@@ -7,6 +7,9 @@ import { Navbar } from "./components/nav";
 import Cart from "./pages/usercart/cart";
 import HistoryUserCart from "./pages/usercart/historyusercart";
 import Login from "./pages/login/login";
+import Home from "./pages/home/home";
+import Rentaltoy from "./pages/rentaltoy/rentaltoy";
+import LogoCategories from "./components/logo";
 
 function App() {
   return (
@@ -14,11 +17,15 @@ function App() {
       <Header />
       <Navbar />
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/historyusercart" element={<HistoryUserCart />} />
+        <Route path="/rentaltoy" element={<Rentaltoy />} />
         {/* Add other routes here */}
       </Routes>
+
+      <LogoCategories />
     </Router>
   );
 }

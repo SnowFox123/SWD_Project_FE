@@ -1,37 +1,69 @@
+/* Overall box styling */
 .box {
-    height: 88px;
-    min-width: 100%;
+    height: 70px;  /* Fixed height for the navbar */
+    min-width: 100%;  /* Ensure it spans full width */
 }
 
+/* Rectangle within the box */
 .box .rectangle {
-    background-color: #ffffff;
-    box-shadow: 0px 4px 4px #00000040;
-    height: 88px;
-    left: 0;
-    position: sticky;
-    top: 0;
-    min-width: 100%;
+    background-color: #ffffff;  /* White background */
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);  /* Slight shadow for depth */
+    height: 70px;  /* Match box height */
+    left: 0;  /* Align to the left */
+    position: sticky;  /* Stick to the top */
+    top: 0;  /* Stick at the top of the viewport */
+    min-width: 100%;  /* Ensure full width */
 }
 
 /* Override Ant Design search button */
 .custom-search .ant-btn-primary {
-    background-color: red !important; /* Set background to red */
-    border-color: red !important;     /* Match border color */
-    color: white !important;          /* Set text to white */
-    padding: 22px 20px !important;       /* Add padding to the button */
-    font-weight: bold;                /* Make text bold */
-    /* border-radius: 20px !important; */
-    border-top-right-radius: 20px !important;
-    border-bottom-right-radius: 20px !important;
+    background-color: red !important;  /* Button background color */
+    border-color: red !important;  /* Border color to match */
+    color: white !important;  /* Text color */
+    padding: 0px 20px !important;  /* Padding around button */
+    font-weight: bold;  /* Bold text */
+    height: 35px;  /* Fixed height */
+    border-top-right-radius: 20px !important;  /* Rounded corners */
+    border-bottom-right-radius: 20px !important;  /* Rounded corners */
 }
 
 /* Increase input height */
 .custom-search .ant-input-affix-wrapper {
-    /* border-radius: 20px !important; */
-    border-top-left-radius: 20px !important;
-    border-bottom-left-radius: 20px !important;
-    justify-content: center !important;
-    padding: 10px 15px;
-    height: 100% !important; /* Adjust the input height to be larger */
-    /* padding-left: 16px !important; */
+    border-top-left-radius: 20px !important;  /* Rounded left corners */
+    border-bottom-left-radius: 20px !important;  /* Rounded left corners */
+    justify-content: center !important;  /* Center input content */
+    padding: 5px 15px;  /* Padding for the input */
+    height: 100% !important;  /* Full height for the input */
+}
+
+/* Link styles */
+a {
+    text-decoration: none;  /* No underline for links */
+    color: red;  /* Default link color */
+    transition: color 0.3s ease;  /* Smooth color transition */
+    font-family: 'Inter-SemiBold';  /* Font family for consistency */
+    font-size: 18px;  /* Font size */
+    font-weight: 600;  /* Font weight */
+}
+
+/* Link hover effects */
+a:hover {
+    color: darkred;  /* Darker color on hover */
+    text-decoration: underline;  /* Underline on hover */
+}
+
+/* Divider styling */
+.divider {
+    background-color: red;  /* Color for the vertical divider */
+}
+
+/* Additional hover effect for search bar */
+.custom-search:hover .ant-btn-primary {
+    background-color: darkred !important;  /* Darker color for the button on hover */
+    border-color: darkred !important;  /* Darker border color on hover */
+}
+
+/* Search input hover effect */
+.custom-search:hover .ant-input-affix-wrapper {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);  /* Add shadow effect on hover */
 }

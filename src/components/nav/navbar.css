@@ -1,11 +1,13 @@
+/* navbar.css */
+
 /* Overall box styling */
-.box {
+.navbar {
     height: 70px;  /* Fixed height for the navbar */
     min-width: 100%;  /* Ensure it spans full width */
 }
 
 /* Rectangle within the box */
-.box .rectangle {
+.navbar .rectangle {
     background-color: #ffffff;  /* White background */
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);  /* Slight shadow for depth */
     height: 70px;  /* Match box height */
@@ -37,7 +39,7 @@
 }
 
 /* Link styles */
-a {
+.nav-link {
     text-decoration: none;  /* No underline for links */
     color: red;  /* Default link color */
     transition: color 0.3s ease;  /* Smooth color transition */
@@ -47,7 +49,7 @@ a {
 }
 
 /* Link hover effects */
-a:hover {
+.nav-link:hover {
     color: darkred;  /* Darker color on hover */
     text-decoration: underline;  /* Underline on hover */
 }
@@ -66,4 +68,21 @@ a:hover {
 /* Search input hover effect */
 .custom-search:hover .ant-input-affix-wrapper {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);  /* Add shadow effect on hover */
+}
+
+
+/* Link styles */
+.navbar a {
+    text-decoration: none;  /* No underline for links */
+    color: red;  /* Default link color */
+    transition: color 0.3s ease;  /* Smooth color transition */
+    font-family: 'Inter-SemiBold';  /* Font family for consistency */
+    font-size: 18px;  /* Font size */
+    font-weight: 600;  /* Font weight */
+}
+
+/* Link hover effects */
+.navbar a:hover {
+    color: darkred;  /* Darker color on hover */
+    text-decoration: underline;  /* Underline on hover */
 }

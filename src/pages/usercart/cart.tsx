@@ -1,16 +1,25 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
-const Cart = () => {
-  // Sample state to represent cart items
-  const [cartItems, setCartItems] = useState([
+// Define a TypeScript interface for a cart item
+interface CartItem {
+  id: number;
+  name: string;
+  price: number;
+}
+
+const Cart: React.FC = () => {
+  // Sample state to represent cart items with CartItem type
+  
+  // onst [cartItems, setCartItems] = useState([
+
+  const [cartItems, setCartItems] = useState<CartItem[]>([
     { id: 1, name: 'Product 1', price: 29.99 },
     { id: 2, name: 'Product 2', price: 49.99 },
     { id: 3, name: 'Product 3', price: 19.99 },
   ]);
 
   // Function to remove an item from the cart
-  const removeItem = (id) => {
+  const removeItem = (id: number): void => {
     const updatedItems = cartItems.filter(item => item.id !== id);
     setCartItems(updatedItems);
   };

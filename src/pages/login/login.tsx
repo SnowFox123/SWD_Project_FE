@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import "./login.css";
+
 import { Link } from "react-router-dom";
 
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
@@ -77,11 +79,10 @@ const Login: React.FC = () => {
             position: "absolute",
             objectFit: "contain",
             width: "85%",
-            height: "490px",
             zIndex: "5",
             maxWidth: 360,
             marginLeft: "53%",
-            marginTop: "3%",
+            marginTop: "4%",
             padding: "20px 30px",
           }}
         >
@@ -148,121 +149,50 @@ const Login: React.FC = () => {
             <Form.Item>
               <Flex justify="space-between" align="center">
                 <Form.Item name="remember" valuePropName="checked" noStyle>
-                  <Checkbox>Remember me</Checkbox>
+                  <Checkbox>Ghi nhớ đăng nhập</Checkbox>
                 </Form.Item>
-                <Link to="">Forgot password</Link>
+                <Link style={{ fontSize: "16px"}} to="/forgetpassword">Quên mật khẩu ?</Link>
               </Flex>
             </Form.Item>
 
             <Form.Item>
-              <Button block type="primary" htmlType="submit">
-                Log in
+              <Button
+                block
+                type="primary"
+                htmlType="submit"
+                className="login-button"
+                style={{
+                  // backgroundColor: "green",
+                  padding: "20px",
+                  borderRadius: "10px",
+                  background: "red",
+                  boxShadow: "0px 4px 15px 0px rgba(0, 0, 0, 0.20)",
+                  fontSize: "16px",
+                }}
+              >
+                Đăng nhập
               </Button>
-              or <Link to="">Register now!</Link>
+              <div style={{ marginTop: "10px", fontSize:"16px", display: "flex", justifyContent: "center"}}>
+              Chưa có tài khoản?
+                <Link className="btn-register" to="/register">
+                  Đăng kí tài khoản
+                </Link>
+              </div>
             </Form.Item>
           </Form>
-          <Link
-            to="/"
-            style={{
-              display: "flex",
-              width: "100%",
-              height: "8%",
-              borderRadius: "10px",
-              border: "2px solid #292929",
-              background: "rgba(80, 140, 193, 0.00)",
-              justifyContent: "center",
-              alignItems: "center",
-              textDecoration: "none", // Add this line to ensure no underline
-              margin: "10px 0",
-            }}
-          >
-            <span
-              style={{
-                color: "#292929",
-                fontFamily: "Poppins",
-                fontSize: "16px",
-                fontStyle: "normal",
-                fontWeight: 500,
-                lineHeight: "normal",
-                textDecoration: "none", // This ensures the text itself has no decoration
-                textUnderlineOffset: "unset",
-              }}
-            >
-              Register with email
-            </span>
+          <Link to="/register" className="link-container">
+            <span className="link-text">Register with email</span>
           </Link>
 
-          <Link
-            to="/"
-            style={{
-              display: "flex",
-              width: "100%",
-              height: "8%",
-              borderRadius: "10px",
-              border: "2px solid #292929",
-              background: "rgba(80, 140, 193, 0.00)",
-              justifyContent: "center",
-              alignItems: "center",
-              textDecoration: "none", // Add this line to ensure no underline
-              margin: "10px 0",
-            }}
-          >
-            <img
-              src="Google.png"
-              style={{ width: "20px", marginRight: "5px" }}
-              alt="google-icon"
-            />
-            <span
-              style={{
-                color: "#292929",
-                fontFamily: "Poppins",
-                fontSize: "16px",
-                fontStyle: "normal",
-                fontWeight: 500,
-                lineHeight: "normal",
-                textDecoration: "none", // This ensures the text itself has no decoration
-                textUnderlineOffset: "unset",
-              }}
-            >
-              Continue with Google
-            </span>
+          {/* <Link to="/" className="link-container">
+            <img src="Google.png" alt="google-icon" />
+            <span className="link-text">Continue with Google</span>
           </Link>
 
-          <Link
-            to="/"
-            style={{
-              display: "flex",
-              width: "100%",
-              height: "8%",
-              borderRadius: "10px",
-              border: "2px solid #292929",
-              background: "rgba(80, 140, 193, 0.00)",
-              justifyContent: "center",
-              alignItems: "center",
-              textDecoration: "none", // Add this line to ensure no underline
-              margin: "10px 0",
-            }}
-          >
-            <img
-              src="Facebook.png"
-              style={{ width: "20px", marginRight: "5px" }}
-              alt="google-icon"
-            />
-            <span
-              style={{
-                color: "#292929",
-                fontFamily: "Poppins",
-                fontSize: "16px",
-                fontStyle: "normal",
-                fontWeight: 500,
-                lineHeight: "normal",
-                textDecoration: "none", // This ensures the text itself has no decoration
-                textUnderlineOffset: "unset",
-              }}
-            >
-              Continue with Facebook
-            </span>
-          </Link>
+          <Link to="/" className="link-container">
+            <img src="Facebook.png" alt="facebook-icon" />
+            <span className="link-text">Continue with Facebook</span>
+          </Link> */}
         </div>
       </div>
       {/* <h2>Login</h2>

@@ -1,20 +1,15 @@
 import React from "react";
-import "./login.css";
+// import "./login.css";
 import { Form, Input, Button } from "antd";
 import type { FormProps } from "antd";
 
 import { Link } from "react-router-dom";
 
-
-import './register.css'
+import "./forgot-password.css";
 
 type FieldType = {
-  username?: string;
   email?: string;
   phone?: string;
-  address?: string;
-  password?: string;
-  confirmPassword?: string;
 };
 
 const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
@@ -25,7 +20,7 @@ const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
   console.log("Failed:", errorInfo);
 };
 
-const Register: React.FC = () => {
+const ForgotPassword: React.FC = () => {
   return (
     <div style={{}}>
       <div style={{ position: "relative", width: "100%", height: "600px" }}>
@@ -81,7 +76,7 @@ const Register: React.FC = () => {
             zIndex: "5",
             maxWidth: 410,
             marginLeft: "34%",
-            marginTop: "2%",
+            marginTop: "8%",
             padding: "20px 30px",
           }}
         >
@@ -96,18 +91,15 @@ const Register: React.FC = () => {
               margin: "0px",
               display: "flex",
               justifyContent: "center",
-              marginBottom: "10px"
+              marginBottom: "10px",
             }}
           >
-            Đăng ký
+            Đặt lại mật khẩu
           </p>
 
-          <div style={{ marginTop: "10px", fontSize:"16px", display: "flex", justifyContent: "center", marginBottom: "20px"}}>
-              Đã có tài khoản?
-                <Link className="btn-register" to="/login">
-                  Đăng nhập tại đây!
-                </Link>
-              </div>
+          <span className="span-reset-password">
+            Chúng tôi sẽ gửi email cho bạn để đặt lại mật khẩu
+          </span>
 
           {/* <p
             style={{
@@ -126,7 +118,7 @@ const Register: React.FC = () => {
 
           <Form
             name="basic"
-            labelCol={{ span: 8 }}
+            labelCol={{ span: 5 }}
             wrapperCol={{ span: 16 }}
             style={{ maxWidth: 600 }}
             initialValues={{ remember: true }}
@@ -134,18 +126,6 @@ const Register: React.FC = () => {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
           >
-            {/* Username Validation */}
-            <Form.Item<FieldType>
-              label="Username"
-              name="username"
-              rules={[
-                { required: true, message: "Please input your username!" },
-                { min: 3, message: "Username must be at least 3 characters" },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-
             {/* Email Validation */}
             <Form.Item<FieldType>
               label="Email"
@@ -161,75 +141,7 @@ const Register: React.FC = () => {
               <Input />
             </Form.Item>
 
-            {/* Phone Validation */}
-            <Form.Item<FieldType>
-              label="Phone"
-              name="phone"
-              rules={[
-                { required: true, message: "Please input your phone number!" },
-                {
-                  pattern: /^\d{10}$/,
-                  message: "Phone number must be 10 digits!",
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-
-            {/* Address Validation */}
-            <Form.Item<FieldType>
-              label="Address"
-              name="address"
-              rules={[
-                { required: true, message: "Please input your address!" },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-
-            {/* Password Validation */}
-            <Form.Item<FieldType>
-              label="Password"
-              name="password"
-              rules={[
-                { required: true, message: "Please input your password!" },
-                { min: 6, message: "Password must be at least 6 characters" },
-              ]}
-              hasFeedback
-            >
-              <Input.Password />
-            </Form.Item>
-
-            {/* Confirm Password Validation */}
-            <Form.Item<FieldType>
-              label="Confirm Password"
-              name="confirmPassword"
-              dependencies={["password"]}
-              hasFeedback
-              labelCol={{ span: 8 }} // Adjust label width
-              wrapperCol={{ span: 16 }} // Adjust input width
-              labelAlign="left" // Align label to the left
-              rules={[
-                {
-                  required: true,
-                  message: "Please confirm your password!",
-                },
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!value || getFieldValue("password") === value) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(
-                      new Error("The two passwords do not match!")
-                    );
-                  },
-                }),
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
-
-            <Form.Item >
+            <Form.Item>
               <Button
                 block
                 type="primary"
@@ -248,20 +160,28 @@ const Register: React.FC = () => {
                   // alignItems: "center"
                 }}
               >
-                Đăng ký
+                Lấy lại mật khẩu
               </Button>
             </Form.Item>
-
-            {/* <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button type="primary" htmlType="submit">
-                Submit
-              </Button>
-            </Form.Item> */}
           </Form>
+          <div
+            style={{
+              marginTop: "10px",
+              fontSize: "16px",
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "20px",
+            }}
+          >
+            Đã có tài khoản?
+            <Link className="btn-register" to="/login">
+              Đăng nhập tại đây!
+            </Link>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Register;
+export default ForgotPassword;

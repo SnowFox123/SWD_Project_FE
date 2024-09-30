@@ -151,7 +151,7 @@ const Login: React.FC = () => {
                 <Form.Item name="remember" valuePropName="checked" noStyle>
                   <Checkbox>Ghi nhớ đăng nhập</Checkbox>
                 </Form.Item>
-                <Link style={{ fontSize: "16px"}} to="/forgetpassword">Quên mật khẩu ?</Link>
+                <Link style={{ fontSize: "16px"}} to="/forgotpassword">Quên mật khẩu ?</Link>
               </Flex>
             </Form.Item>
 

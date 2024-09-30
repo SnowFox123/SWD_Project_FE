@@ -2,8 +2,17 @@
 
 /* Overall box styling */
 .navbar {
-    height: 70px;  /* Fixed height for the navbar */
+    height: 70px;  
     min-width: 100%;  /* Ensure it spans full width */
+    position: sticky !important;
+    top: 0;
+    z-index: 10;
+    background-color: #ffffff;  /* White background */
+}
+
+.rectangle {
+    position: sticky !important;
+
 }
 
 /* Rectangle within the box */
@@ -12,7 +21,7 @@
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);  /* Slight shadow for depth */
     height: 70px;  /* Match box height */
     left: 0;  /* Align to the left */
-    position: sticky;  /* Stick to the top */
+    position: sticky !important;  /* Stick to the top */
     top: 0;  /* Stick at the top of the viewport */
     min-width: 100%;  /* Ensure full width */
 }

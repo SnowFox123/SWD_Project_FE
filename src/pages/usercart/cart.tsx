@@ -1,52 +1,112 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { Space, Table, Button } from "antd";
+import type { TableColumnsType, TableProps } from "antd";
 
-// Define a TypeScript interface for a cart item
-interface CartItem {
-  id: number;
+interface DataType {
+  key: React.Key;
   name: string;
+  status: boolean; // Keeping status as boolean
   price: number;
+  quantity: number;
 }
 
+type TableRowSelection<T extends object = object> =
+  TableProps<T>["rowSelection"];
+
+const columns: TableProps<DataType>["columns"] = [
+  {
+    title: "Toy Name",
+    dataIndex: "name",
+    key: "name",
+    render: (text) => <span>{text}</span>, // Changed <a> to <span> to avoid accessibility issues
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    render: (status: boolean) => (status ? "Thuê" : "Mua"), // Render based on boolean value
+  },
+  {
+    title: "Price",
+    dataIndex: "price",
+    key: "price",
+  },
+  {
+    title: "Quantity",
+    dataIndex: "quantity",
+    key: "quantity",
+  },
+  {
+    title: "Action",
+    key: "action",
+    render: (_, record) => (
+      <Space size="middle">
+        {/* Changed <a> to <button> for better accessibility */}
+        <button>Edit</button>
+        <button>Delete</button>
+      </Space>
+    ),
+  },
+];
+
+// Updated to match the DataType structure without extra properties
+const dataSource = Array.from({ length: 46 }).map<DataType>((_, i) => {
+  const price = 99;
+  const quantity = 2;
+  const status = Math.random() > 0.5; // Trạng thái ngẫu nhiên
+  return {
+    key: i,
+    name: `Toy story ${i}`,
+    status: status, // Use the boolean value directly
+    price: price,
+    quantity: quantity,
+  };
+});
+
 const Cart: React.FC = () => {
-  // Sample state to represent cart items with CartItem type
-  
-  // onst [cartItems, setCartItems] = useState([
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    { id: 1, name: 'Product 1', price: 29.99 },
-    { id: 2, name: 'Product 2', price: 49.99 },
-    { id: 3, name: 'Product 3', price: 19.99 },
-  ]);
-
-  // Function to remove an item from the cart
-  const removeItem = (id: number): void => {
-    const updatedItems = cartItems.filter(item => item.id !== id);
-    setCartItems(updatedItems);
+  const start = () => {
+    setLoading(true);
+    // Simulate an AJAX request
+    setTimeout(() => {
+      setSelectedRowKeys([]);
+      setLoading(false);
+    }, 1000);
   };
 
-  // Calculate total price
-  const totalPrice = cartItems.reduce((total, item) => total + item.price, 0);
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+
+  const rowSelection: TableRowSelection<DataType> = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+
+  const hasSelected = selectedRowKeys.length > 0;
 
   return (
-    <div className="cart">
-      <h1>Shopping Cart</h1>
-      {cartItems.length === 0 ? (
-        <p>Your cart is empty.</p>
-      ) : (
-        <div>
-          <ul>
-            {cartItems.map(item => (
-              <li key={item.id}>
-                <span>{item.name}</span>
-                <span>${item.price.toFixed(2)}</span>
-                <button onClick={() => removeItem(item.id)}>Remove</button>
-              </li>
-            ))}
-          </ul>
-          <h2>Total: ${totalPrice.toFixed(2)}</h2>
-        </div>
-      )}
-    </div>
+    <Space direction="vertical" style={{ width: "100%" }}>
+      <Space align="center" style={{ marginBottom: 16 }}>
+        <Button
+          type="primary"
+          onClick={start}
+          disabled={!hasSelected}
+          loading={loading}
+        >
+          Reload
+        </Button>
+        {hasSelected ? `Selected ${selectedRowKeys.length} items` : null}
+      </Space>
+      <Table<DataType>
+        rowSelection={rowSelection}
+        columns={columns}
+        dataSource={dataSource}
+      />
+    </Space>
   );
 };
 

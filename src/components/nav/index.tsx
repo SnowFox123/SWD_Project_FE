@@ -8,8 +8,8 @@ const { Search } = Input;
 
 export const Navbar = () => {
     return (
-        <div className="navbar"> {/* Add the navbar class here */}
-            <div className="rectangle">
+        <div className="navbar" style={{ position: "sticky" }}> {/* Add the navbar class here */}
+            {/* <div className="rectangle"> */}
                 <Row style={{ padding: "20px 200px" }}>
                     <Col span={12}>
                         <Search
@@ -47,7 +47,7 @@ export const Navbar = () => {
                         </Row>
                     </Col>
                 </Row>
-            </div>
+            {/* </div> */}
         </div>
     );
 };

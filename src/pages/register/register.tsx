@@ -52,6 +52,7 @@ const Register: React.FC = () => {
               marginTop: "4%",
               zIndex: "3",
             }}
+            className="fade-in"
           />
         </div>
         <div>
@@ -66,6 +67,7 @@ const Register: React.FC = () => {
               zIndex: "1",
               marginTop: "6%",
             }}
+            className="fade-in"
           />
         </div>
         <div

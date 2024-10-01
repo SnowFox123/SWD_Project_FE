@@ -47,6 +47,7 @@ const ForgotPassword: React.FC = () => {
               marginTop: "4%",
               zIndex: "3",
             }}
+             className="fade-in"
           />
         </div>
         <div>
@@ -61,6 +62,7 @@ const ForgotPassword: React.FC = () => {
               zIndex: "1",
               marginTop: "6%",
             }}
+             className="fade-in"
           />
         </div>
         <div

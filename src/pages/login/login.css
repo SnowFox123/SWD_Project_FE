@@ -44,12 +44,17 @@
     /* Change text color on hover */
 }
 
-.login-button:hover {
+/* .login-button:hover {
     background: #ac2229 !important;
     color: #ccc !important;
-    /* Slightly changes the background color */
     border-color: #508cc1;
-    /* Changes the border color on hover */
+} */
+
+.login-button {
+    &.active {
+        background-color: red !important;
+        color: #fff
+    }
 }
 
 .btn-register {
@@ -69,3 +74,27 @@
     text-decoration-thickness: 2px;
     /* Slightly changes the background color */
 }
+
+
+
+/* Add these styles to your CSS */
+
+@keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  img.fade-in {
+    animation: fadeInUp 1s ease-in-out forwards;
+  }
+
+  img.fade-in-2 {
+    animation: fadeInUp 0.8s ease-in-out forwards;
+  }
+  

@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import React from "react";
+import React, {useContext, useEffect} from "react";
 
 import "./App.css";
 import Header from "./components/header";
@@ -12,14 +12,30 @@ import Rentaltoy from "./pages/rentaltoy/rentaltoy";
 import LogoCategories from "./components/logo";
 import Register from "./pages/register/Register";
 import ForgotPassword from "./pages/forgot-password/forgot-password";
+import { UserContext } from "./context/UserContext";
+
+
 
 function App() {
+
+  const { user, loginContext } = useContext(UserContext);
+
+  console.log("user:", user)
+
+  useEffect(() => {
+    if(localStorage.getItem("token")){
+      loginContext(localStorage.getItem("email"), localStorage.getItem("token"))
+    }
+  }, [])
+
+
   return (
-    <Router>
+    <>
       <Header />
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/customer" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
@@ -30,7 +46,7 @@ function App() {
       </Routes>
 
       <LogoCategories />
-    </Router>
+    </>
   );
 }
 

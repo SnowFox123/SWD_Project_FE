@@ -7,19 +7,27 @@ import reportWebVitals from "./reportWebVitals";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter } from "react-router-dom";
-import { UserProvider } from "./context/UserContext";
+// import { UserProvider } from "./context/UserContext";
+
+import { Provider } from 'react-redux';
+import {store, persistor} from './redux/store';
+import { PersistGate } from "redux-persist/integration/react";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <UserProvider>
+    {/* <UserProvider> */}
       <BrowserRouter>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
         <App />
+        </PersistGate>
         <ToastContainer />
+        </Provider>,
       </BrowserRouter>
-    </UserProvider>
+    {/* </UserProvider> */}
   </React.StrictMode>
 );
 

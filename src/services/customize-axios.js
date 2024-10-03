@@ -1,31 +1,27 @@
-import axios from "axios"
+import axios from "axios";
+import { store } from '../redux/store'; // Correct way to import named exports
 
-const instance = axios.create({
-    baseURL: 'https://reqres.in'
+const BASE_URL = 'https://localhost:7221';
+
+export const axiosInstance = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  responseType: 'json',
 });
 
-// Add a response interceptor
-instance.interceptors.response.use(function (response) {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
-    return response.data ? response.data : { statusCode : response.status };
-  }, function (error) {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
-    let res= {};
-    if(error.response) {
-      res.data = error.response.data
-      res.status = error.response.status
-      res.headers = error.response.headers
-    } else if (error.request) {
-      console.log(error.request);
-    } else {
-      console.log('Error', error.message)
+axiosInstance.interceptors.request.use(
+  async (config) => {
+    const appState = store.getState(); // Get state from the store
+    const accessToken = appState?.auth?.accessToken; // Access the token from state
+    if (accessToken) {
+      config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
-    return res;
-
-    // return Promise.reject(error);
-  });
-
-
-export default instance
+    return config;
+  },
+  (error) => {
+    // Handle request errors
+    return Promise.reject(error);
+  }
+);

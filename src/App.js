@@ -25,12 +25,21 @@ import SupplierPage from "./components/Supplier";
 import StaffPage from "./components/Staff";
 import ProfileUser from "./pages/profile/profileuser";
 import ChangePassword from "./components/changePassword";
+import { useSelector } from 'react-redux'; //
 
 function App() {
+  const role = useSelector((state) => state.auth.role); // 
+
+
   return (
     <>
-      <Header />
-      <Navbar />
+
+    {role !== '4' && role !== '3' && (
+        <>
+          <Header />
+          <Navbar />
+        </>
+      )}
       {/* <AuthStatus /> */}
       {/* <Logout /> */}
 
@@ -126,7 +135,12 @@ function App() {
         <Route path="*" element={<Navigate to="/unauthorized" />} />
       </Routes>
 
-      <LogoCategories />
+      {role !== '4' && role !== '3' && (
+        <>
+         <LogoCategories />
+        </>
+      )}
+
       {/* <ToastContainer /> */}
     </>
   );

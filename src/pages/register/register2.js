@@ -139,7 +139,7 @@ const Register2 = () => {
           >
             {/* Name Validation */}
             <Form.Item
-              label="Username"
+              label="Name"
               name="username"
               rules={[
                 { required: true, message: "Please input your username!" },
@@ -154,7 +154,7 @@ const Register2 = () => {
               ]}
             >
               <Input
-                placeholder="Username"
+                placeholder="Name"
                 type="text"
                 value={name}
                 onChange={(event) => setName(event.target.value)}

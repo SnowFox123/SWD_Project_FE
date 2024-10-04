@@ -9,7 +9,8 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate from react
 const { Title } = Typography;
 
 const ChangePassword = () => {
-    const [newPassword, setNewPassword] = useState('');  // State to track new password input
+    const [oldPassword, setOldPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);  // State to track if submit button should be disabled
     const [form] = Form.useForm(); // Ant Design's form instance
@@ -19,7 +20,7 @@ const ChangePassword = () => {
     const handleSubmit = async () => {
         setLoading(true);
         try {
-            const res = await changePassword(newPassword); // Call the changePassword API
+            const res = await changePassword(oldPassword, newPassword); // Call the changePassword API
             if (res) {
                 setNewPassword(''); // Clear the password input
                 form.resetFields(); // Reset form fields
@@ -54,17 +55,39 @@ const ChangePassword = () => {
 
     return (
         <div style={{ maxWidth: '600px', margin: 'auto', padding: '2rem' }}>
-            <Title level={2}>Change Password</Title>
+            <Title level={2}>Đổi mật khẩu</Title>
             <Form
                 form={form} // Bind form to the Ant Design form instance
                 layout="vertical"
                 onFieldsChange={handleFormChange}  // Listen to form field changes
             >
                 <Form.Item
+                    label="Old Password"
+                    name="oldPassword"
+                    rules={[
+                        { required: true, message: "Please input your old password!" },
+                        {
+                            min: 6,
+                            message: "Password must be at least 6 characters long",
+                        },
+                        {
+                            pattern: /^(?=.*[A-Z])(?=.*[!@#$%^&*])/,
+                            message: "Password must contain at least one uppercase letter and one special character",
+                        },
+                    ]}
+                >
+                    <Input.Password
+                        value={oldPassword}
+                        onChange={(e) => setOldPassword(e.target.value)}  // Update password state on change
+                        placeholder="Enter your old password"
+                    />
+                </Form.Item>
+
+                <Form.Item
                     label="New Password"
                     name="password"
                     rules={[
-                        { required: true, message: "Please input your new password!" }, 
+                        { required: true, message: "Please input your new password!" },
                         {
                             min: 6,
                             message: "Password must be at least 6 characters long",
@@ -80,6 +103,28 @@ const ChangePassword = () => {
                         onChange={(e) => setNewPassword(e.target.value)}  // Update password state on change
                         placeholder="Enter your new password"
                     />
+                </Form.Item>
+
+                <Form.Item
+                    label="Confirm Password"
+                    name="confirmPassword"
+                    dependencies={["password"]}
+                    hasFeedback
+                    rules={[
+                        { required: true, message: "Please confirm your password!" },
+                        ({ getFieldValue }) => ({
+                            validator(_, value) {
+                                if (!value || getFieldValue("password") === value) {
+                                    return Promise.resolve();
+                                }
+                                return Promise.reject(
+                                    new Error("The two passwords do not match!")
+                                );
+                            },
+                        }),
+                    ]}
+                >
+                    <Input.Password />
                 </Form.Item>
 
                 <Form.Item>

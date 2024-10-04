@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { getProfile, updateProfile } from '../../services/profile';
 import { Form, Input, Button, Row, Col, Typography, Spin, notification } from 'antd'; // Ant Design imports
 import { EditOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons'; // Ant Design icons
+import { useDispatch } from 'react-redux';
+import { updateNamePhone } from '../../redux/authSlice';
 
 const { Title } = Typography;
 
@@ -17,6 +19,8 @@ const ProfileUser = () => {
   
   const [form] = Form.useForm(); // Ant Design's form instance
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -24,6 +28,7 @@ const ProfileUser = () => {
         setProfile(userProfile);
         setInitialProfile(userProfile);
         form.setFieldsValue(userProfile); // Initialize form with profile data
+        console.log(userProfile)
       } catch (err) {
         notification.error({
           message: 'Error',
@@ -57,16 +62,26 @@ const ProfileUser = () => {
       setIsEditing(false);
       setInitialProfile({ accountName, address, phoneNumber });
       setProfile({ accountName, address, phoneNumber }); // Update current profile
+      dispatch(updateNamePhone({accountName, phoneNumber})); 
     } catch (err) {
-      notification.error({
-        message: 'Error',
-        description: err.message || 'Failed to update profile',
-      });
+      if (err.response && err.response.data.errors) {
+        const backendErrors = err.response.data.errors;
+        const formattedErrors = Object.keys(backendErrors).map((field) => ({
+          name: field,
+          errors: backendErrors[field],
+        }));
+        form.setFields(formattedErrors); // Set errors on corresponding fields
+      } else {
+        notification.error({
+          message: 'Error',
+          description: err.message || 'Failed to update profile',
+        });
+      }
     }
   };
 
   const handleCancel = () => {
-    // Chỉ reset form và state nếu có thay đổi
+    // Reset form and state only if there are changes
     if (hasProfileChanged()) {
       form.setFieldsValue(initialProfile); // Reset form fields to initial values
       setProfile(initialProfile); // Set the profile state back to the initial profile
@@ -122,7 +137,7 @@ const ProfileUser = () => {
               placeholder="Enter your name"
             />
           ) : (
-            <span>{profile.accountName}</span>
+            <span>{profile.accountName || 'N/A'}</span> // Render valid string
           )}
         </Form.Item>
 
@@ -141,7 +156,7 @@ const ProfileUser = () => {
               placeholder="Enter your address"
             />
           ) : (
-            <span>{profile.address}</span>
+            <span>{profile.address || 'N/A'}</span> // Render valid string
           )}
         </Form.Item>
 
@@ -164,7 +179,7 @@ const ProfileUser = () => {
               placeholder="Enter your phone number"
             />
           ) : (
-            <span>{profile.phoneNumber}</span>
+            <span>{profile.phoneNumber || 'N/A'}</span> // Render valid string
           )}
         </Form.Item>
 
@@ -184,7 +199,7 @@ const ProfileUser = () => {
                 <Button
                   type="primary"
                   htmlType="submit"
-                  disabled={!hasProfileChanged()} // Chỉ cho phép lưu khi có thay đổi
+                  disabled={!hasProfileChanged()} // Enable save only if there are changes
                   icon={<SaveOutlined />}
                 >
                   Save Changes

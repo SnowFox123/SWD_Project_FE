@@ -10,6 +10,15 @@
     background-color: #ffffff;  /* White background */
 }
 
+.navbar-2 {
+    height: 40px !important;  
+    min-width: 100%;  /* Ensure it spans full width */
+    position: sticky !important;
+    top: 0;
+    z-index: 10;
+    background-color: #ffffff;  /* White background */
+}
+
 .rectangle {
     position: sticky !important;
 
@@ -92,6 +101,21 @@
 
 /* Link hover effects */
 .navbar a:hover {
+    color: darkred;  /* Darker color on hover */
+    text-decoration: underline;  /* Underline on hover */
+}
+
+.navbar-2 a {
+    text-decoration: none;  /* No underline for links */
+    color: red;  /* Default link color */
+    transition: color 0.3s ease;  /* Smooth color transition */
+    font-family: 'Inter-SemiBold';  /* Font family for consistency */
+    font-size: 18px;  /* Font size */
+    font-weight: 600;  /* Font weight */
+}
+
+/* Link hover effects */
+.navbar-2 a:hover {
     color: darkred;  /* Darker color on hover */
     text-decoration: underline;  /* Underline on hover */
 }

@@ -31,10 +31,13 @@ const Login2 = () => {
       const response = await login(email, password);
       const { accessToken, refreshToken } = response;
       const decodedToken = decodeJWT(accessToken);
+
+      console.log(decodedToken)
       const role = decodedToken.role;
       const unique_name = decodedToken.unique_name;
+      const phone = decodedToken.Phone;
 
-      dispatch(loginSuccess({ accessToken, refreshToken, role, email, unique_name }));
+      dispatch(loginSuccess({ accessToken, refreshToken, role, email, unique_name, phone }));
 
       if (role === '1') {
         toast.success("Login successful", response);
@@ -165,6 +168,22 @@ const Login2 = () => {
           <p>( admin@gmail.com )</p>
           <p>( edutoyrent123 )</p> */}
 
+          
+<div
+                style={{
+                  marginTop: "10px",
+                  fontSize: "16px",
+                  display: "flex",
+                  justifyContent: "center",
+                  marginBottom: '16px'
+                }}
+              >
+                Chưa có tài khoản?
+                <Link className="btn-register" to="/register">
+                  Đăng kí tài khoản
+                </Link>
+              </div>
+
           <Form name="login" initialValues={{ remember: true }}>
             <Form.Item
               name="email"
@@ -204,7 +223,7 @@ const Login2 = () => {
               />
             </Form.Item>
 
-            <Form.Item>
+            <Form.Item style={{ display: 'flex', justifyContent: 'right'}}>
               <Link style={{ fontSize: "16px" }} to="/forgotpassword">
                 Quên mật khẩu ?
               </Link>
@@ -233,19 +252,6 @@ const Login2 = () => {
                 </Button>
               </Spin>
 
-              <div
-                style={{
-                  marginTop: "10px",
-                  fontSize: "16px",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                Chưa có tài khoản?
-                <Link className="btn-register" to="/register">
-                  Đăng kí tài khoản
-                </Link>
-              </div>
             </Form.Item>
           </Form>
           <Link to="/" className="link-container">

@@ -14,36 +14,28 @@ import { Spin } from 'antd';
 
 import "./login.css";
 
-
 const Login2 = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [loadingAPI, setLoadingAPI] = useState(false);
+  const [isEmailValid, setIsEmailValid] = useState(false);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
   const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null); // Reset error state
     try {
-      // Await the API response
       const response = await login(email, password);
-
       const { accessToken, refreshToken } = response;
-
-      // Decode accessToken to get user info
       const decodedToken = decodeJWT(accessToken);
-      const role = decodedToken.role; // Get role from JWT
-      const unique_name = decodedToken.unique_name; // Get role from JWT
+      const role = decodedToken.role;
+      const unique_name = decodedToken.unique_name;
 
-      // Dispatch accessToken, refreshToken, and role to Redux store
       dispatch(loginSuccess({ accessToken, refreshToken, role, email, unique_name }));
 
-      // Set welcome message with email
-      // setWelcomeMessage(email);
-
-      // Redirect based on role
       if (role === '1') {
         toast.success("Login successful", response);
         navigate("/user");
@@ -60,9 +52,34 @@ const Login2 = () => {
         navigate("/unauthorized");
       }
     } catch (err) {
-      // Set error if login fails
       toast.error("Login failed", err.message);
     }
+  };
+
+  // Validate email using Validate
+  const validateEmail = (email) => {
+    const emailValidate = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailValidate.test(email);
+  };
+
+  // Validate password using Validate
+  const validatePassword = (password) => {
+    const passwordValidate = /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{6,}$/;
+    return passwordValidate.test(password);
+  };
+
+  // Update email validation on change
+  const handleEmailChange = (event) => {
+    const value = event.target.value;
+    setEmail(value);
+    setIsEmailValid(validateEmail(value));
+  };
+
+  // Update password validation on change
+  const handlePasswordChange = (event) => {
+    const value = event.target.value;
+    setPassword(value);
+    setIsPasswordValid(validatePassword(value));
   };
 
   return (
@@ -142,25 +159,18 @@ const Login2 = () => {
           >
             Đăng nhập
           </p>
-          <p>( user@gmail.com )</p>
+          {/* <p>( user@gmail.com )</p>
           <p>( supplier@gmail.com )</p>
           <p>( staff@gmail.com )</p>
           <p>( admin@gmail.com )</p>
-          <p>( edutoyrent123 )</p>
+          <p>( edutoyrent123 )</p> */}
 
-          <Form
-            name="login"
-            initialValues={{ remember: true }}
-          // onFinish={onFinish}
-          >
+          <Form name="login" initialValues={{ remember: true }}>
             <Form.Item
               name="email"
               rules={[
                 { required: true, message: "Please input your email!" },
-                {
-                  type: "email",
-                  message: "Please enter a valid email address!",
-                },
+                { type: "email", message: "Please enter a valid email address!" },
               ]}
             >
               <Input
@@ -168,38 +178,40 @@ const Login2 = () => {
                 placeholder="Email or username "
                 type="text"
                 value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                onChange={handleEmailChange}
               />
             </Form.Item>
             <Form.Item
               name="password"
-              rules={[{ required: true, message: "Please input your Password!" },
-              {
-                pattern: /^(?=.*[A-Z])(?=.*[!@#$%^&*])/,
-                message:
-                  "Password must contain at least one uppercase letter and one special character",
-              },
+              rules={[
+                { required: true, message: "Please input your password!" },
+                {
+                  min: 6,
+                  message: "Password must be at least 6 characters",
+                },
+                {
+                  pattern: /^(?=.*[A-Z])(?=.*[!@#$%^&*])/,
+                  message:
+                    "Password must contain at least one uppercase letter and one special character",
+                },
               ]}
+              hasFeedback
             >
-              <Input
+              <Input.Password
                 prefix={<LockOutlined />}
-                type="password"
-                placeholder="Password"
                 value={password}
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={handlePasswordChange}
               />
             </Form.Item>
+
             <Form.Item>
-              <Form.Item name="remember" valuePropName="checked" noStyle>
-                <Checkbox>Ghi nhớ đăng nhập</Checkbox>
-              </Form.Item>
               <Link style={{ fontSize: "16px" }} to="/forgotpassword">
                 Quên mật khẩu ?
               </Link>
             </Form.Item>
 
             <Form.Item>
-              <Spin spinning={loadingAPI} >
+              <Spin spinning={loadingAPI}>
                 <Button
                   block
                   type="primary"
@@ -211,16 +223,15 @@ const Login2 = () => {
                     boxShadow: "0px 4px 15px 0px rgba(0, 0, 0, 0.20)",
                     fontSize: "16px",
                   }}
-                  // className={`login-button ${email && password ? "active" : ""}`}
-                  // disabled={email && password ? false : true}
+                  className={`login-button ${
+                    isEmailValid && isPasswordValid ? "active" : ""
+                  }`}
+                  disabled={!isEmailValid || !isPasswordValid}
                   onClick={handleLogin}
-
                 >
-
                   Đăng nhập
                 </Button>
               </Spin>
-
 
               <div
                 style={{
@@ -247,8 +258,3 @@ const Login2 = () => {
 };
 
 export default Login2;
-
-// {/* Display welcome message after login */}
-// {welcomeMessage && (
-//     <span>Welcome, {welcomeMessage}!</span>
-// )}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Form, Input, Button } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -12,7 +12,17 @@ const Register2 = () => {
   const [password, setPassword] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
+  
   const navigate = useNavigate();
+  
+  const nameInputRef = useRef(null); // reference for the input element
+
+  // useEffect for focusing the name input field on component mount
+  useEffect(() => {
+    if (nameInputRef.current) {
+      nameInputRef.current.focus();
+    }
+  }, []); // Empty dependency array means this runs once after the initial render
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -69,19 +79,20 @@ const Register2 = () => {
             className="fade-in"
           />
         </div>
+        <div style={{ position: "relative",display: "flex", justifyContent: "center", alignItems: 'center'}}>
         <div
           style={{
             borderRadius: "33.684px",
             background:
               "radial-gradient(110.62% 129.38% at 8.52% 8.5%, rgba(255, 255, 255, 0.80) 0%, rgba(255, 255, 255, 0.48) 100%)",
             backdropFilter: "blur(10px)",
-            position: "absolute",
+            // position: "absolute",
             objectFit: "contain",
             justifyContent: "center",
             width: "85%",
             zIndex: "5",
             maxWidth: 410,
-            marginLeft: "34%",
+            // marginLeft: "36%",
             marginTop: "2%",
             padding: "20px 30px",
           }}
@@ -147,6 +158,7 @@ const Register2 = () => {
                 type="text"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
+                ref={nameInputRef}  // Set ref to focus on this input field
               />
             </Form.Item>
 
@@ -270,6 +282,8 @@ const Register2 = () => {
               </Button>
             </Form.Item>
           </Form>
+        </div>
+
         </div>
       </div>
     </div>

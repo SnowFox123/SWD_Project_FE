@@ -28,21 +28,39 @@ export const Navbar = () => {
     navigate('/profile'); // Redirect to home after logout
   };
 
+  const handleChangePassword = () => {
+    // dispatch(logout());
+    navigate('/changepassword'); // Redirect to home after logout
+  };
+
+  const handleRegister = () => {
+    // dispatch(logout());
+    navigate('/register'); // Redirect to home after logout
+  };
+
   const items = isAuthenticated
     ? [
       {
         key: '1',
-        label: <span onClick={handleProfile}>Profile</span>, // Trigger logout on click
+        label: <span onClick={handleProfile}>Tài khoản</span>, // Trigger logout on click
+      },
+      {
+        key: '3',
+        label: <span onClick={handleChangePassword}>Đổi mật khẩu</span>, // Trigger logout on click
       },
         {
-          key: '3',
-          label: <span onClick={handleLogout}>Logout</span>, // Trigger logout on click
+          key: '4',
+          label: <span onClick={handleLogout}>Đăng xuất</span>, // Trigger logout on click
         },
       ]
     : [
         {
           key: '2',
-          label: <Link to="/login">Login</Link>,
+          label: <Link to="/login">Đăng nhập</Link>,
+        },
+        {
+          key: '5',
+          label: <span onClick={handleRegister}>Đăng kí</span>, // Trigger logout on click
         },
       ];
 

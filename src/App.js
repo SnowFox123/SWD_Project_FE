@@ -24,6 +24,7 @@ import Logout from "./components/Logout";
 import SupplierPage from "./components/Supplier";
 import StaffPage from "./components/Staff";
 import ProfileUser from "./pages/profile/profileuser";
+import ChangePassword from "./components/changePassword";
 
 function App() {
   return (
@@ -44,6 +45,15 @@ function App() {
           element={
             <PrivateRoute allowedRoles={['1', '2', '3']}>
               <ProfileUser />
+            </PrivateRoute>
+          }
+        />
+
+<Route
+          path="/changepassword"
+          element={
+            <PrivateRoute allowedRoles={['1']}>
+              <ChangePassword />
             </PrivateRoute>
           }
         />
@@ -117,7 +127,7 @@ function App() {
       </Routes>
 
       <LogoCategories />
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </>
   );
 }

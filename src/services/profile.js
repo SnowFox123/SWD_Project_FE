@@ -48,3 +48,36 @@ export const updateProfile = async (updatedProfile) => {
 };
 
 
+export const changePassword = async (newPassword) => {
+    try {
+        // Pass newPassword in an object with the key 'password'
+        const response = await axiosInstance.put('https://localhost:7221/api/Account/change-password', {
+            accountPassword: newPassword
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        // If successful, return the response data
+        if (response.data.isSuccess) {
+            return response.data;
+        } else {
+            throw new Error('Failed to update password.');
+        }
+    } catch (error) {
+        // Handle validation errors
+        if (error.response && error.response.data.errors) {
+            const validationErrors = error.response.data.errors;
+            const formattedErrors = Object.keys(validationErrors).reduce((acc, key) => {
+                return acc.concat(validationErrors[key]); // Concatenate all error messages
+            }, []);
+            throw new Error(formattedErrors.join(' ')); // Join all error messages into a single string
+        }
+        console.error('Error updating password:', error);
+        throw error;
+    }
+};
+
+
+

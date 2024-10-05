@@ -18,6 +18,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../redux/authSlice'; // Ensure this imports your updated Redux action
 import '../components/nav/navbar.css'; // Ensure this imports your updated CSS
+import CategoryList from './Categories';
 
 const { Header, Content, Footer, Sider } = Layout;
 const siderStyle = {
@@ -42,7 +43,7 @@ const TeamPage = () => <p>Team Content</p>;
 const ShopPage = () => <p>Shop Content</p>;
 
 const items = [
-  { key: '1', icon: <UserOutlined />, label: 'User', component: UserPage },
+  { key: '1', icon: <UserOutlined />, label: 'CategoryList', component: CategoryList },
   { key: '2', icon: <VideoCameraOutlined />, label: 'Video', component: VideoPage },
   { key: '3', icon: <UploadOutlined />, label: 'Upload', component: UploadPage },
   { key: '4', icon: <BarChartOutlined />, label: 'Bar Chart', component: BarChartPage },

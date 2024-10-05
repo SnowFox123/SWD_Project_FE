@@ -27,37 +27,46 @@ const Login2 = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null); // Reset error state
+    setLoadingAPI(true); // Start loading spinner
+  
     try {
       const response = await login(email, password);
-      const { accessToken, refreshToken } = response;
-      const decodedToken = decodeJWT(accessToken);
-
-      console.log(decodedToken)
-      const role = decodedToken.role;
-      const unique_name = decodedToken.unique_name;
-      const phone = decodedToken.Phone;
-
-      dispatch(loginSuccess({ accessToken, refreshToken, role, email, unique_name, phone }));
-
-      if (role === '1') {
-        toast.success("Login successful", response);
-        navigate("/user");
-      } else if (role === '2') {
-        toast.success("Login successful", response);
-        navigate("/supplier");
-      } else if (role === '3') {
-        toast.success("Login successful", response);
-        navigate("/staff");
-      } else if (role === '4') {
-        toast.success("Login successful", response);
-        navigate("/admin");
+  
+      if (response.accessToken) {
+        const { accessToken, refreshToken } = response;
+        const decodedToken = decodeJWT(accessToken);
+        const role = decodedToken.role;
+        const unique_name = decodedToken.unique_name;
+        const phone = decodedToken.Phone;
+  
+        dispatch(loginSuccess({ accessToken, refreshToken, role, email, unique_name, phone }));
+  
+        toast.success("Login successful!");
+  
+        // Redirect based on user role
+        if (role === '1') {
+          navigate("/user");
+        } else if (role === '2') {
+          navigate("/supplier");
+        } else if (role === '3') {
+          navigate("/staff");
+        } else if (role === '4') {
+          navigate("/admin");
+        } else {
+          navigate("/unauthorized");
+        }
       } else {
-        navigate("/unauthorized");
+        // If login failed but response didn't throw an error, show a generic message
+        toast.error(response.error.message || "Login failed. Please try again.");
       }
     } catch (err) {
-      toast.error("Login failed", err.message);
+      // Display error message from backend using toast
+      toast.error(err.error?.message || "An unexpected error occurred during login.");
+    } finally {
+      setLoadingAPI(false); // Stop loading spinner
     }
   };
+  
 
   // Validate email using Validate
   const validateEmail = (email) => {

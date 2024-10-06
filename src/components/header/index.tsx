@@ -8,14 +8,21 @@ const Header = () => {
   ];
 
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveIndex((prevIndex) => (prevIndex + 1) % messages.length);
-    }, 3000); // Change slide every 5 seconds
+      if (activeIndex === messages.length) {
+        setIsTransitioning(false); // Disable the transition
+        setActiveIndex(0); // Reset the index to 0 instantly
+      } else {
+        setIsTransitioning(true); // Enable transition for smooth slide
+        setActiveIndex((prevIndex) => prevIndex + 1);
+      }
+    }, 3000); // Change slide every 3 seconds
 
     return () => clearInterval(interval); // Clean up interval on component unmount
-  }, [messages.length]);
+  }, [activeIndex, messages.length]);
 
   return (
     <div
@@ -25,18 +32,20 @@ const Header = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        position: "relative", // Add relative position for slider
+        width: "100%", // Full width of container
       }}
     >
       <div
         className="slide"
         style={{
-          transform: `translateX(-${activeIndex * 100}%)`,
-          transition: "transform 1s ease-in-out",
           display: "flex",
-          width: `${messages.length * 100}%`, // Make container full width
+          width: `${(messages.length + 1) * 100}%`, // Extra width for duplicate slide
+          transform: `translateX(-${activeIndex * 100}%)`,
+          transition: isTransitioning ? "transform 1s ease-in-out" : "none", // Smooth transition only if active
         }}
       >
-        {messages.map((message, index) => (
+        {messages.concat(messages[0]).map((message, index) => (
           <div
             key={index}
             className="py-3"
@@ -47,7 +56,6 @@ const Header = () => {
               fontSize: "16px",
               display: "flex",
               fontWeight: "bold",
-              // fontFamily: "Inter-SemiBold",
               justifyContent: "center", // Center horizontally
               alignItems: "center", // Center vertically
               boxSizing: "border-box",

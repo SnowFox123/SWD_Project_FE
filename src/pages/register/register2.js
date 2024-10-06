@@ -111,7 +111,7 @@ const Register2 = () => {
               marginBottom: "10px",
             }}
           >
-            Đăng ký
+            Đăng ký thành viên với ERT System
           </p>
 
           <div

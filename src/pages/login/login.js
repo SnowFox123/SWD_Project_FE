@@ -28,21 +28,21 @@ const Login2 = () => {
     e.preventDefault();
     setError(null); // Reset error state
     setLoadingAPI(true); // Start loading spinner
-  
+
     try {
       const response = await login(email, password);
-  
+
       if (response.accessToken) {
         const { accessToken, refreshToken } = response;
         const decodedToken = decodeJWT(accessToken);
         const role = decodedToken.role;
         const unique_name = decodedToken.unique_name;
         const phone = decodedToken.Phone;
-  
+
         dispatch(loginSuccess({ accessToken, refreshToken, role, email, unique_name, phone }));
-  
+
         toast.success("Login successful!");
-  
+
         // Redirect based on user role
         if (role === '1') {
           navigate("/user");
@@ -66,7 +66,7 @@ const Login2 = () => {
       setLoadingAPI(false); // Stop loading spinner
     }
   };
-  
+
 
   // Validate email using Validate
   const validateEmail = (email) => {
@@ -171,27 +171,35 @@ const Login2 = () => {
           >
             Đăng nhập
           </p>
+
+          <span className="span-reset-password">
+            Chào mừng bạn đến với ERT System
+          </span>
+
+          {/* <p
+            style={{
+              color: "#5C5C5C",
+              fontFamily: "Poppins",
+              fontSize: "16px",
+              fontStyle: "normal",
+              fontWeight: 400,
+              lineHeight: "normal",
+              margin: "5px 0px 15px 0px",
+              display: 'flex',
+              justifyContent: 'center'
+            }}
+          >
+            Chào mừng bạn đến với ERT <br />
+            the bunch of awesome movies and games
+          </p> */}
           {/* <p>( user@gmail.com )</p>
           <p>( supplier@gmail.com )</p>
           <p>( staff@gmail.com )</p>
           <p>( admin@gmail.com )</p>
           <p>( edutoyrent123 )</p> */}
 
-          
-<div
-                style={{
-                  marginTop: "10px",
-                  fontSize: "16px",
-                  display: "flex",
-                  justifyContent: "center",
-                  marginBottom: '16px'
-                }}
-              >
-                Chưa có tài khoản?
-                <Link className="btn-register" to="/register">
-                  Đăng kí tài khoản
-                </Link>
-              </div>
+
+
 
           <Form name="login" initialValues={{ remember: true }}>
             <Form.Item
@@ -232,7 +240,7 @@ const Login2 = () => {
               />
             </Form.Item>
 
-            <Form.Item style={{ display: 'flex', justifyContent: 'right'}}>
+            <Form.Item style={{ display: 'flex', justifyContent: 'right' }}>
               <Link style={{ fontSize: "16px" }} to="/forgotpassword">
                 Quên mật khẩu ?
               </Link>
@@ -251,9 +259,8 @@ const Login2 = () => {
                     boxShadow: "0px 4px 15px 0px rgba(0, 0, 0, 0.20)",
                     fontSize: "16px",
                   }}
-                  className={`login-button ${
-                    isEmailValid && isPasswordValid ? "active" : ""
-                  }`}
+                  className={`login-button ${isEmailValid && isPasswordValid ? "active" : ""
+                    }`}
                   disabled={!isEmailValid || !isPasswordValid}
                   onClick={handleLogin}
                 >
@@ -263,6 +270,22 @@ const Login2 = () => {
 
             </Form.Item>
           </Form>
+
+          <div
+            style={{
+              marginTop: "10px",
+              fontSize: "16px",
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: '16px'
+            }}
+          >
+            Chưa có tài khoản?
+            <Link className="btn-register" to="/register">
+              Đăng kí tài khoản
+            </Link>
+          </div>
+
           <Link to="/" className="link-container">
             <span className="link-text">Về trang chủ</span>
           </Link>

@@ -1,42 +1,47 @@
 import { axiosInstance } from './customize-axios';
 
+// Define the function to submit the rental request
+export const submitRentalRequest = async (
+  ToyName,
+  Description,
+  CategoryId,
+  RentPricePerDay,
+  RentPricePerWeek,
+  RentPricePerTwoWeeks,
+  Stock,
+  ImageFile
+) => {
+  try {
+    // Create form data object to handle file uploads
+    const formData = new FormData();
+    formData.append('ToyName', ToyName);
+    formData.append('Description', Description);
+    formData.append('CategoryId', CategoryId);
+    formData.append('RentPricePerDay', RentPricePerDay);
+    formData.append('RentPricePerWeek', RentPricePerWeek);
+    formData.append('RentPricePerTwoWeeks', RentPricePerTwoWeeks);
+    formData.append('Stock', Stock);
+    formData.append('ImageFile', ImageFile);  // Append the image file
 
-export const postRental = async (ToyName, Description, CategoryId, RentPricePerDay, RentPricePerWeek,RentPricePerTwoWeeks, Stock, ImageFile) => {
-    try {
-        // Call the API to get categories
-        const response = await axiosInstance.post('https://localhost:7221/api/Request/rental', {
-            ToyName, 
-            Description, 
-            CategoryId, 
-            RentPricePerDay, 
-            RentPricePerWeek,
-            RentPricePerTwoWeeks, 
-            Stock, 
-            ImageFile
-          });
+    // Make the API request with axiosInstance
+    const response = await axiosInstance.post('https://localhost:7221/api/Request/rental', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data', // Ensure multipart/form-data is used
+      },
+    });
 
-        // Check if the response indicates success
-        if (response.data.isSuccess) {
-            return response.data.object; // Return the categories from the response
-        } else {
-            throw new Error('Failed to retrieve categories.'); // Handle generic failure cases
-        }
-    } catch (error) {
-        if (error.response && error.response.data.errors) {
-            // Handle validation errors returned from the backend
-            const validationErrors = error.response.data.errors;
-
-            // Create a new Error object and attach validation errors to it
-            const validationError = new Error('Validation errors occurred');
-            validationError.validationErrors = Object.keys(validationErrors).reduce((acc, key) => {
-                acc[key] = validationErrors[key].join(' '); // Join multiple messages if any
-                return acc;
-            }, {});
-
-            throw validationError; // Throw the error object with validation data
-        }
-        console.error('Error retrieving categories:', error);
-        throw error; // Re-throw the original error if not validation-related
+    // Return the response data if successful
+    if (response.data.isSuccess) {
+      return response.data;  // You can also return specific response data fields here
+    } else {
+      throw new Error('Submission failed. Please check the form data.');
     }
+  } catch (error) {
+    // Catch and rethrow any errors from the API call
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.error.message || 'An error occurred while submitting the form.');
+    } else {
+      throw new Error('Network error or server is unreachable.');
+    }
+  }
 };
-

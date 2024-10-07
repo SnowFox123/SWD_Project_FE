@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { axiosInstance } from '../services/customize-axios';
+import { submitRentalRequest } from '../services/supplierService';
 
 const RequestRental = () => {
   // State variables to store form inputs
@@ -19,41 +19,25 @@ const RequestRental = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if the file is selected
-    if (!imageFile) {
-      setError('Please select an image file to upload.');
-      return;
-    }
-
-    // Create form data object
-    const formData = new FormData();
-    formData.append('ToyName', toyName);
-    formData.append('Description', description);
-    formData.append('CategoryId', categoryId);
-    formData.append('RentPricePerDay', rentPricePerDay);
-    formData.append('RentPricePerWeek', rentPricePerWeek);
-    formData.append('RentPricePerTwoWeeks', rentPricePerTwoWeeks);
-    formData.append('Stock', stock);
-    formData.append('ImageFile', imageFile);  // Append image file
-
-    // Log the formData keys to ensure everything is appended correctly
-    for (let pair of formData.entries()) {
-      console.log(pair[0], pair[1]); // Use this for debugging: it will log every formData key-value pair.
-    }
-
     try {
-      const res = await axiosInstance.post('https://localhost:7221/api/Request/rental', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data', // Axios automatically sets this but adding it for clarity.
-        },
-      });
+      // Call the API service to submit the form data
+      const res = await submitRentalRequest(
+        toyName,
+        description,
+        categoryId,
+        rentPricePerDay,
+        rentPricePerWeek,
+        rentPricePerTwoWeeks,
+        stock,
+        imageFile
+      );
 
       // Handle success
-      setResponse(res.data);
+      setResponse(res);
       setError(null);  // Clear any previous errors
     } catch (err) {
       // Handle error
-      setError(err.response ? err.response.data : 'An error occurred');
+      setError(err.message || 'An error occurred');
       setResponse(null);  // Clear any previous success message
     }
   };

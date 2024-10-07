@@ -21,7 +21,7 @@ import UserPage from "./components/UserPage";
 import Unauthorized from "./components/Unauthorized";
 import PrivateRoute from "./components/PrivateRoute";  // Import PrivateRoute
 import Logout from "./components/Logout";
-import SupplierPage from "./components/Supplier";
+import SupplierPage from "./components/SupplierPage";
 import StaffPage from "./components/Staff";
 import ProfileUser from "./pages/profile/profileuser";
 import ChangePassword from "./components/changePassword";
@@ -34,7 +34,7 @@ function App() {
   return (
     <>
 
-    {role !== '4' && role !== '3' && (
+    {role !== '4' && role !== '3' && role !== '2' &&(
         <>
           <Header />
           <Navbar />
@@ -135,7 +135,7 @@ function App() {
         <Route path="*" element={<Navigate to="/unauthorized" />} />
       </Routes>
 
-      {role !== '4' && role !== '3' && (
+      {role !== '4' && role !== '3' && role !== '2' &&(
         <>
          <LogoCategories />
         </>

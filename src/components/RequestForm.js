@@ -1,19 +1,18 @@
 import React from 'react'
 import RequestRental from './RequestRental'
 import { Tabs } from 'antd';
-const onChange = (key) => {
-  console.log(key);
-};
+import RequestSale from './RequestSale';
+
 const items = [
   {
     key: '1',
-    label: 'For sale',
+    label: 'For rent',
     children: <RequestRental />
   },
   {
     key: '2',
-    label: 'For rent',
-    children: 'Content of Tab Pane 2',
+    label: 'For sale',
+    children: <RequestSale />,
   },
   {
     key: '3',
@@ -30,7 +29,7 @@ const items = [
 const RequestForm = () => {
   return (
     <>
-    <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+    <Tabs defaultActiveKey="1" items={items}/>
         
     </>
   )

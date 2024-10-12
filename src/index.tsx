@@ -7,7 +7,6 @@ import reportWebVitals from "./reportWebVitals";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter } from "react-router-dom";
-// import { UserProvider } from "./context/UserContext";
 
 import { Provider } from 'react-redux';
 import {store, persistor} from './redux/store';
@@ -18,7 +17,6 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    {/* <UserProvider> */}
       <BrowserRouter>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
@@ -27,7 +25,6 @@ root.render(
         <ToastContainer />
         </Provider>,
       </BrowserRouter>
-    {/* </UserProvider> */}
   </React.StrictMode>
 );
 

@@ -1,24 +1,19 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../../redux/authSlice';
 import { login } from '../../services/authService';
 import { decodeJWT } from '../../utils/jwtUtils'; // Import decodeJWT
-
 import { Link, useNavigate } from "react-router-dom";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input } from "antd";
-
-import React, { useEffect, useState } from "react";
-import { loginApi } from "../../services/UserServices";
+import { Button, Form, Input, Spin, Alert } from "antd"; // Import Alert component
+import React, { useState } from "react";
 import { toast } from 'react-toastify';
-import { Spin } from 'antd';
-
 import "./login.css";
 
 const Login2 = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null); // For showing error message
   const [loadingAPI, setLoadingAPI] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
@@ -56,17 +51,23 @@ const Login2 = () => {
           navigate("/unauthorized");
         }
       } else {
-        // If login failed but response didn't throw an error, show a generic message
-        toast.error(response.error.message || "Login failed. Please try again.");
+        // If login failed but response didn't throw an error, show the backend message
+        setError(response.error?.message || "Login failed. Please try again."); // Set error message
+        toast.error(response.error?.message || "Login failed. Please try again.");
       }
     } catch (err) {
       // Display error message from backend using toast
-      toast.error(err.error?.message || "An unexpected error occurred during login.");
+      if (err.response && err.response.data && err.response.data.error) {
+        setError(err.response.data.error.message); // Set error message from the backend
+        toast.error(err.response.data.error.message);
+      } else {
+        setError("An unexpected error occurred during login.");
+        toast.error("An unexpected error occurred during login.");
+      }
     } finally {
       setLoadingAPI(false); // Stop loading spinner
     }
   };
-
 
   // Validate email using Validate
   const validateEmail = (email) => {
@@ -133,7 +134,7 @@ const Login2 = () => {
               width: "82%",
               height: "66%",
               zIndex: "1",
-              marginTop: "13%",
+              marginTop: "11%",
             }}
             className="fade-in-2"
           />
@@ -176,38 +177,21 @@ const Login2 = () => {
             Chào mừng bạn đến với ERT System
           </span>
 
-          {/* <p
-            style={{
-              color: "#5C5C5C",
-              fontFamily: "Poppins",
-              fontSize: "16px",
-              fontStyle: "normal",
-              fontWeight: 400,
-              lineHeight: "normal",
-              margin: "5px 0px 15px 0px",
-              display: 'flex',
-              justifyContent: 'center'
-            }}
-          >
-            Chào mừng bạn đến với ERT <br />
-            the bunch of awesome movies and games
-          </p> */}
-          {/* <p>( user@gmail.com )</p>
-          <p>( supplier@gmail.com )</p>
-          <p>( staff@gmail.com )</p>
-          <p>( admin@gmail.com )</p>
-          <p>( edutoyrent123 )</p> */}
-
-
-
+          {/* Display the error message
+          {error && (
+            <Alert
+              message="Login Error"
+              description={error}
+              type="error"
+              showIcon
+              style={{ marginBottom: '20px' }}
+            />
+          )} */}
 
           <Form name="login" initialValues={{ remember: true }}>
             <Form.Item
               name="email"
-              rules={[
-                { required: true, message: "Please input your email!" },
-                { type: "email", message: "Please enter a valid email address!" },
-              ]}
+              rules={[{ required: true, message: "Please input your email!" }, { type: "email", message: "Please enter a valid email address!" }]}
             >
               <Input
                 prefix={<UserOutlined />}
@@ -221,15 +205,8 @@ const Login2 = () => {
               name="password"
               rules={[
                 { required: true, message: "Please input your password!" },
-                {
-                  min: 6,
-                  message: "Password must be at least 6 characters",
-                },
-                {
-                  pattern: /^(?=.*[A-Z])(?=.*[!@#$%^&*])/,
-                  message:
-                    "Password must contain at least one uppercase letter and one special character",
-                },
+                { min: 6, message: "Password must be at least 6 characters" },
+                { pattern: /^(?=.*[A-Z])(?=.*[!@#$%^&*])/, message: "Password must contain at least one uppercase letter and one special character" },
               ]}
               hasFeedback
             >
@@ -259,15 +236,13 @@ const Login2 = () => {
                     boxShadow: "0px 4px 15px 0px rgba(0, 0, 0, 0.20)",
                     fontSize: "16px",
                   }}
-                  className={`login-button ${isEmailValid && isPasswordValid ? "active" : ""
-                    }`}
+                  className={`login-button ${isEmailValid && isPasswordValid ? "active" : ""}`}
                   disabled={!isEmailValid || !isPasswordValid}
                   onClick={handleLogin}
                 >
                   Đăng nhập
                 </Button>
               </Spin>
-
             </Form.Item>
           </Form>
 
@@ -296,3 +271,13 @@ const Login2 = () => {
 };
 
 export default Login2;
+
+
+
+
+
+
+
+
+
+

@@ -10,6 +10,7 @@ import {
 import { Dropdown, Space, Divider, Col, Row, Input } from 'antd';
 import { logout } from '../../redux/authSlice'; // Make sure this is imported correctly
 import './navbar.css'; // Ensure this imports your updated CSS
+import SearchToyRentComponent from '../search/SearchToyRent';
 
 const { Search } = Input;
 
@@ -66,20 +67,22 @@ export const Navbar = () => {
 
   return (
     <div className="navbar" style={{ position: 'sticky' }}>
-      <Row style={{ padding: '20px 200px' }}>
+      <Row style={{ padding: '15px 200px' }}>
         <Col
           span={8}
           style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
         >
-          {/* <img style={{width: '100px'}} src="https://w7.pngwing.com/pngs/968/724/png-transparent-toy-biz-hd-logo.png" alt=""/> */}
-          <Search
+          <img style={{width: '150px', height: '45px'}} src="https://i.ebayimg.com/images/g/fGwAAOSwfhtejRhD/s-l1200.jpg" alt=""/>
+          {/* <Search
             placeholder="input search text"
             allowClear
             enterButton="Tìm kiếm"
             size="large"
             style={{ maxWidth: '80%' }}
             className="custom-search"
-          />
+          /> */}
+            {/* <SearchToyRentComponent /> */}
+          
         </Col>
         <Col
           span={8}

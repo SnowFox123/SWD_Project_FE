@@ -25,7 +25,7 @@ const CategoryList = () => {
                 setCategories(fetchedCategories);
                 setFilteredCategories(fetchedCategories);
             } catch (error) {
-                console.error('Error fetching categories:', error);
+                toast.error('Error fetching categories:', error);
                 setError(error);
             } finally {
                 setLoading(false);

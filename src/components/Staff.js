@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import {
   AppstoreOutlined,
-  BarChartOutlined,
+  UsergroupDeleteOutlined,
   CloudOutlined,
   ShopOutlined,
   TeamOutlined,
-  UploadOutlined,
+  UserAddOutlined,
   UserOutlined,
-  VideoCameraOutlined,
+  FileDoneOutlined,
+  InboxOutlined
 } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 
@@ -19,6 +20,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../redux/authSlice'; // Ensure this imports your updated Redux action
 import '../components/nav/navbar.css'; // Ensure this imports your updated CSS
 import CategoryList from './Categories';
+import ApprovalRequestFrom from './ApprovalRequestFrom';
+import BanAccount from './BanAccount';
+import SignUpSupplier from './SignUpSupplier';
 
 const { Header, Content, Footer, Sider } = Layout;
 const siderStyle = {
@@ -43,10 +47,10 @@ const TeamPage = () => <p>Team Content</p>;
 const ShopPage = () => <p>Shop Content</p>;
 
 const items = [
-  { key: '1', icon: <UserOutlined />, label: 'CategoryList', component: CategoryList },
-  { key: '2', icon: <VideoCameraOutlined />, label: 'Video', component: VideoPage },
-  { key: '3', icon: <UploadOutlined />, label: 'Upload', component: UploadPage },
-  { key: '4', icon: <BarChartOutlined />, label: 'Bar Chart', component: BarChartPage },
+  { key: '1', icon: <FileDoneOutlined />, label: 'Approval Request', component: ApprovalRequestFrom },
+  { key: '2', icon: <InboxOutlined />, label: 'Category List', component: CategoryList },
+  { key: '3', icon: <UserAddOutlined />, label: 'SignUp Supplier', component: SignUpSupplier },
+  { key: '4', icon: <UsergroupDeleteOutlined  />, label: 'Ban Account', component: BanAccount },
   { key: '5', icon: <CloudOutlined />, label: 'Cloud', component: CloudPage },
   { key: '6', icon: <AppstoreOutlined />, label: 'App Store', component: AppStorePage },
   { key: '7', icon: <TeamOutlined />, label: 'Team', component: TeamPage },

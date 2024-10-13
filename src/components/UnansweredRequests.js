@@ -106,13 +106,13 @@ const UnansweredRequests = () => {
       key: 'requestId',
     },
     {
-      title: 'Ngày tạo đơn',
+      title: 'Create Date',
       dataIndex: 'requestDate',
       key: 'requestDate',
       render: (date) => new Date(date).toLocaleDateString(),
     },
     {
-      title: 'Đơn cho thuê',
+      title: 'For Rent',
       dataIndex: 'forRent',
       key: 'forRent',
       render: (forRent) => (
@@ -126,7 +126,7 @@ const UnansweredRequests = () => {
       ),
     },
     {
-      title: 'Trạng thái',
+      title: 'Status',
       dataIndex: 'requestStatus',
       key: 'requestStatus',
       render: (status) => {
@@ -135,19 +135,19 @@ const UnansweredRequests = () => {
 
         switch (status) {
           case 0:
-            statusText = 'Chưa xử lý';
+            statusText = 'Not processed yet';
             statusColor = 'grey';
             break;
           case 1:
-            statusText = 'Phê Duyệt';
+            statusText = 'Approve';
             statusColor = 'green';
             break;
           case 2:
-            statusText = 'Từ chối';
+            statusText = 'Deny';
             statusColor = 'red';
             break;
           default:
-            statusText = 'Có lỗi rồi';
+            statusText = 'Something wrong';
             statusColor = 'orange';
             break;
         }
@@ -155,26 +155,26 @@ const UnansweredRequests = () => {
         return <span style={{ color: statusColor }}>{statusText}</span>;
       },
     },
-    {
-      title: 'Đơn cho thuê',
-      dataIndex: 'denyReason',
-      key: 'denyReason',
-      render: (denyReason) => (
-        <span>
-          {denyReason ? (
-            <p>{denyReason}</p>
-          ) : (
-            <CloseOutlined style={{ color: 'red', marginRight: 5 }} />
-          )}
-        </span>
-      ),
-    },
+    // {
+    //   title: 'Deny Reason',
+    //   dataIndex: 'denyReason',
+    //   key: 'denyReason',
+    //   render: (denyReason) => (
+    //     <span>
+    //       {denyReason ? (
+    //         <p>{denyReason}</p>
+    //       ) : (
+    //         <CloseOutlined style={{ color: 'red', marginRight: 5 }} />
+    //       )}
+    //     </span>
+    //   ),
+    // },
     {
       title: '',
       dataIndex: 'ViewDetail',
       key: 'ViewDetail',
       render: (text, record) => (
-        <Button onClick={() => showModal(record)}>Xem chi tiết</Button>
+        <Button onClick={() => showModal(record)}>View Detail</Button>
       ),
     },
   ];
@@ -284,7 +284,7 @@ const UnansweredRequests = () => {
                 onClick={() => handleSubmit(2)} // Deny request
               // disabled={!denyReason} // Disable button if no deny reason
               >
-                Từ chối
+                Deny
               </Button>
               <Button
                 type="primary"
@@ -299,7 +299,7 @@ const UnansweredRequests = () => {
                 }}
                 onClick={() => handleSubmit(1)} // Accept request
               >
-                Đồng ý
+                Accept
               </Button>
             </div>
           </div>

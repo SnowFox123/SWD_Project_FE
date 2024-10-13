@@ -6,24 +6,24 @@ import UnansweredRequests from './UnansweredRequests';
 const items = [
   {
     key: '1',
-    label: 'Đơn chưa phản hồi',
+    label: 'Unanswered Requests',
     children: <UnansweredRequests/>,
   },
   {
     key: '2',
-    label: 'Đơn đã phản hồi',
+    label: 'Answered Requests',
     children: <AnsweredRequests />
   },
-  {
-    key: '3',
-    label: 'Request created',
-    children: 'Content of Tab Pane 3',
-  },
-  {
-    key: '4',
-    label: 'Request result',
-    children: 'Content of Tab Pane 3',
-  },
+  // {
+  //   key: '3',
+  //   label: 'Request created',
+  //   children: 'Content of Tab Pane 3',
+  // },
+  // {
+  //   key: '4',
+  //   label: 'Request result',
+  //   children: 'Content of Tab Pane 3',
+  // },
 ];
 
 const ApprovalRequestFrom = () => {

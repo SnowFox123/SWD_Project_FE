@@ -80,7 +80,7 @@ const SupplierPage = () => {
     <Menu>
       {isAuthenticated && (
         <Menu.Item key="logout" onClick={handleLogout}>
-          Đăng xuất
+          Log InboxOutlined
         </Menu.Item>
       )}
     </Menu>
@@ -116,7 +116,7 @@ const SupplierPage = () => {
         >
           <div className="navbar-2" style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
             <Col style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-              <p style={{ fontSize: '18px', margin: 0 }}>Staff page</p>
+              <p style={{ fontSize: '18px', margin: 0 }}>Supplier page</p>
             </Col>
             <Col style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
               <Dropdown overlay={dropdownMenuItems}>

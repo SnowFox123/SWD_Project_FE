@@ -18,7 +18,7 @@ interface TabItem {
 const CustomTabs: React.FC = () => {
   const items: TabItem[] = [
     {
-      label: 'Thuê đồ chơi',  // Home Tab
+      label: 'Rent Toys',  // Home Tab
       key: '1',
       children: <ToyRent />
       // (
@@ -62,15 +62,15 @@ const CustomTabs: React.FC = () => {
       // ),
     },
     {
-      label: 'Mua đồ chơi',  // Products Tab
+      label: 'Sale Toys ',  // Products Tab
       key: '2',
       children: <ToySale /> ,  // Content for Products Tab
     },
-    {
-      label: 'Liên hệ',  // Contact Tab
-      key: '3',
-      children: <div>Content of Liên hệ (Contact)</div>,  // Content for Contact Tab
-    },
+    // {
+    //   label: 'Liên hệ',  // Contact Tab
+    //   key: '3',
+    //   children: <div>Content of Liên hệ (Contact)</div>,  // Content for Contact Tab
+    // },
   ];
 
   return (

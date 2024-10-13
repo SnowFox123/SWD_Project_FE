@@ -43,27 +43,27 @@ export const Navbar = () => {
     ? [
       {
         key: '1',
-        label: <span onClick={handleProfile}>Tài khoản</span>, // Trigger logout on click
+        label: <span onClick={handleProfile}>Profile</span>, // Trigger logout on click
       },
       {
         key: '3',
-        label: <span onClick={handleChangePassword}>Đổi mật khẩu</span>, // Trigger logout on click
+        label: <span onClick={handleChangePassword}>Change Password</span>, // Trigger logout on click
       },
-        {
-          key: '4',
-          label: <span onClick={handleLogout}>Đăng xuất</span>, // Trigger logout on click
-        },
-      ]
+      {
+        key: '4',
+        label: <span onClick={handleLogout}>Log out</span>, // Trigger logout on click
+      },
+    ]
     : [
-        {
-          key: '2',
-          label: <Link to="/login">Đăng nhập</Link>,
-        },
-        {
-          key: '5',
-          label: <span onClick={handleRegister}>Đăng kí</span>, // Trigger logout on click
-        },
-      ];
+      {
+        key: '2',
+        label: <Link to="/login">Sign In</Link>,
+      },
+      {
+        key: '5',
+        label: <span onClick={handleRegister}>Sign Up</span>, // Trigger logout on click
+      },
+    ];
 
   return (
     <div className="navbar" style={{ position: 'sticky' }}>
@@ -72,7 +72,9 @@ export const Navbar = () => {
           span={8}
           style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
         >
-          <img style={{width: '150px', height: '45px'}} src="https://i.ebayimg.com/images/g/fGwAAOSwfhtejRhD/s-l1200.jpg" alt=""/>
+          <Link to='/'>
+            <img style={{ width: '150px', height: '45px' }} src="https://i.ebayimg.com/images/g/fGwAAOSwfhtejRhD/s-l1200.jpg" alt="" />
+          </Link>
           {/* <Search
             placeholder="input search text"
             allowClear
@@ -81,8 +83,8 @@ export const Navbar = () => {
             style={{ maxWidth: '80%' }}
             className="custom-search"
           /> */}
-            {/* <SearchToyRentComponent /> */}
-          
+          {/* <SearchToyRentComponent /> */}
+
         </Col>
         <Col
           span={8}
@@ -90,12 +92,12 @@ export const Navbar = () => {
         >
           <Link to="/cart">
             <ShoppingCartOutlined style={{ fontSize: '24px', marginRight: '5px' }} />
-            Giỏ hàng
+            Toy Cart
           </Link>
           <Divider type="vertical" style={{ backgroundColor: '#ccc' }} className="divider" />
           <Link to="/historyusercart">
             <CodeSandboxOutlined style={{ fontSize: '24px', marginRight: '5px' }} />
-            Lịch sử đơn hàng
+            Order History
           </Link>
         </Col>
 

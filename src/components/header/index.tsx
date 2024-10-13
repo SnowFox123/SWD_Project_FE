@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 
 const Header = () => {
   const messages = [
-    "Thế giới đồ chơi an toàn chính hãng",
-    "Hỗ trợ 24/7",
-    "Miễn phí giao hàng đơn từ 500k",
+    "Genuine toys at good prices",
+    "24/7 Support",
+    "Free delivery for orders from 300$",
   ];
 
   const [activeIndex, setActiveIndex] = useState(0);

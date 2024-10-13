@@ -99,7 +99,7 @@ const SignUpSupplier = () => {
                 marginBottom: "18px",
               }}
             >
-              Đăng ký Supplier
+              Register Supplier
             </p>
 
             <Form 

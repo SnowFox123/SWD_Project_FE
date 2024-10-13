@@ -14,16 +14,16 @@ const items = [
     label: 'For sale',
     children: <RequestSale />,
   },
-  {
-    key: '3',
-    label: 'Request created',
-    children: 'Content of Tab Pane 3',
-  },
-  {
-    key: '4',
-    label: 'Request result',
-    children: 'Content of Tab Pane 3',
-  },
+  // {
+  //   key: '3',
+  //   label: 'Request created',
+  //   children: 'Content of Tab Pane 3',
+  // },
+  // {
+  //   key: '4',
+  //   label: 'Request result',
+  //   children: 'Content of Tab Pane 3',
+  // },
 ];
 
 const RequestForm = () => {

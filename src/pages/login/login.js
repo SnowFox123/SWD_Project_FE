@@ -170,11 +170,11 @@ const Login2 = () => {
               marginBottom: "10px",
             }}
           >
-            Đăng nhập
+            Sign In
           </p>
 
           <span className="span-reset-password">
-            Chào mừng bạn đến với ERT System
+            Welcome to ERT System
           </span>
 
           {/* Display the error message
@@ -219,7 +219,7 @@ const Login2 = () => {
 
             <Form.Item style={{ display: 'flex', justifyContent: 'right' }}>
               <Link style={{ fontSize: "16px" }} to="/forgotpassword">
-                Quên mật khẩu ?
+              Forgot password?
               </Link>
             </Form.Item>
 
@@ -240,7 +240,7 @@ const Login2 = () => {
                   disabled={!isEmailValid || !isPasswordValid}
                   onClick={handleLogin}
                 >
-                  Đăng nhập
+                  Log in
                 </Button>
               </Spin>
             </Form.Item>
@@ -255,14 +255,15 @@ const Login2 = () => {
               marginBottom: '16px'
             }}
           >
-            Chưa có tài khoản?
+            Don't have an account yet?
+            
             <Link className="btn-register" to="/register">
-              Đăng kí tài khoản
+            Register an account
             </Link>
           </div>
 
           <Link to="/" className="link-container">
-            <span className="link-text">Về trang chủ</span>
+            <span className="link-text">Back to home page</span>
           </Link>
         </div>
       </div>

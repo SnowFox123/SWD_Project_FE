@@ -85,7 +85,7 @@ const ChangePassword = () => {
 
     return (
         <div style={{ maxWidth: '600px', margin: 'auto', padding: '2rem' }}>
-            <Title level={2}>Đổi mật khẩu</Title>
+            <Title level={2}>Change password</Title>
             <Form
                 form={form} // Bind form to the Ant Design form instance
                 layout="vertical"

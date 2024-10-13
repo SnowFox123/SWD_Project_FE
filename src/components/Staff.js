@@ -51,10 +51,10 @@ const items = [
   { key: '2', icon: <InboxOutlined />, label: 'Category List', component: CategoryList },
   { key: '3', icon: <UserAddOutlined />, label: 'SignUp Supplier', component: SignUpSupplier },
   { key: '4', icon: <UsergroupDeleteOutlined  />, label: 'Ban Account', component: BanAccount },
-  { key: '5', icon: <CloudOutlined />, label: 'Cloud', component: CloudPage },
-  { key: '6', icon: <AppstoreOutlined />, label: 'App Store', component: AppStorePage },
-  { key: '7', icon: <TeamOutlined />, label: 'Team', component: TeamPage },
-  { key: '8', icon: <ShopOutlined />, label: 'Shop', component: ShopPage },
+  // { key: '5', icon: <CloudOutlined />, label: 'Cloud', component: CloudPage },
+  // { key: '6', icon: <AppstoreOutlined />, label: 'App Store', component: AppStorePage },
+  // { key: '7', icon: <TeamOutlined />, label: 'Team', component: TeamPage },
+  // { key: '8', icon: <ShopOutlined />, label: 'Shop', component: ShopPage },
 ];
 
 const StaffPage = () => {

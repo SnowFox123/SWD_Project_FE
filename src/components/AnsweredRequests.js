@@ -78,13 +78,13 @@ const AnsweredRequests = () => {
       key: 'requestId',
     },
     {
-      title: 'Ngày tạo đơn',
+      title: 'Create Date',
       dataIndex: 'requestDate',
       key: 'requestDate',
       render: (date) => new Date(date).toLocaleDateString(),
     },
     {
-      title: 'Đơn cho thuê',
+      title: 'For Rent',
       dataIndex: 'forRent',
       key: 'forRent',
       render: (forRent) => (
@@ -98,7 +98,7 @@ const AnsweredRequests = () => {
       ),
     },
     {
-      title: 'Trạng thái',
+      title: 'Status',
       dataIndex: 'requestStatus',
       key: 'requestStatus',
       render: (status) => {
@@ -107,19 +107,19 @@ const AnsweredRequests = () => {
 
         switch (status) {
           case 0:
-            statusText = 'Chưa xử lý';
+            statusText = 'Not processed yet';
             statusColor = 'grey';
             break;
           case 1:
-            statusText = 'Phê Duyệt';
+            statusText = 'Approve';
             statusColor = 'green';
             break;
           case 2:
-            statusText = 'Từ chối';
+            statusText = 'Deny';
             statusColor = 'red';
             break;
           default:
-            statusText = 'Có lỗi rồi';
+            statusText = 'Something wrong';
             statusColor = 'orange';
             break;
         }
@@ -132,7 +132,7 @@ const AnsweredRequests = () => {
       }
     },
     {
-      title: 'Lí do',
+      title: 'Deny Reason',
       dataIndex: 'denyReason',
       key: 'denyReason',
       render: (denyReason) => (
@@ -151,7 +151,7 @@ const AnsweredRequests = () => {
       dataIndex: 'ViewDetail',
       key: 'ViewDetail',
       render: (text, record) => (
-        <Button onClick={() => showModal(record)}>Xem chi tiết</Button>
+        <Button onClick={() => showModal(record)}>View Detail</Button>
       ),
     },
   ];

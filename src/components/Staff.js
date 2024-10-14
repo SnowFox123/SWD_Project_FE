@@ -87,7 +87,7 @@ const StaffPage = () => {
     <Menu>
       {isAuthenticated && (
         <Menu.Item key="logout" onClick={handleLogout}>
-          Đăng xuất
+          Logout
         </Menu.Item>
       )}
     </Menu>

@@ -1,67 +1,61 @@
 import React, { useEffect, useState } from 'react';
 import { getAnsweredRequests, getToyByID } from '../services/staffService';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-
-import { Table, Spin,Button,Avatar, Modal } from 'antd'; // Removed Alert import
-
-import { toast } from 'react-toastify'; // Importing toast components
-import 'react-toastify/dist/ReactToastify.css'; // Importing default styles
+import { Table, Spin, Button, Avatar, Modal, Image } from 'antd';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AnsweredRequests = () => {
   const [answeredRequests, setAnsweredRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
-  const [requestDetails, setRequestDetails] = useState(null); // State to store details of the selected request
+  const [requestDetails, setRequestDetails] = useState(null);
 
-
-  // Function to fetch answered requests from the API
+  // Fetch answered requests from the API
   const fetchAnsweredRequests = async () => {
+    setLoading(true); // Set loading state before fetching
     try {
       const data = await getAnsweredRequests();
       setAnsweredRequests(data);
     } catch (error) {
+      // Handle API errors
       if (error.validationErrors) {
-        toast.error('Validation Errors: ' + JSON.stringify(error.validationErrors)); // Show toast for validation errors
+        toast.error('Validation Errors: ' + JSON.stringify(error.validationErrors));
       } else {
-        toast.error('Failed to load answered requests.', error); // Show toast for other errors
+        toast.error('Failed to load answered requests.');
       }
     } finally {
-      setLoading(false);
+      setLoading(false); // Reset loading state after fetch
     }
   };
 
   useEffect(() => {
-    fetchAnsweredRequests();
+    fetchAnsweredRequests(); // Fetch data when the component mounts
   }, []);
 
   const fetchRequestDetails = async (requestId) => {
     try {
-      const details = await getToyByID(requestId); // Assuming this function fetches details by requestId
+      const details = await getToyByID(requestId); // Fetch toy details by requestId
       setRequestDetails(details);
-      console.log(requestId);
     } catch (error) {
       toast.error('Failed to load request details.');
     }
   };
 
-  // Show modal and fetch selected request details
   const showModal = (request) => {
     setSelectedRequest(request);
-    fetchRequestDetails(request.requestId); // Fetch details of the selected request
+    fetchRequestDetails(request.requestId); // Fetch details for selected request
     setIsModalVisible(true);
   };
 
-  // Handle modal close
   const handleModalClose = () => {
     setIsModalVisible(false);
     setSelectedRequest(null);
     setRequestDetails(null); // Reset details when modal is closed
-    // setDenyReason(''); // Reset deny reason when modal closes
-    // setError(null); // Reset error state
   };
 
-  // Render loading spinner if the data is still loading
+  // Render loading spinner if data is loading
   if (loading) {
     return (
       <div className="loader">
@@ -70,7 +64,7 @@ const AnsweredRequests = () => {
     );
   }
 
-
+  // Define table columns
   const columns = [
     {
       title: 'STT',
@@ -124,27 +118,14 @@ const AnsweredRequests = () => {
             break;
         }
 
-        return (
-          <span style={{ color: statusColor }}>
-            {statusText}
-          </span>
-        );
-      }
+        return <span style={{ color: statusColor }}>{statusText}</span>;
+      },
     },
     {
       title: 'Deny Reason',
       dataIndex: 'denyReason',
       key: 'denyReason',
-      render: (denyReason) => (
-        <span>
-          {denyReason ? (
-            <p>{denyReason}</p> 
-          ) : (
-            <p></p>
-            // <CloseOutlined style={{ color: 'red', marginRight: 5 }} />
-          )}
-        </span>
-      ),
+      render: (denyReason) => <p>{denyReason || ''}</p>, // Display empty string if denyReason is null
     },
     {
       title: '',
@@ -177,7 +158,7 @@ const AnsweredRequests = () => {
         {requestDetails ? (
           <div>
             {/* Avatar Image Styling */}
-            <Avatar
+            <Image
               src={requestDetails.imageUrl}
               alt={requestDetails.toyName}
               shape="square"
@@ -187,10 +168,12 @@ const AnsweredRequests = () => {
                 objectFit: 'contain',
                 justifyContent: 'center',
                 alignItems: 'center',
+                width: '100%',
+                height: '200px',
                 margin: '0 auto 20px',
                 border: '2px solid #f0f0f0',
                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                borderRadius: '8px'
+                borderRadius: '8px',
               }}
             />
 
@@ -218,9 +201,7 @@ const AnsweredRequests = () => {
               <p><strong>Stock:</strong> {requestDetails.stock}</p>
               <p><strong>Supplier:</strong> {requestDetails.supplierName}</p>
             </div>
-
-            
-            </div>
+          </div>
         ) : (
           <Spin tip="Loading details..." />
         )}

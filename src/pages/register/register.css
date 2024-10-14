@@ -1,14 +1,13 @@
-.register-button {
+.register-button-2 {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
     width: 150% !important;
     /* Full width */
 }
-
+/* 
 .register-button:hover {
     background: #ac2229 !important;
     color: #ccc !important;
-    /* Slightly changes the background color */
     border-color: #508cc1;
-}
+} */

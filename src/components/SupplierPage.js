@@ -44,10 +44,10 @@ const items = [
   // { key: '2', icon: <VideoCameraOutlined />, label: 'Video', component: VideoPage },
   // { key: '3', icon: <UploadOutlined />, label: 'Upload', component: BarChartPage },
   // { key: '4', icon: <BarChartOutlined />, label: 'Bar Chart', component: BarChartPage },
-  { key: '5', icon: <CloudOutlined />, label: 'Cloud', component: CloudPage },
-  { key: '6', icon: <AppstoreOutlined />, label: 'App Store', component: AppStorePage },
-  { key: '7', icon: <TeamOutlined />, label: 'Team', component: TeamPage },
-  { key: '8', icon: <ShopOutlined />, label: 'Shop', component: ShopPage },
+  // { key: '5', icon: <CloudOutlined />, label: 'Cloud', component: CloudPage },
+  // { key: '6', icon: <AppstoreOutlined />, label: 'App Store', component: AppStorePage },
+  // { key: '7', icon: <TeamOutlined />, label: 'Team', component: TeamPage },
+  // { key: '8', icon: <ShopOutlined />, label: 'Shop', component: ShopPage },
 ];
 
 const SupplierPage = () => {
@@ -80,7 +80,7 @@ const SupplierPage = () => {
     <Menu>
       {isAuthenticated && (
         <Menu.Item key="logout" onClick={handleLogout}>
-          Log InboxOutlined
+          Logout
         </Menu.Item>
       )}
     </Menu>

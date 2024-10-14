@@ -54,23 +54,32 @@ const CategoryList = () => {
     const handleSubmit = async () => {
         try {
             const values = await form.validateFields();
-            if (selectedCategory) {
-                await putCategories(selectedCategory.categoryId, values.categoryName);
-                toast.success('Category updated successfully!')
-            } else {
-                await postCategories(values.categoryName);
-                toast.success('Category added successfully!')
-            }
-            const updatedCategories = await getCategories();
-            setCategories(updatedCategories);
-            setFilteredCategories(updatedCategories);
-            setIsModalVisible(false);
+            
+            // Hiển thị modal confirm trước khi gửi dữ liệu
+            Modal.confirm({
+                title: selectedCategory ? 'Confirm Edit' : 'Confirm Add',
+                content: `Are you sure you want to ${selectedCategory ? 'edit' : 'add'} this category?`,
+                onOk: async () => {
+                    // Nếu người dùng xác nhận, tiếp tục với quá trình submit
+                    if (selectedCategory) {
+                        await putCategories(selectedCategory.categoryId, values.categoryName);
+                        toast.success('Category updated successfully!');
+                    } else {
+                        await postCategories(values.categoryName);
+                        toast.success('Category added successfully!');
+                    }
+                    const updatedCategories = await getCategories();
+                    setCategories(updatedCategories);
+                    setFilteredCategories(updatedCategories);
+                    setIsModalVisible(false);
+                }
+            });
         } catch (error) {
             let errorMessage = 'An error occurred while processing your request.';
             if (error.validationErrors) {
                 errorMessage = Object.values(error.validationErrors).join(' '); // Join all validation messages
             }
-            toast.error(errorMessage)
+            toast.error(errorMessage);
             setError(error);
         }
     };
@@ -201,14 +210,12 @@ const CategoryList = () => {
                                     form.validateFields().then(() => {
                                         // Nếu form hợp lệ, gọi hàm submit
                                         handleSubmit();
-                                    })
+                                    });
                                 }
                             }}
                         />
                     </Form.Item>
                 </Form>
-
-
             </Modal>
         </div>
     );

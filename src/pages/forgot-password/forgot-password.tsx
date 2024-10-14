@@ -77,7 +77,7 @@ const ForgotPassword: React.FC = () => {
             width: "85%",
             zIndex: "5",
             maxWidth: 410,
-            marginLeft: "34%",
+            marginLeft: "38%",
             marginTop: "8%",
             padding: "20px 30px",
           }}
@@ -96,11 +96,11 @@ const ForgotPassword: React.FC = () => {
               marginBottom: "10px",
             }}
           >
-            Đặt lại mật khẩu
+            Reset your password
           </p>
 
           <span className="span-reset-password">
-            Chúng tôi sẽ gửi email cho bạn để đặt lại mật khẩu
+          We will email you to reset your password
           </span>
 
           {/* <p
@@ -162,7 +162,7 @@ const ForgotPassword: React.FC = () => {
                   // alignItems: "center"
                 }}
               >
-                Lấy lại mật khẩu
+               Reset password
               </Button>
             </Form.Item>
           </Form>
@@ -175,9 +175,9 @@ const ForgotPassword: React.FC = () => {
               marginBottom: "20px",
             }}
           >
-            Đã có tài khoản?
+            Already have an account?
             <Link className="btn-register" to="/login">
-              Đăng nhập tại đây!
+            Sign in here!
             </Link>
           </div>
         </div>

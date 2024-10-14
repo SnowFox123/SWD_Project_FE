@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, notification } from 'antd';
+import { Table, Button, notification, Modal } from 'antd'; // Import Modal for confirmation
 import { banAccount, getAllAccount } from '../services/staffService'; // Import the API function for banning account
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
@@ -19,9 +19,9 @@ const BanAccount = () => {
             } catch (err) {
                 if (err.response && err.response.data && err.response.data.error) {
                     toast.error(err.response.data.error.message);
-                  } else {
+                } else {
                     toast.error("An unexpected error occurred during login.");
-                  }
+                }
             } finally {
                 setLoading(false); // Stop loading once data is fetched
             }
@@ -58,6 +58,17 @@ const BanAccount = () => {
         }
     };
 
+    // Show a confirmation modal before banning the account
+    const confirmBanAccount = (accountId) => {
+        Modal.confirm({
+            title: 'Confirm Ban',
+            content: 'Are you sure you want to ban this account?',
+            okText: 'Yes',
+            cancelText: 'No',
+            onOk: () => handleBanAccount(accountId), // If confirmed, proceed with banning
+        });
+    };
+
     // Define table columns for account display
     const columns = [
         {
@@ -80,31 +91,18 @@ const BanAccount = () => {
             dataIndex: 'roleId',
             key: 'roleId',
             render: (roleId) => {
-                // let roleId;
-
                 switch (roleId) {
                     case 1:
-                        roleId = 'User';
-                        break;
+                        return 'User';
                     case 2:
-                        roleId = 'Supplier';
-                        break;
+                        return 'Supplier';
                     case 3:
-                        roleId = 'Staff';
-                        break;
+                        return 'Staff';
                     case 4:
-                        roleId = 'Admin';
-                        break;
+                        return 'Admin';
                     default:
-                        roleId = 'Có lỗi rồi';
-                        break;
+                        return 'Unknown Role';
                 }
-
-                return (
-                    <span>
-                        {roleId}
-                    </span>
-                );
             }
         },
         {
@@ -139,7 +137,7 @@ const BanAccount = () => {
                     type="primary"
                     danger
                     loading={banLoading[record.accountId]} // Show loading for specific account
-                    onClick={() => handleBanAccount(record.accountId)} // Pass account ID to handler
+                    onClick={() => confirmBanAccount(record.accountId)} // Show confirmation before banning
                     disabled={record.isBan} // Disable if already banned
                 >
                     {record.isBan ? 'Banned' : 'Ban'}

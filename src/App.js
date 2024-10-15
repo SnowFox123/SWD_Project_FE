@@ -6,7 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import "./App.css";
 import Header from "./components/header";
 import { Navbar } from "./components/nav";
-import Cart from "./pages/usercart/cart";
+import Cart from "./pages/usercart/cartRent";
 import HistoryUserCart from "./pages/usercart/historyusercart";
 import Login2 from "./pages/login/Login";
 import Home from "./pages/home/home";
@@ -26,6 +26,8 @@ import StaffPage from "./components/Staff";
 import ProfileUser from "./pages/profile/profileuser";
 import ChangePassword from "./components/changePassword";
 import { useSelector } from 'react-redux'; //
+import CartRent from "./pages/usercart/cartRent";
+import CartSale from "./pages/usercart/cartsale";
 
 function App() {
   const role = useSelector((state) => state.auth.role); // 
@@ -34,7 +36,7 @@ function App() {
   return (
     <>
 
-    {role !== '4' && role !== '3' && role !== '2' &&(
+      {role !== '4' && role !== '3' && role !== '2' && (
         <>
           <Header />
           <Navbar />
@@ -58,7 +60,7 @@ function App() {
           }
         />
 
-<Route
+        <Route
           path="/changepassword"
           element={
             <PrivateRoute allowedRoles={['1']}>
@@ -95,16 +97,35 @@ function App() {
           }
         />
 
-
-
         <Route
-          path="/rentaltoy"
+          path="/user"
           element={
             <PrivateRoute allowedRoles={['1']}>
-              <Rentaltoy />
+              <UserPage />
             </PrivateRoute>
           }
         />
+
+
+
+        <Route
+          path="/cartrental"
+          element={
+            <PrivateRoute allowedRoles={['1']}>
+              <CartRent />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/cartsale"
+          element={
+            <PrivateRoute allowedRoles={['1']}>
+              <CartSale />
+            </PrivateRoute>
+          }
+        />
+
         <Route
           path="/supplier"
           element={
@@ -127,17 +148,17 @@ function App() {
         <Route path="/customer" element={<Home />} />
         <Route path="/register" element={<Register2 />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/historyusercart" element={<HistoryUserCart />} />
+        {/* <Route path="/cartrental" element={<CartRent />} /> */}
+        {/* <Route path="/historyusercart" element={<HistoryUserCart />} /> */}
         <Route path="/rentaltoy" element={<Rentaltoy />} />
 
         {/* Catch-all route for non-existent paths */}
         <Route path="*" element={<Navigate to="/unauthorized" />} />
       </Routes>
 
-      {role !== '4' && role !== '3' && role !== '2' &&(
+      {role !== '4' && role !== '3' && role !== '2' && (
         <>
-         <LogoCategories />
+          <LogoCategories />
         </>
       )}
 

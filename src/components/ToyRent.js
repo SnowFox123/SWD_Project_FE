@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Pagination, Spin, message, Input, Button } from 'antd';
-import { ViewToyRent, SearchToyRent } from '../services/UserServices'; // Import your service functions
+import { ViewToyRent, SearchToyRent, AddToCart } from '../services/UserServices'; // Import your service functions
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 import './card.css';  // Create and import a CSS file
 
 const { Search } = Input;
@@ -9,6 +11,7 @@ const { Search } = Input;
 const ToyRent = () => {
     const [toys, setToys] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [addingToCart, setAddingToCart] = useState(false); // New loading state for adding to cart
     const [pageIndex, setPageIndex] = useState(1);
     const [pageSize] = useState(10);
     const [totalItemsCount, setTotalItemsCount] = useState(0);
@@ -19,10 +22,10 @@ const ToyRent = () => {
             try {
                 setLoading(true);
                 let response;
-                
+
                 // Conditionally fetch toys based on keyword presence
                 if (keyword.trim()) {
-                    response = await SearchToyRent(keyword, pageIndex , pageSize);
+                    response = await SearchToyRent(keyword, pageIndex, pageSize);
                 } else {
                     response = await ViewToyRent(pageIndex - 1, pageSize);
                 }
@@ -33,11 +36,11 @@ const ToyRent = () => {
                 } else {
                     setToys([]);
                 }
-                setLoading(false);
             } catch (error) {
-                setLoading(false);
                 message.error('Error fetching toy rental data.');
                 console.error('Error fetching toy rental data:', error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -49,16 +52,38 @@ const ToyRent = () => {
     };
 
     const handleSearch = (value) => {
-        setKeyword(value);
-        setPageIndex(1); // Reset to the first page on a new search
+        if (value.trim()) {
+            setKeyword(value);
+            setPageIndex(1); // Reset to the first page on a new search
+        } else {
+            setKeyword(''); // Clear keyword if the input is empty
+        }
     };
+
+    const handleAddToCart = async (toyId, quantity = 1) => {
+        try {
+            setAddingToCart(true); // Set loading state
+            const response = await AddToCart(toyId, quantity); // Call the AddToCart function
+            toast.success('Item added to cart successfully!');
+        } catch (error) {
+            // Check if the error has validation errors from the server
+            if (error.validationErrors) {
+                // Join the validation messages into a single string
+                const validationMessages = Object.values(error.validationErrors).flat().join(' ');
+                toast.error(`Validation errors: ${validationMessages}`);
+            } else {
+                toast.error(error.message || 'Failed to add item to cart.');
+            }
+            console.error('Add to cart error:', error);
+        } finally {
+            setAddingToCart(false); // Reset loading state
+        }
+    };
+    
 
     return (
         <div style={{ padding: '20px' }}>
-            {/* <h1>View Toy Rentals</h1> */}
-
-            {/* Search input */}
-            <div style={{ marginBottom: '20px', width:'400px' }}>
+            <div style={{ marginBottom: '20px', width: '400px' }}>
                 <Search
                     placeholder="Search for toys"
                     enterButton="Search"
@@ -93,9 +118,14 @@ const ToyRent = () => {
                                             <p className="toy-card__description">{toy.description}</p>
                                         </Link>
 
-                                        <div className="toy-card__actions">
-                                            <Link to="/login" className="add-to-cart-btn">Add to Cart</Link>
-                                        </div>
+                                        <Button
+                                            type="primary"
+                                            onClick={() => handleAddToCart(toy.toyId)}
+                                            className="add-to-cart-btn"
+                                            loading={addingToCart} // Add loading state for button
+                                        >
+                                            {addingToCart ? 'Adding...' : 'Add to Cart'}
+                                        </Button>
                                     </Card>
                                 </Col>
                             ))

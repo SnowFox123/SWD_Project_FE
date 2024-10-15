@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   ShoppingCartOutlined,
-  CodeSandboxOutlined,
+  ShoppingOutlined,
   UserOutlined,
   DownOutlined,
 } from '@ant-design/icons';
@@ -90,14 +90,14 @@ export const Navbar = () => {
           span={8}
           style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
         >
-          <Link to="/cart">
+          <Link to="/cartrental">
             <ShoppingCartOutlined style={{ fontSize: '24px', marginRight: '5px' }} />
-            Toy Cart
+            Cart Rental
           </Link>
           <Divider type="vertical" style={{ backgroundColor: '#ccc' }} className="divider" />
-          <Link to="/historyusercart">
-            <CodeSandboxOutlined style={{ fontSize: '24px', marginRight: '5px' }} />
-            Order History
+          <Link to="/cartsale">
+            <ShoppingOutlined  style={{ fontSize: '24px', marginRight: '5px' }} />
+            Cart Sale
           </Link>
         </Col>
 

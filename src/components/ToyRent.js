@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Pagination, Spin, message, Input, Button } from 'antd';
-import { ViewToyRent, SearchToyRent, AddToCart } from '../services/UserServices'; // Import your service functions
+import { ViewToyRent, SearchToyRent, AddToCart, AddToCart2 } from '../services/UserServices'; // Import your service functions
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -11,7 +11,7 @@ const { Search } = Input;
 const ToyRent = () => {
     const [toys, setToys] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [addingToCart, setAddingToCart] = useState(false); // New loading state for adding to cart
+    const [addingToCart, setAddingToCart] = useState({}); // State for tracking add-to-cart loading for individual toys
     const [pageIndex, setPageIndex] = useState(1);
     const [pageSize] = useState(10);
     const [totalItemsCount, setTotalItemsCount] = useState(0);
@@ -31,8 +31,8 @@ const ToyRent = () => {
                 }
 
                 if (response) {
-                    setToys(response);
-                    setTotalItemsCount(response.totalItemsCount);
+                    setToys(response); // Assuming response.toys contains the list of toys
+                    setTotalItemsCount(response.totalItemsCount); // Assuming the total item count is provided
                 } else {
                     setToys([]);
                 }
@@ -61,17 +61,33 @@ const ToyRent = () => {
     };
 
     const handleAddToCart = async (toyId, quantity = 1) => {
+        if (quantity < 1 || quantity > 2147483647) {
+            toast.error('Invalid quantity. Please enter a value between 1 and 2147483647.');
+            return;  // Early return to avoid making a request with invalid quantity
+        }
+    
         try {
-            setAddingToCart(true); // Set adding to cart loading state
-            const response = await AddToCart(toyId, quantity);
-            toast.success('Item added to cart successfully!');
+            // Set loading state only for the specific toy being added to the cart
+            setAddingToCart((prevState) => ({ ...prevState, [toyId]: true }));
+    
+            console.log(`Adding toy ${toyId} to cart with quantity: ${quantity}`);  // Log the quantity
+    
+            const response = await AddToCart2(toyId, quantity);
+    
+            if (response) {
+                toast.success('Item added to cart successfully!');
+            } else {
+                throw new Error('Failed to add item to cart.');
+            }
         } catch (error) {
             toast.error(error.message || 'Failed to add item to cart.');
             console.error('Add to cart error:', error);
         } finally {
-            setAddingToCart(false); // Reset adding to cart loading state
+            // Reset loading state for the specific toy
+            setAddingToCart((prevState) => ({ ...prevState, [toyId]: false }));
         }
     };
+    
 
     return (
         <div style={{ padding: '20px' }}>
@@ -97,7 +113,7 @@ const ToyRent = () => {
                                         className="toy-card"  // Reference the class for custom styling
                                         hoverable={true}
                                     >
-                                        <Link to="/register" style={{ textDecoration: 'none' }}>
+                                        <Link to={`/toyrentaldetail/${toy.toyId}`} style={{ textDecoration: 'none' }}>
                                             <img
                                                 className="toy-card__image"
                                                 alt={toy.toyName}
@@ -112,11 +128,11 @@ const ToyRent = () => {
 
                                         <Button
                                             type="primary"
-                                            onClick={() => handleAddToCart(toy.toyId,1)}
+                                            onClick={() => handleAddToCart(toy.toyId, 1)}
                                             className="add-to-cart-btn"
-                                            loading={addingToCart} // Add loading state for button
+                                            loading={addingToCart[toy.toyId]} // Loading state for this specific toy
                                         >
-                                            {addingToCart ? 'Adding...' : 'Add to Cart'}
+                                            {addingToCart[toy.toyId] ? 'Adding...' : 'Add to Cart'}
                                         </Button>
                                     </Card>
                                 </Col>

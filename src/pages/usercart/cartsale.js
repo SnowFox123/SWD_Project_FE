@@ -80,7 +80,7 @@ const CartSale = () => {
       return total;
     }, 0);
 
-    return (total - discount).toFixed(2);
+    return (total - discount);
   }, [cartItems, selectedItems, discount]);
 
   const handleVoucherSubmit = () => {
@@ -158,7 +158,7 @@ const CartSale = () => {
       render: (text, record) => {
         const { quantity, toy } = record;
         const buyPrice = toy.buyPrice;
-        return <div>${(buyPrice * quantity).toFixed(2)}</div>;
+        return <div>${(buyPrice * quantity)}</div>;
       },
     },
   ];

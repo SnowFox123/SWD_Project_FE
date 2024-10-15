@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Pagination, Spin, message, Input, Button } from 'antd';
-import { SearchToySale, ViewToySale } from '../services/UserServices'; // Import your service functions
+import { ViewToyRent, SearchToyRent, AddToCart, AddToCart2, ViewToySale, SearchToySale } from '../services/UserServices'; // Import your service functions
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 import './card.css';  // Create and import a CSS file
 
 const { Search } = Input;
 
-const ToyRent = () => {
+const ToySale = () => {
     const [toys, setToys] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [addingToCart, setAddingToCart] = useState({}); // State for tracking add-to-cart loading for individual toys
     const [pageIndex, setPageIndex] = useState(1);
     const [pageSize] = useState(10);
     const [totalItemsCount, setTotalItemsCount] = useState(0);
@@ -19,25 +22,25 @@ const ToyRent = () => {
             try {
                 setLoading(true);
                 let response;
-                
+
                 // Conditionally fetch toys based on keyword presence
                 if (keyword.trim()) {
-                    response = await SearchToySale(keyword, pageIndex , pageSize);
+                    response = await SearchToySale(keyword, pageIndex, pageSize);
                 } else {
                     response = await ViewToySale(pageIndex - 1, pageSize);
                 }
 
                 if (response) {
-                    setToys(response);
-                    setTotalItemsCount(response.totalItemsCount);
+                    setToys(response); // Assuming response.toys contains the list of toys
+                    setTotalItemsCount(response.totalItemsCount); // Assuming the total item count is provided
                 } else {
                     setToys([]);
                 }
-                setLoading(false);
             } catch (error) {
-                setLoading(false);
                 message.error('Error fetching toy rental data.');
                 console.error('Error fetching toy rental data:', error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -49,16 +52,46 @@ const ToyRent = () => {
     };
 
     const handleSearch = (value) => {
-        setKeyword(value);
-        setPageIndex(1); // Reset to the first page on a new search
+        if (value.trim()) {
+            setKeyword(value);
+            setPageIndex(1); // Reset to the first page on a new search
+        } else {
+            setKeyword(''); // Clear keyword if the input is empty
+        }
     };
+
+    const handleAddToCart = async (toyId, quantity = 1) => {
+        if (quantity < 1 || quantity > 2147483647) {
+            toast.error('Invalid quantity. Please enter a value between 1 and 2147483647.');
+            return;  // Early return to avoid making a request with invalid quantity
+        }
+    
+        try {
+            // Set loading state only for the specific toy being added to the cart
+            setAddingToCart((prevState) => ({ ...prevState, [toyId]: true }));
+    
+            console.log(`Adding toy ${toyId} to cart with quantity: ${quantity}`);  // Log the quantity
+    
+            const response = await AddToCart2(toyId, quantity);
+    
+            if (response) {
+                toast.success('Item added to cart successfully!');
+            } else {
+                throw new Error('Failed to add item to cart.');
+            }
+        } catch (error) {
+            toast.error(error.message || 'Failed to add item to cart.');
+            console.error('Add to cart error:', error);
+        } finally {
+            // Reset loading state for the specific toy
+            setAddingToCart((prevState) => ({ ...prevState, [toyId]: false }));
+        }
+    };
+    
 
     return (
         <div style={{ padding: '20px' }}>
-            {/* <h1>View Toy Rentals</h1> */}
-
-            {/* Search input */}
-            <div style={{ marginBottom: '20px', width:'400px' }}>
+            <div style={{ marginBottom: '20px', width: '400px' }}>
                 <Search
                     placeholder="Search for toys"
                     enterButton="Search"
@@ -88,14 +121,19 @@ const ToyRent = () => {
                                             />
                                             <h4 className="toy-card__name">{toy.toyName}</h4>
                                             <div className="toy-card__price">
-                                                <span className="price-current">${toy.rentPricePerDay}</span>
+                                                <span className="price-current">${toy.buyPrice}</span>
                                             </div>
                                             <p className="toy-card__description">{toy.description}</p>
                                         </Link>
 
-                                        <div className="toy-card__actions">
-                                            <Link to="/login" className="add-to-cart-btn">Add to Cart</Link>
-                                        </div>
+                                        <Button
+                                            type="primary"
+                                            onClick={() => handleAddToCart(toy.toyId, 1)}
+                                            className="add-to-cart-btn"
+                                            loading={addingToCart[toy.toyId]} // Loading state for this specific toy
+                                        >
+                                            {addingToCart[toy.toyId] ? 'Adding...' : 'Add to Cart'}
+                                        </Button>
                                     </Card>
                                 </Col>
                             ))
@@ -117,4 +155,4 @@ const ToyRent = () => {
     );
 };
 
-export default ToyRent;
+export default ToySale;

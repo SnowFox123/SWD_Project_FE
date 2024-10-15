@@ -28,6 +28,7 @@ import ChangePassword from "./components/changePassword";
 import { useSelector } from 'react-redux'; //
 import CartRent from "./pages/usercart/cartRent";
 import CartSale from "./pages/usercart/cartsale";
+import ToyRentalDetail from "./components/ToyRentalDetail";
 
 function App() {
   const role = useSelector((state) => state.auth.role); // 
@@ -116,6 +117,17 @@ function App() {
             </PrivateRoute>
           }
         />
+
+        <Route
+          path="/toyrentaldetail/:id"
+          element={
+            <PrivateRoute allowedRoles={['1']}>
+              <ToyRentalDetail />
+            </PrivateRoute>
+          }
+        />
+
+        {/* <Route path="/toyrentaldetail/:id" component={ToyRentalDetail} /> */}
 
         <Route
           path="/cartsale"

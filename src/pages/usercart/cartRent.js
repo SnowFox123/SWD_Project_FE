@@ -1,19 +1,19 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Table, Spin, message, InputNumber, Radio, Checkbox, Button, Modal, Input, Row, Col } from 'antd';
-import {
-  GiftOutlined
-} from '@ant-design/icons';
+import { GiftOutlined } from '@ant-design/icons';
 import { GetCart, getToyByID } from '../../services/UserServices'; // Import API functions
-
+import { useLocation } from 'react-router-dom'; // Import useLocation
 
 const CartRent = () => {
-  const [cartItems, setCartItems] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [voucherCode, setVoucherCode] = useState('');
-  const [discount, setDiscount] = useState(0);
+    const location = useLocation(); // Get the location object
+    const [cartItems, setCartItems] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [selectedItems, setSelectedItems] = useState([]);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [voucherCode, setVoucherCode] = useState('');
+    const [discount, setDiscount] = useState(0);
+
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -108,7 +108,7 @@ const CartRent = () => {
       return total;
     }, 0);
 
-    return (total - discount).toFixed(2);
+    return (total - discount);
   }, [cartItems, selectedItems, discount]);
 
   const handleVoucherSubmit = () => {
@@ -220,7 +220,8 @@ const CartRent = () => {
             break;
         }
 
-        return <div>${(rentPrice * quantity).toFixed(2)}</div>;
+        // return <div>${(rentPrice * quantity).toFixed(2)}</div>;
+        return <div>${(rentPrice * quantity)}</div>;
       },
     },
   ];

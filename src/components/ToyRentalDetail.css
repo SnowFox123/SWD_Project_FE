@@ -1,0 +1,74 @@
+.toy-detail-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.toy-detail-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.toy-detail-card {
+    padding: 24px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.toy-detail-card h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #333;
+}
+
+.toy-detail-card p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #666;
+}
+
+.toy-detail-price {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 16px 0;
+    color: #ff4d4f;
+}
+
+.toy-detail-quantity {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.toy-detail-quantity span {
+    margin-right: 8px;
+    font-size: 16px;
+    color: #333;
+}
+
+.ant-input-number {
+    width: 100px;
+}
+
+.ant-btn-primary {
+    background-color: #ff4d4f;
+    border-color: #ff4d4f;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px 20px;
+}
+
+.ant-btn-primary:hover {
+    background-color: #d9363e;
+    border-color: #d9363e;
+}

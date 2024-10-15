@@ -273,13 +273,8 @@ export const getToyByID = async (id) => {
 
 
 
-export const AddToCart = async (toyId, quantity = 1) => {
+export const AddToCart = async (toyId, quantity) => {
     try {
-        // Validate quantity before making the request
-        if (quantity < 1 || quantity > 2147483647) {
-            throw new Error(`Quantity must be between 1 and 2147483647. Provided: ${quantity}`);
-        }
-
         // Call the API to add item to cart
         const response = await axiosInstance.post('https://localhost:7221/api/Cart/add-item-to-cart', {
             toyId,

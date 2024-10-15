@@ -62,24 +62,16 @@ const ToyRent = () => {
 
     const handleAddToCart = async (toyId, quantity = 1) => {
         try {
-            setAddingToCart(true); // Set loading state
-            const response = await AddToCart(toyId, quantity); // Call the AddToCart function
+            setAddingToCart(true); // Set adding to cart loading state
+            const response = await AddToCart(toyId, quantity);
             toast.success('Item added to cart successfully!');
         } catch (error) {
-            // Check if the error has validation errors from the server
-            if (error.validationErrors) {
-                // Join the validation messages into a single string
-                const validationMessages = Object.values(error.validationErrors).flat().join(' ');
-                toast.error(`Validation errors: ${validationMessages}`);
-            } else {
-                toast.error(error.message || 'Failed to add item to cart.');
-            }
+            toast.error(error.message || 'Failed to add item to cart.');
             console.error('Add to cart error:', error);
         } finally {
-            setAddingToCart(false); // Reset loading state
+            setAddingToCart(false); // Reset adding to cart loading state
         }
     };
-    
 
     return (
         <div style={{ padding: '20px' }}>
@@ -120,7 +112,7 @@ const ToyRent = () => {
 
                                         <Button
                                             type="primary"
-                                            onClick={() => handleAddToCart(toy.toyId)}
+                                            onClick={() => handleAddToCart(toy.toyId,1)}
                                             className="add-to-cart-btn"
                                             loading={addingToCart} // Add loading state for button
                                         >

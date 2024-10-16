@@ -121,9 +121,9 @@ const ToyRent = () => {
                                             />
                                             <h4 className="toy-card__name">{toy.toyName}</h4>
                                             <div className="toy-card__price">
-                                                <span className="price-current">${toy.rentPricePerDay}</span>
+                                                <span className="price-current">${toy.rentPricePerDay}/Day</span>
                                             </div>
-                                            <p className="toy-card__description">{toy.description}</p>
+                                            {/* <p className="toy-card__description">{toy.description}</p> */}
                                         </Link>
 
                                         <Button
@@ -156,3 +156,104 @@ const ToyRent = () => {
 };
 
 export default ToyRent;
+
+{/* <div style={{ padding: '10px 120px', paddingBottom: '100px', backgroundColor: '#f3f4f6' }}>
+{loading ? (
+  <div style={{ textAlign: 'center' }}>
+    <Spin tip="Loading your cart..." />
+  </div>
+) : error ? (
+  <div style={{ color: 'red', textAlign: 'center', margin: '20px 0' }}>
+    {error.message}
+  </div>
+) : cartItems.length > 0 ? (
+  <Table
+    style={{
+      // padding: '0 150px',
+      borderRadius: '8px',
+      backgroundColor: '#fff',
+      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+    }}
+    dataSource={cartItems}
+    columns={columns}
+    rowKey="cartItemId"
+    pagination={false}
+  />
+) : (
+  <div style={{ textAlign: 'center', fontSize: '18px', color: '#666' }}>
+    No items in the cart
+  </div>
+)}
+
+<div style={{
+  position: 'fixed',
+  bottom: '0',
+  left: '0',
+  right: '0',
+  backgroundColor: '#ffffff',
+  border: '1px solid #d9d9d9',
+  borderTop: 'none',
+  padding: '10px 180px',
+  zIndex: 1000,
+  boxShadow: '0 -2px 10px rgba(0, 0, 0, 0.1)',
+}}>
+  <Row style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
+    <Row style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <span style={{ marginRight: '120px', fontSize: '16px' }}>
+        <GiftOutlined style={{ fontSize: '22px', color: 'red' }} /> Platform Voucher
+      </span>
+      <Button type="default" onClick={() => setIsModalVisible(true)} style={{ borderRadius: '4px', borderColor: '#d9d9d9', }}>
+        Select or enter voucher
+      </Button>
+    </Row>
+  </Row>
+  <Row style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <Col>
+      <Button onClick={toggleSelectAll} style={{ marginRight: '10px', borderRadius: '4px', borderColor: '#d9d9d9' }}>
+        {selectedItems.length === cartItems.length
+          ? `Deselect All (${selectedItems.length})`
+          : `Select All (${selectedItems.length})`}
+      </Button>
+      <Button type="danger" onClick={handleDeleteSelected} disabled={selectedItems.length === 0} style={{ borderRadius: '4px' }}>
+        Delete
+      </Button>
+    </Col>
+    <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Col >
+        <Row style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div style={{ marginRight: '10px' }}>
+            Total ({selectedItems.length} {selectedItems.length === 0 ? 'item' : 'items'})
+          </div>
+          <div style={{ fontWeight: 'bold', fontSize: '26px', color: 'red', marginRight: '20px' }}>
+            ${calculateTotalPrice}
+          </div>
+        </Row>
+        <Row>
+          Saved
+        </Row>
+      </Col>
+      <Col>
+        <Button type="primary" style={{ width: '100%', marginBottom: '8px', borderRadius: '4px', padding: '22px 90px', backgroundColor: 'red', color: '#fff' }}>
+          Checkout
+        </Button>
+      </Col>
+    </Col>
+  </Row>
+</div>
+
+<Modal
+  title="Apply Voucher"
+  visible={isModalVisible}
+  onCancel={() => setIsModalVisible(false)}
+  onOk={handleVoucherSubmit}
+  okText="Apply"
+  cancelText="Cancel"
+>
+  <Input
+    value={voucherCode}
+    onChange={(e) => setVoucherCode(e.target.value)}
+    placeholder="Enter your voucher code"
+    style={{ borderRadius: '4px' }}
+  />
+</Modal>
+</div> */}

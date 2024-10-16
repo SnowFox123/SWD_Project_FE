@@ -1,5 +1,6 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import authReducer from './authSlice';
+import orderReducer from './orderSlice'; // Import your orderSlice
 
 import {
   persistStore,
@@ -23,6 +24,7 @@ const persistConfig = {
 // Combine your reducers
 const rootReducer = combineReducers({
   auth: authReducer,
+  order: orderReducer, // Add orderReducer here
 });
 
 // Create a persisted reducer

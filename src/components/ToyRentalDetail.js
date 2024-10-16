@@ -42,24 +42,24 @@ const ToyRentalDetail = () => {
     }, [id]);
 
     // Update total price based on rental duration and quantity
-    useEffect(() => {
-        if (toy) {
-            let pricePerUnit;
-            switch (rentalDuration) {
-                case DURATIONS.WEEK:
-                    pricePerUnit = toy.rentPricePerWeek;
-                    break;
-                case DURATIONS.TWO_WEEKS:
-                    pricePerUnit = toy.rentPricePerTwoWeeks;
-                    break;
-                default:
-                    pricePerUnit = toy.rentPricePerDay;
-            }
-            setTotalPrice(pricePerUnit * quantity);
-            // console.log('rentalDuration', rentalDuration)
+    // useEffect(() => {
+    //     if (toy) {
+    //         let pricePerUnit;
+    //         switch (rentalDuration) {
+    //             case DURATIONS.WEEK:
+    //                 pricePerUnit = toy.rentPricePerWeek;
+    //                 break;
+    //             case DURATIONS.TWO_WEEKS:
+    //                 pricePerUnit = toy.rentPricePerTwoWeeks;
+    //                 break;
+    //             default:
+    //                 pricePerUnit = toy.rentPricePerDay;
+    //         }
+    //         setTotalPrice(pricePerUnit * quantity);
+    //         // console.log('rentalDuration', rentalDuration)
 
-        }
-    }, [rentalDuration, quantity, toy]);
+    //     }
+    // }, [rentalDuration, quantity, toy]);
 
     // Handle adding to cart
     const handleAddToCart = async () => {
@@ -89,7 +89,7 @@ const ToyRentalDetail = () => {
                     state: {
                         selectedToyId: toy.toyId,
                         // quantity: quantity,
-                        rentalDuration: rentalDuration
+                        // rentalDuration: rentalDuration
                     }
                 });
             } else {

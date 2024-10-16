@@ -195,7 +195,7 @@ export const SearchToySale = async (keyword,pageIndex, pageSize) => {
 export const GetCart = async () => {
   try {
     // Construct the API URL dynamically based on passed arguments
-    const url = `https://localhost:7221/api/Cart/get-cart`;
+    const url = `https://localhost:7221/api/Cart/rental-cart`;
 
     // Call the API to get toy rental data
     const response = await axiosInstance.get(url, {
@@ -374,6 +374,48 @@ export const AddToCart2 = async (
         throw error; // Re-throw the original error if not validation-related
     }
 };
+
+
+
+
+export const OrderRentToys = async (shippingAddress, receivePhoneNumber, isRentalOrder, toyList, rentalDate, returnDate) => {
+    try {
+        // Call the API to post the order
+        const response = await axiosInstance.post('https://localhost:7221/api/Order', {
+            shippingAddress,          // Address where the order will be shipped
+            receivePhoneNumber,       // Phone number to contact
+            isRentalOrder,            // Boolean or value indicating if this is a rental order
+            toyList,                  // Array of toy objects (with toyId and quantity)
+            rentalDate,               // Start date for the rental
+            returnDate                // Return date for the rental
+        });
+
+        // Check if the response indicates success
+        if (response.data.isSuccess) {
+            return response.data.object; // Return the response object if success
+        } else {
+            throw new Error('Failed to place order.'); // Handle generic failure cases
+        }
+    } catch (error) {
+        if (error.response && error.response.data.errors) {
+            // Handle validation errors returned from the backend
+            const validationErrors = error.response.data.errors;
+
+            // Create a new Error object and attach validation errors to it
+            const validationError = new Error('Validation errors occurred');
+            validationError.validationErrors = Object.keys(validationErrors).reduce((acc, key) => {
+                acc[key] = validationErrors[key].join(' '); // Join multiple messages if any
+                return acc;
+            }, {});
+
+            throw validationError; // Throw the error object with validation data
+        }
+        console.error('Error placing order:', error);
+        throw error; // Re-throw the original error if not validation-related
+    }
+};
+
+
 
   
   

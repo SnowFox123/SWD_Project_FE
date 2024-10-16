@@ -1,21 +1,22 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Table, Spin, message, InputNumber, Radio, Checkbox, Button, Modal, Input, Row, Col } from 'antd';
-import { GiftOutlined } from '@ant-design/icons';
+import { Table, Spin, message, InputNumber, Checkbox, Button, Row, Col } from 'antd';
 import { GetCart, getToyByID } from '../../services/UserServices';
-
-import { Link } from 'react-router-dom'
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux'; // Import useDispatch
+import { saveOrderData } from '../../redux/orderSlice'; // Import saveOrderData action
 
 const CartRent = () => {
   const location = useLocation();
   const { selectedToyId, rentalDuration } = location.state || {};
+
+  const dispatch = useDispatch(); // Initialize useDispatch
+
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [voucherCode, setVoucherCode] = useState('');
-  const [discount, setDiscount] = useState(0);
+  const [quantities, setQuantities] = useState({});
+  const [orderData, setOrderData] = useState([]); // Store order data
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -31,15 +32,18 @@ const CartRent = () => {
         const rentalItems = cartWithToyDetails.filter((item) => item.toy.isRental);
         setCartItems(rentalItems);
 
+        const initialQuantities = rentalItems.reduce((acc, item) => {
+          acc[item.cartItemId] = item.quantity || 1; // Ensure default quantity
+          return acc;
+        }, {});
+
+        setQuantities(initialQuantities);
+
         if (selectedToyId) {
           const selectedItem = rentalItems.find(item => item.toy.toyId === selectedToyId);
           if (selectedItem) {
             setSelectedItems([selectedItem.cartItemId]);
           }
-        }
-
-        if (rentalDuration) {
-          console.log(rentalDuration, 'rental');
         }
       } catch (err) {
         setError(err);
@@ -52,20 +56,19 @@ const CartRent = () => {
     fetchCart();
   }, [selectedToyId]);
 
-  const handleQuantityChange = (cartItemId, value) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.cartItemId === cartItemId ? { ...item, quantity: value } : item
-      )
-    );
-  };
+  useEffect(() => {
+    const updatedOrderData = selectedItems.map(cartItemId => ({
+      toyId: cartItems.find(item => item.cartItemId === cartItemId).toy.toyId,
+      quantity: quantities[cartItemId] || 1,
+    }));
+    setOrderData(updatedOrderData);
+  }, [selectedItems, quantities, cartItems]);
 
-  const handlePriceDurationChange = (cartItemId, value) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.cartItemId === cartItemId ? { ...item, priceDuration: value } : item
-      )
-    );
+  const handleQuantityChange = (cartItemId, value) => {
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [cartItemId]: value,
+    }));
   };
 
   const handleCheckboxChange = (cartItemId) => {
@@ -91,50 +94,20 @@ const CartRent = () => {
     setSelectedItems([]);
   };
 
-  const handleDeleteItem = () => {
-    // setCartItems((prevItems) => prevItems.filter(item => !selectedItems.includes(item.cartItemId)));
-    // setSelectedItems([]);
-  };
-
   const calculateTotalPrice = useMemo(() => {
-    const total = selectedItems.reduce((total, cartItemId) => {
+    return selectedItems.reduce((total, cartItemId) => {
       const item = cartItems.find(item => item.cartItemId === cartItemId);
       if (item) {
-        const { toy, quantity, priceDuration } = item;
-        let rentPrice;
-
-        switch (priceDuration) {
-          case 'Day':
-            rentPrice = toy.rentPricePerDay;
-            break;
-          case 'Week':
-            rentPrice = toy.rentPricePerWeek;
-            break;
-          case 'TwoWeeks':
-            rentPrice = toy.rentPricePerTwoWeeks;
-            break;
-          default:
-            rentPrice = toy.rentPricePerDay;
-            break;
-        }
-
-        return total + (rentPrice * quantity);
+        const { toy } = item;
+        const quantity = quantities[cartItemId] || 1;
+        return total + (toy.rentPricePerDay * quantity);
       }
       return total;
     }, 0);
+  }, [cartItems, selectedItems, quantities]);
 
-    return (total - discount);
-  }, [cartItems, selectedItems, discount]);
-
-  const handleVoucherSubmit = () => {
-    if (voucherCode === "DISCOUNT10") {
-      setDiscount(10);
-      message.success("Voucher applied successfully!");
-    } else {
-      message.error("Invalid voucher code!");
-    }
-    setIsModalVisible(false);
-    setVoucherCode('');
+  const handleCreateOrder = () => {
+    dispatch(saveOrderData(orderData)); // Dispatch the saveOrderData action
   };
 
   const columns = [
@@ -173,29 +146,15 @@ const CartRent = () => {
       render: (toy) => <div>${toy.rentPricePerDay}</div>,
     },
     {
-      title: 'Price Per Week',
-      dataIndex: 'toy',
-      key: 'pricePerWeek',
-      render: (toy) => <div>${toy.rentPricePerWeek}</div>,
-    },
-    {
-      title: 'Price Per Two Weeks',
-      dataIndex: 'toy',
-      key: 'pricePerTwoWeeks',
-      render: (toy) => <div>${toy.rentPricePerTwoWeeks}</div>,
-    },
-    {
       title: 'Quantity',
       dataIndex: 'quantity',
       key: 'quantity',
       render: (text, record) => (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <InputNumber
-            min={1}
-            value={record.quantity}
-            onChange={(value) => handleQuantityChange(record.cartItemId, value)}
-          />
-        </div>
+        <InputNumber
+          min={1}
+          value={quantities[record.cartItemId]}
+          onChange={(value) => handleQuantityChange(record.cartItemId, value)}
+        />
       ),
     },
     {
@@ -203,125 +162,17 @@ const CartRent = () => {
       dataIndex: 'Delete',
       key: 'Delete',
       render: (text, record) => (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Button type="primary" danger onClick={handleDeleteItem}  >
-            Delete
-          </Button>
-        </div>
+        <Button 
+          type="primary" 
+          danger 
+          onClick={() => handleDeleteSelected(record.cartItemId)}>
+          Delete
+        </Button>
       ),
     },
-    // {
-    //   title: 'Duration',
-    //   key: 'duration',
-    //   render: (text, record) => {
-    //     const durationMapping = {
-    //       day: 'Day',
-    //       week: 'Week',
-    //       twoWeeks: 'TwoWeeks',
-    //     };
-
-    //     // Determine if the current toy is selected
-    //     const isSelectedToy = record.toy.toyId === selectedToyId;
-
-    //     // Get the selected duration based on whether the toy is selected
-    //     const selectedDuration = isSelectedToy
-    //       ? durationMapping[rentalDuration] || 'Day'
-    //       : record.priceDuration || 'Day';
-
-    //     return (
-    //       <div>
-    //         <Radio.Group
-    //           style={{ display: 'flex', flexDirection: 'column' }}
-    //           value={selectedDuration}
-    //           onChange={(e) => handlePriceDurationChange(record.cartItemId, e.target.value)}
-    //         >
-    //           <Radio value="Day">Day</Radio>
-    //           <Radio style={{ padding: '5px 0' }} value="Week">Week</Radio>
-    //           <Radio value="TwoWeeks">Two Weeks</Radio>
-    //         </Radio.Group>
-    //       </div>
-    //     );
-    //   },
-    // },
-    // {
-    //   title: 'Total Price',
-    //   key: 'totalPrice',
-    //   render: (text, record) => {
-    //     const { toy, quantity, priceDuration } = record;
-    //     let rentPrice;
-
-    //     switch (priceDuration) {
-    //       case 'Day':
-    //         rentPrice = toy.rentPricePerDay;
-    //         break;
-    //       case 'Week':
-    //         rentPrice = toy.rentPricePerWeek;
-    //         break;
-    //       case 'TwoWeeks':
-    //         rentPrice = toy.rentPricePerTwoWeeks;
-    //         break;
-    //       default:
-    //         rentPrice = toy.rentPricePerDay;
-    //         break;
-    //     }
-
-    //     return <div>${(rentPrice * quantity).toFixed(2)}</div>;
-    //   },
-    // },
   ];
 
   return (
-    // <div style={{ padding: '10px 120px', paddingBottom: '100px', backgroundColor: '#f3f4f6' }}>
-    //   {loading ? (
-    //     <div style={{ textAlign: 'center' }}>
-    //       <Spin tip="Loading your cart..." />
-    //     </div>
-    //   ) : error ? (
-    //     <div style={{ color: 'red', textAlign: 'center', margin: '20px 0' }}>
-    //       {error.message}
-    //     </div>
-    //   ) : cartItems.length > 0 ? (
-    //     <div>
-    //       <Table
-    //         columns={columns}
-    //         dataSource={cartItems}
-    //         rowKey="cartItemId"
-    //         pagination={false}
-    //       />
-    //       <div style={{ margin: '20px 0', fontWeight: 'bold', fontSize: '20px' }}>
-    //         Total Price: ${calculateTotalPrice.toFixed(2)}
-    //       </div>
-    //       <Button onClick={() => setIsModalVisible(true)} style={{ marginBottom: '20px' }}>
-    //         Apply Voucher
-    //       </Button>
-    //       <Button type="primary" onClick={handleDeleteSelected} disabled={selectedItems.length === 0}>
-    //         Delete Selected
-    //       </Button>
-
-    //       <Modal
-    //         title="Apply Voucher"
-    //         visible={isModalVisible}
-    //         onCancel={() => setIsModalVisible(false)}
-    //         footer={null}
-    //       >
-    //         <Input
-    //           value={voucherCode}
-    //           onChange={(e) => setVoucherCode(e.target.value)}
-    //           placeholder="Enter voucher code"
-    //           style={{ marginBottom: '10px' }}
-    //         />
-    //         <Button type="primary" onClick={handleVoucherSubmit}>
-    //           Apply
-    //         </Button>
-    //       </Modal>
-    //     </div>
-    //   ) : (
-    //     <div style={{ textAlign: 'center', margin: '20px 0' }}>
-    //       <h2>Your cart is empty.</h2>
-    //     </div>
-    //   )}
-    // </div>
-
     <div style={{ padding: '10px 120px', paddingBottom: '100px', backgroundColor: '#f3f4f6' }}>
       {loading ? (
         <div style={{ textAlign: 'center' }}>
@@ -334,7 +185,6 @@ const CartRent = () => {
       ) : cartItems.length > 0 ? (
         <Table
           style={{
-            // padding: '0 150px',
             borderRadius: '8px',
             backgroundColor: '#fff',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
@@ -362,16 +212,6 @@ const CartRent = () => {
         zIndex: 1000,
         boxShadow: '0 -2px 10px rgba(0, 0, 0, 0.1)',
       }}>
-        {/* <Row style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
-          <Row style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <span style={{ marginRight: '120px', fontSize: '16px' }}>
-              <GiftOutlined style={{ fontSize: '22px', color: 'red' }} /> Platform Voucher
-            </span>
-            <Button type="default" onClick={() => setIsModalVisible(true)} style={{ borderRadius: '4px', borderColor: '#d9d9d9', }}>
-              Select or enter voucher
-            </Button>
-          </Row>
-        </Row> */}
         <Row style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Col>
             <Button onClick={toggleSelectAll} style={{ marginRight: '10px', borderRadius: '4px', borderColor: '#d9d9d9', fontSize: '18px' }}>
@@ -384,61 +224,31 @@ const CartRent = () => {
             </Button>
           </Col>
           <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Col >
-              <Row style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <div style={{ marginRight: '10px', fontSize: '18px' }}>
-                  Total ({selectedItems.length} {selectedItems.length === 0 ? 'item' : 'items'})
-                </div>
-                {/* <div style={{ fontWeight: 'bold', fontSize: '26px', color: 'red', marginRight: '20px' }}>
-                  ${calculateTotalPrice}
-                </div> */}
-              </Row>
-              {/* <Row>
-                Saved
-              </Row> */}
-            </Col>
-            <Col>
+            {selectedItems.length > 0 ? (
               <Link
-                to={selectedItems.length > 0 ? '/login' : '#'} // Nếu có item thì mới điều hướng
-                // onClick={(e) => {
-                //   if (selectedItems.length <= 0) e.preventDefault(); // Chặn điều hướng nếu không có item
-                // }}
+                to="/order" // Navigate to OrderPage
+                onClick={handleCreateOrder} // Dispatch the action before navigating
                 style={{
                   fontSize: '18px',
                   width: '100%',
                   marginBottom: '8px',
                   borderRadius: '4px',
                   padding: '16px 70px',
-                  backgroundColor: selectedItems.length > 0 ? 'red' : 'gray', // Đổi màu nếu disable
+                  backgroundColor: 'red',
                   color: '#fff',
-                  cursor: selectedItems.length > 0 ? 'pointer' : 'not-allowed' // Hiển thị trạng thái chuột
+                  textAlign: 'center',
+                  display: 'inline-block', // Make it block-level for better alignment
                 }}
               >
                 Create Order
               </Link>
-            </Col>
-
+            ) : (
+              <div style={{ fontSize: '18px', color: '#666' }}>No items selected for order</div>
+            )}
           </Col>
         </Row>
       </div>
-
-      {/* <Modal
-        title="Apply Voucher"
-        visible={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
-        onOk={handleVoucherSubmit}
-        okText="Apply"
-        cancelText="Cancel"
-      >
-        <Input
-          value={voucherCode}
-          onChange={(e) => setVoucherCode(e.target.value)}
-          placeholder="Enter your voucher code"
-          style={{ borderRadius: '4px' }}
-        />
-      </Modal> */}
     </div>
-
   );
 };
 

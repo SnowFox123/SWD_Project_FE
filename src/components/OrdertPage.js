@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { UserGetToyByID, OrderRentToys } from '../services/UserServices'; // Adjust the import based on your file structure
-import { Table, Spin, Alert, Form, Input, Button, DatePicker, Checkbox } from 'antd'; // Import necessary Ant Design components
-
+import { Table, Spin, Alert, Form, Input, Button, DatePicker, Checkbox, Row, Col } from 'antd'; // Import necessary Ant Design components
+import { toast } from 'react-toastify'
 const OrderPage = () => {
   const orderData = useSelector((state) => state.order.orderData); // Access order data from Redux
   const [toyDetails, setToyDetails] = useState([]); // Local state for storing toy details
@@ -77,6 +77,7 @@ const OrderPage = () => {
 
   const onFinish = async (values) => {
     const { shippingAddress, receivePhoneNumber, isRentalOrder, rentalDate, returnDate } = values;
+    console.log(values)
 
     const toyList = orderData.map(item => ({
       toyId: item.toyId,
@@ -85,11 +86,11 @@ const OrderPage = () => {
 
     try {
       await OrderRentToys(shippingAddress, receivePhoneNumber, isRentalOrder, toyList, rentalDate, returnDate);
-      setSuccessMessage('Order placed successfully!'); // Set success message
+      toast.success('Order placed successfully!'); // Set success message
       setError(null); // Reset error message
     } catch (err) {
       setError(err.message || 'Failed to place order.'); // Set error message
-      setSuccessMessage(null); // Reset success message
+      toast.error(null); // Reset success message
     }
   };
 
@@ -103,53 +104,53 @@ const OrderPage = () => {
         <>
 
           <Form layout="vertical" onFinish={onFinish}>
-            {/* <Row>
+            <Row>
               <Col>
-              
+                <Form.Item
+                  label="Shipping Address"
+                  name="shippingAddress"
+                  rules={[{ required: true, message: 'Please input your shipping address!' }]}
+                >
+                  <Input placeholder="Enter your shipping address" />
+                </Form.Item>
+                <Form.Item
+                  label="Receive Phone Number"
+                  name="receivePhoneNumber"
+                  rules={[{ required: true, message: 'Please input your phone number!' }]}
+                >
+                  <Input placeholder="Enter your phone number" />
+                </Form.Item>
               </Col>
 
               <Col>
-              
+                <Form.Item
+                  label="Is Rental Order"
+                  name="isRentalOrder"
+                  valuePropName="checked"
+                >
+                  <Checkbox>Yes</Checkbox>
+                </Form.Item>
+                <Form.Item
+                  label="Rental Date"
+                  name="rentalDate"
+                  rules={[{ required: true, message: 'Please select rental date!' }]}
+                >
+                  <DatePicker format="YYYY-MM-DD" />
+                </Form.Item>
+                <Form.Item
+                  label="Return Date"
+                  name="returnDate"
+                  rules={[{ required: true, message: 'Please select return date!' }]}
+                >
+                  <DatePicker format="YYYY-MM-DD" />
+                </Form.Item>
               </Col>
-            </Row> */}
-            <Form.Item
-              label="Shipping Address"
-              name="shippingAddress"
-              rules={[{ required: true, message: 'Please input your shipping address!' }]}
-            >
-              <Input placeholder="Enter your shipping address" />
-            </Form.Item>
-            <Form.Item
-              label="Receive Phone Number"
-              name="receivePhoneNumber"
-              rules={[{ required: true, message: 'Please input your phone number!' }]}
-            >
-              <Input placeholder="Enter your phone number" />
-            </Form.Item>
-            <Form.Item
-              label="Is Rental Order"
-              name="isRentalOrder"
-              valuePropName="checked"
-            >
-              <Checkbox>Yes</Checkbox>
-            </Form.Item>
-            <Form.Item
-              label="Rental Date"
-              name="rentalDate"
-              rules={[{ required: true, message: 'Please select rental date!' }]}
-            >
-              <DatePicker format="YYYY-MM-DD" />
-            </Form.Item>
-            <Form.Item
-              label="Return Date"
-              name="returnDate"
-              rules={[{ required: true, message: 'Please select return date!' }]}
-            >
-              <DatePicker format="YYYY-MM-DD" />
-            </Form.Item>
+            </Row>
+
+
             <Form.Item>
               <Button type="primary" htmlType="submit">
-                Place Order
+                Submit
               </Button>
             </Form.Item>
           </Form>

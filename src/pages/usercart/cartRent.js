@@ -81,6 +81,14 @@ const CartRent = () => {
     });
   };
 
+  const handleCreateOrderClick = () => {
+    if (selectedItems.length === 0) {
+      message.warning('You haven’t selected any products!'); // Show a warning toast
+    } else {
+      handleCreateOrder(); // Dispatch the action to create the order
+    }
+  };
+
   const toggleSelectAll = () => {
     if (selectedItems.length === cartItems.length) {
       setSelectedItems([]);
@@ -107,6 +115,7 @@ const CartRent = () => {
   }, [cartItems, selectedItems, quantities]);
 
   const handleCreateOrder = () => {
+
     dispatch(saveOrderData(orderData)); // Dispatch the saveOrderData action
   };
 
@@ -138,7 +147,7 @@ const CartRent = () => {
       dataIndex: 'toy',
       key: 'name',
       render: (toy) => (
-        <Link to={`/toyrentaldetail/${toy.toyId}`} style={{ color: 'black', fontSize: '16px'}}>
+        <Link to={`/toyrentaldetail/${toy.toyId}`} style={{ color: 'black', fontSize: '16px' }}>
           {toy.toyName}
         </Link>
       )
@@ -228,19 +237,27 @@ const CartRent = () => {
             </Button>
           </Col>
           <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            (<p style={{ display: 'flex',  marginRight:'10px'}}>
+              <p style={{ display: 'flex', marginRight: '5px' }}>
+                {selectedItems.length}
+              </p>
+              <p>
+                {selectedItems.length > 1 ? "items" : "item"}
+              </p>
+            </p>)
             <Link
-              to="/order" // Navigate to OrderPage
-              onClick={handleCreateOrder} // Dispatch the action before navigating
-              disabled={selectedItems.length > 0}
+              to={selectedItems.length > 0 ? "/order" : "#"}
+              onClick={handleCreateOrderClick} // Use the new handleCreateOrderClick function
               style={{
                 fontSize: '18px',
                 width: '100%',
                 borderRadius: '4px',
                 padding: '16px 70px',
-                backgroundColor: 'red',
+                backgroundColor: selectedItems.length > 0 ? 'red' : '#d9d9d9', // Change color based on selection
                 color: '#fff',
                 textAlign: 'center',
-                display: 'inline-block', // Make it block-level for better alignment
+                display: 'inline-block',
+                pointerEvents: selectedItems.length > 0 ? 'auto' : 'none', // Prevent clicking when disabled
               }}
             >
               Create Order

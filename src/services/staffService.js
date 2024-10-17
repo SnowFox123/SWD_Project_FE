@@ -3,7 +3,7 @@ import { axiosInstance } from './customize-axios';
 export const getCategories = async () => {
     try {
         // Call the API to get categories
-        const response = await axiosInstance.get('https://localhost:7221/api/Category/categories', {
+        const response = await axiosInstance.get('https://localhost:7221/api/Category', {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -37,7 +37,7 @@ export const getCategories = async () => {
 export const postCategories = async (categoryName) => {
     try {
         // Call the API to get categories
-        const response = await axiosInstance.post('https://localhost:7221/api/Category/category', {
+        const response = await axiosInstance.post('https://localhost:7221/api/Category', {
             categoryName
         });
 
@@ -70,7 +70,7 @@ export const postCategories = async (categoryName) => {
 export const putCategories = async (categoryId, categoryName) => {
     try {
         // Call the API to get categories
-        const response = await axiosInstance.put('https://localhost:7221/api/Category/category', {
+        const response = await axiosInstance.put('https://localhost:7221/api/Category', {
             categoryId,
             categoryName,
         });
@@ -314,7 +314,7 @@ export const PutSignUpSupplier = async (accountName, accountEmail, accountPasswo
 export const AcceptDenyRequest = async (requestId, requestStatus, denyReason) => {
     try {
         // Call the API to get categories
-        const response = await axiosInstance.put('https://localhost:7221/api/Request/update-status', {
+        const response = await axiosInstance.put('https://localhost:7221/api/Request/status', {
             requestId,
             requestStatus,
             denyReason

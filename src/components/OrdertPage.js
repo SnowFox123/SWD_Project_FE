@@ -40,9 +40,14 @@ const OrderPage = () => {
       key: 'toyId',
     },
     {
-      title: 'Quantity',
-      dataIndex: 'quantity',
-      key: 'quantity',
+      title: 'Image',
+      dataIndex: 'imageUrl',
+      key: 'imageUrl',
+      render: (_, record) => (
+        toyDetails[record.index]?.imageUrl ? (
+          <img src={toyDetails[record.index].imageUrl} alt={toyDetails[record.index].toyName} style={{ width: 100 }} />
+        ) : 'Loading...'
+      ),
     },
     {
       title: 'Toy Name',
@@ -56,15 +61,12 @@ const OrderPage = () => {
       key: 'rentPricePerDay',
       render: (_, record) => `$${toyDetails[record.index]?.rentPricePerDay || 'Loading...'}`,
     },
+
+
     {
-      title: 'Image',
-      dataIndex: 'imageUrl',
-      key: 'imageUrl',
-      render: (_, record) => (
-        toyDetails[record.index]?.imageUrl ? (
-          <img src={toyDetails[record.index].imageUrl} alt={toyDetails[record.index].toyName} style={{ width: 100 }} />
-        ) : 'Loading...'
-      ),
+      title: 'Quantity',
+      dataIndex: 'quantity',
+      key: 'quantity',
     },
   ];
 
@@ -99,12 +101,17 @@ const OrderPage = () => {
       {successMessage && <Alert message="Success" description={successMessage} type="success" showIcon />}
       {orderData.length > 0 ? (
         <>
-          <Table 
-            dataSource={dataSource} 
-            columns={columns} 
-            rowKey="toyId" // Specify the key for rows
-          />
+
           <Form layout="vertical" onFinish={onFinish}>
+            {/* <Row>
+              <Col>
+              
+              </Col>
+
+              <Col>
+              
+              </Col>
+            </Row> */}
             <Form.Item
               label="Shipping Address"
               name="shippingAddress"
@@ -146,6 +153,11 @@ const OrderPage = () => {
               </Button>
             </Form.Item>
           </Form>
+          <Table
+            dataSource={dataSource}
+            columns={columns}
+            rowKey="toyId" // Specify the key for rows
+          />
         </>
       ) : (
         <p>No order data available.</p>

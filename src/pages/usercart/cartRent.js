@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Table, Spin, message, InputNumber, Checkbox, Button, Row, Col } from 'antd';
+import { Table, Spin, message, InputNumber, Checkbox, Button, Row, Col, Image } from 'antd';
 import { GetCart, getToyByID } from '../../services/UserServices';
 import { Link, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux'; // Import useDispatch
@@ -126,10 +126,10 @@ const CartRent = () => {
       dataIndex: 'toy',
       key: 'image',
       render: (toy) => (
-        <img
+        <Image
           src={toy.imageUrl}
           alt={toy.toyName}
-          style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+          style={{ width: '150px', height: '150px', objectFit: 'contain' }}
         />
       ),
     },
@@ -137,7 +137,11 @@ const CartRent = () => {
       title: 'Name',
       dataIndex: 'toy',
       key: 'name',
-      render: (toy) => toy.toyName,
+      render: (toy) => (
+        <Link to={`/toyrentaldetail/${toy.toyId}`} style={{ color: 'black', fontSize: '16px'}}>
+          {toy.toyName}
+        </Link>
+      )
     },
     {
       title: 'Price Per Day',
@@ -162,9 +166,9 @@ const CartRent = () => {
       dataIndex: 'Delete',
       key: 'Delete',
       render: (text, record) => (
-        <Button 
-          type="primary" 
-          danger 
+        <Button
+          type="primary"
+          danger
           onClick={() => handleDeleteSelected(record.cartItemId)}>
           Delete
         </Button>
@@ -208,7 +212,7 @@ const CartRent = () => {
         backgroundColor: '#ffffff',
         border: '1px solid #d9d9d9',
         borderTop: 'none',
-        padding: '30px 180px',
+        padding: '16px 180px',
         zIndex: 1000,
         boxShadow: '0 -2px 10px rgba(0, 0, 0, 0.1)',
       }}>
@@ -224,27 +228,23 @@ const CartRent = () => {
             </Button>
           </Col>
           <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            {selectedItems.length > 0 ? (
-              <Link
-                to="/order" // Navigate to OrderPage
-                onClick={handleCreateOrder} // Dispatch the action before navigating
-                style={{
-                  fontSize: '18px',
-                  width: '100%',
-                  marginBottom: '8px',
-                  borderRadius: '4px',
-                  padding: '16px 70px',
-                  backgroundColor: 'red',
-                  color: '#fff',
-                  textAlign: 'center',
-                  display: 'inline-block', // Make it block-level for better alignment
-                }}
-              >
-                Create Order
-              </Link>
-            ) : (
-              <div style={{ fontSize: '18px', color: '#666' }}>No items selected for order</div>
-            )}
+            <Link
+              to="/order" // Navigate to OrderPage
+              onClick={handleCreateOrder} // Dispatch the action before navigating
+              disabled={selectedItems.length > 0}
+              style={{
+                fontSize: '18px',
+                width: '100%',
+                borderRadius: '4px',
+                padding: '16px 70px',
+                backgroundColor: 'red',
+                color: '#fff',
+                textAlign: 'center',
+                display: 'inline-block', // Make it block-level for better alignment
+              }}
+            >
+              Create Order
+            </Link>
           </Col>
         </Row>
       </div>

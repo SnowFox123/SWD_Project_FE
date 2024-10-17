@@ -236,27 +236,20 @@ const CartRent = () => {
               Delete
             </Button>
           </Col>
-          <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            (<p style={{ display: 'flex',  marginRight:'10px'}}>
-              <p style={{ display: 'flex', marginRight: '5px' }}>
-                {selectedItems.length}
-              </p>
-              <p>
-                {selectedItems.length > 1 ? "items" : "item"}
-              </p>
-            </p>)
+          <Col style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', justifyContent: 'flex-end', width: '100%' }}>
+            <div style={{ marginRight: '20px', fontSize: '18px' }}>
+              Total ({selectedItems.length} {selectedItems.length === 1 ? 'item' : 'items'})
+            </div>
             <Link
               to={selectedItems.length > 0 ? "/order" : "#"}
               onClick={handleCreateOrderClick} // Use the new handleCreateOrderClick function
               style={{
                 fontSize: '18px',
-                width: '100%',
                 borderRadius: '4px',
                 padding: '16px 70px',
                 backgroundColor: selectedItems.length > 0 ? 'red' : '#d9d9d9', // Change color based on selection
                 color: '#fff',
                 textAlign: 'center',
-                display: 'inline-block',
                 pointerEvents: selectedItems.length > 0 ? 'auto' : 'none', // Prevent clicking when disabled
               }}
             >
@@ -265,6 +258,7 @@ const CartRent = () => {
           </Col>
         </Row>
       </div>
+
     </div>
   );
 };

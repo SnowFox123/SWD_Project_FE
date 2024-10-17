@@ -159,6 +159,18 @@ const CartRent = () => {
       render: (toy) => <div>${toy.rentPricePerDay}</div>,
     },
     {
+      title: 'Price Per Day',
+      dataIndex: 'toy',
+      key: 'pricePerDay',
+      render: (toy) => <div>${toy.rentPricePerWeek}</div>,
+    },
+    {
+      title: 'Price Per Day',
+      dataIndex: 'toy',
+      key: 'pricePerDay',
+      render: (toy) => <div>${toy.rentPricePerTwoWeeks}</div>,
+    },
+    {
       title: 'Quantity',
       dataIndex: 'quantity',
       key: 'quantity',

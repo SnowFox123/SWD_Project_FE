@@ -29,7 +29,7 @@ import { useSelector } from 'react-redux'; //
 import CartRent from "./pages/usercart/cartRent";
 import CartSale from "./pages/usercart/cartsale";
 import ToyRentalDetail from "./components/ToyRentalDetail";
-import OrdertPage from "./components/OrdertPage";
+import OrderPage2 from "./components/OrderPage2";
 
 function App() {
   const role = useSelector((state) => state.auth.role); // 
@@ -112,7 +112,7 @@ function App() {
           path="/order"
           element={
             <PrivateRoute allowedRoles={['1']}>
-              <OrdertPage />
+              <OrderPage2 />
             </PrivateRoute>
           }
         />

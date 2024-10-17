@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Table, Spin, message, InputNumber, Checkbox, Button, Modal, Input, Row, Col } from 'antd';
 import { GiftOutlined } from '@ant-design/icons';
-import { GetCart, getToyByID } from '../../services/UserServices'; // Import API functions
+import { GetCart, GetCart2, getToyByID } from '../../services/UserServices'; // Import API functions
 
 const CartSale = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -16,7 +16,7 @@ const CartSale = () => {
     const fetchCart = async () => {
       setLoading(true);
       try {
-        const items = await GetCart();
+        const items = await GetCart2();
         const toyDetailsPromises = items.map(async (item) => {
           const toyDetails = await getToyByID(item.toyId);
           return { ...item, toy: toyDetails };

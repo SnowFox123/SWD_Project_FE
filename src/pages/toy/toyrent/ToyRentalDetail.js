@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Spin, message, Card, Button, Row, Col, InputNumber, Typography, Space, Image, Radio } from 'antd';
-import { AddToCart2, UserGetToyByID } from '../services/UserServices';
+import { AddToCart2, UserGetToyByID } from '../../../services/UserServices';
 import { toast } from 'react-toastify';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 
@@ -183,7 +183,7 @@ const ToyRentalDetail = () => {
                                     </Text>
                                 </Col>
                                 <Col style={{ display: 'flex', flexDirection: 'column', marginLeft: '10px' }}>
-                                    <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#ee4d2d' }}>${toy.rentPricePerDay}</span>
+                                    <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#ee4d2d' }}>${toy.buyPrice}</span>
                                     <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#ee4d2d' }}>${toy.rentPricePerWeek}</span>
                                     <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#ee4d2d' }}>${toy.rentPricePerTwoWeeks}</span>
                                 </Col>

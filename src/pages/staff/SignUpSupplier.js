@@ -5,7 +5,7 @@ import { toast } from "react-toastify"; // Import toast and ToastContainer
 import 'react-toastify/dist/ReactToastify.css'; // Import react-toastify CSS
 
 import './SignUpSupplier.css';
-import { PutSignUpSupplier } from "../services/staffService";
+import { PutSignUpSupplier } from "../../services/staffService";
 
 const SignUpSupplier = () => {
   const [form] = Form.useForm(); // Using Ant Design form instance
@@ -102,12 +102,12 @@ const SignUpSupplier = () => {
               Register Supplier
             </p>
 
-            <Form 
-              form={form} 
-              name="basic" 
-              labelCol={{ span: 8 }} 
-              wrapperCol={{ span: 16 }} 
-              style={{ maxWidth: 600 }} 
+            <Form
+              form={form}
+              name="basic"
+              labelCol={{ span: 8 }}
+              wrapperCol={{ span: 16 }}
+              style={{ maxWidth: 600 }}
               autoComplete="off"
               onFieldsChange={handleFormChange} // Handle form changes here
             >

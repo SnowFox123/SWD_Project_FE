@@ -7,7 +7,6 @@ import "./App.css";
 import Header from "./components/header";
 import { Navbar } from "./components/nav";
 import Cart from "./pages/usercart/cartRent";
-import HistoryUserCart from "./pages/usercart/historyusercart";
 import Login2 from "./pages/login/Login";
 import Home from "./pages/home/home";
 import Rentaltoy from "./pages/rentaltoy/rentaltoy";
@@ -16,20 +15,22 @@ import LogoCategories from "./components/logo";
 import Register2 from "./pages/register/register2";
 import ForgotPassword from "./pages/forgot-password/forgot-password";
 // import AuthStatus from "./redux/AuthStatus";
-import AdminPage from "./components/AdminPage";
-import UserPage from "./components/UserPage";
-import Unauthorized from "./components/Unauthorized";
-import PrivateRoute from "./components/PrivateRoute";  // Import PrivateRoute
-import Logout from "./components/Logout";
-import SupplierPage from "./components/SupplierPage";
-import StaffPage from "./components/Staff";
+import AdminPage from "./pages/admin/AdminPage";
+import UserPage from "./pages/user/UserPage";
+import Unauthorized from "./pages/Unauthorized/Unauthorized";
+import PrivateRoute from "./pages/privateroute/PrivateRoute";  // Import PrivateRoute
+import Logout from "./pages/user/Logout";
+import SupplierPage from "./pages/supplier/SupplierPage";
+import StaffPage from "./pages/staff/Staff";
 import ProfileUser from "./pages/profile/profileuser";
-import ChangePassword from "./components/changePassword";
+import ChangePassword from "./pages/user/changePassword";
 import { useSelector } from 'react-redux'; //
 import CartRent from "./pages/usercart/cartRent";
 import CartSale from "./pages/usercart/cartsale";
-import ToyRentalDetail from "./components/ToyRentalDetail";
-import OrderPage2 from "./components/OrderPage2";
+import ToyRentalDetail from "./pages/toy/toyrent/ToyRentalDetail";
+import OrderRent from "./pages/user/order/OrderRent";
+import OrderSale from "./pages/user/order/OrderSale";
+import ToySaleDetail from "./pages/toy/toysale/ToySaleDetail";
 
 function App() {
   const role = useSelector((state) => state.auth.role); // 
@@ -109,10 +110,19 @@ function App() {
         />
 
         <Route
-          path="/order"
+          path="/orderrent"
           element={
             <PrivateRoute allowedRoles={['1']}>
-              <OrderPage2 />
+              <OrderRent />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/ordersale"
+          element={
+            <PrivateRoute allowedRoles={['1']}>
+              <OrderSale />
             </PrivateRoute>
           }
         />
@@ -132,6 +142,16 @@ function App() {
           element={
             <PrivateRoute allowedRoles={['1']}>
               <ToyRentalDetail />
+            </PrivateRoute>
+          }
+        />
+
+
+        <Route
+          path="/toysaledetail/:id"
+          element={
+            <PrivateRoute allowedRoles={['1']}>
+              <ToySaleDetail />
             </PrivateRoute>
           }
         />
@@ -170,7 +190,6 @@ function App() {
         <Route path="/register" element={<Register2 />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
         {/* <Route path="/cartrental" element={<CartRent />} /> */}
-        {/* <Route path="/historyusercart" element={<HistoryUserCart />} /> */}
         <Route path="/rentaltoy" element={<Rentaltoy />} />
 
         {/* Catch-all route for non-existent paths */}

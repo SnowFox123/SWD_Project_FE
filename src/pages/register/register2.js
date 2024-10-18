@@ -269,28 +269,26 @@ const Register2 = () => {
               </Form.Item>
 
               <Form.Item>
-                <Form.Item>
-                  <Button
-                    block
-                    type="primary"
-                    htmlType="submit"
-                    className="register-button-2"
-                    onClick={handleRegister}
-                    disabled={isButtonDisabled} // Disable button based on validation
-                    style={{
-                      width: "100%", // Adjust the width here if needed
-                      background: isButtonDisabled ? "#d9d9d9" : "red", // Gray when disabled, red when enabled
-                      padding: "20px",
-                      color: isButtonDisabled ? "#a0a0a0" : "#fff", // Adjust text color when disabled
-                      cursor: isButtonDisabled ? "not-allowed" : "pointer" // Change cursor when disabled
-                    }}
-                  >
-                    Register
-                  </Button>
-                </Form.Item>
-
-
+                <Button
+                  block
+                  type="primary"
+                  htmlType="submit"
+                  className="register-button-2"
+                  onClick={handleRegister}
+                  disabled={isButtonDisabled} // Disable button based on validation
+                  style={{
+                    width: "100%", // Adjust the width here if needed
+                    background: isButtonDisabled ? "#d9d9d9" : "red", // Gray when disabled, red when enabled
+                    padding: "20px",
+                    color: isButtonDisabled ? "#a0a0a0" : "#fff", // Adjust text color when disabled
+                    cursor: isButtonDisabled ? "not-allowed" : "pointer" // Change cursor when disabled
+                  }}
+                >
+                  Register
+                </Button>
               </Form.Item>
+
+
             </Form>
           </div>
         </div>

@@ -24,7 +24,7 @@ const persistConfig = {
 // Combine your reducers
 const rootReducer = combineReducers({
   auth: authReducer,
-  order: orderReducer, // Add orderReducer here
+  order: orderReducer,
 });
 
 // Create a persisted reducer

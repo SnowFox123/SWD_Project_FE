@@ -29,8 +29,8 @@ const items = [
 const RequestForm = () => {
   return (
     <>
-    <Tabs defaultActiveKey="1" items={items}/>
-        
+      <Tabs defaultActiveKey="1" items={items} />
+
     </>
   )
 }

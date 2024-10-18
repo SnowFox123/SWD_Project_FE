@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Pagination, Spin, message, Input, Button } from 'antd';
-import { ViewToyRent, SearchToyRent, AddToCart, AddToCart2, ViewToySale, SearchToySale } from '../services/UserServices'; // Import your service functions
+import { ViewToyRent, SearchToyRent, AddToCart, AddToCart2, ViewToySale, SearchToySale } from '../../../services/UserServices'; // Import your service functions
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -65,15 +65,15 @@ const ToySale = () => {
             toast.error('Invalid quantity. Please enter a value between 1 and 2147483647.');
             return;  // Early return to avoid making a request with invalid quantity
         }
-    
+
         try {
             // Set loading state only for the specific toy being added to the cart
             setAddingToCart((prevState) => ({ ...prevState, [toyId]: true }));
-    
+
             console.log(`Adding toy ${toyId} to cart with quantity: ${quantity}`);  // Log the quantity
-    
+
             const response = await AddToCart2(toyId, quantity);
-    
+
             if (response) {
                 toast.success('Item added to cart successfully!');
             } else {
@@ -87,7 +87,7 @@ const ToySale = () => {
             setAddingToCart((prevState) => ({ ...prevState, [toyId]: false }));
         }
     };
-    
+
 
     return (
         <div style={{ padding: '20px' }}>

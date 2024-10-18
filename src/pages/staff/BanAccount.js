@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, notification, Modal } from 'antd'; // Import Modal for confirmation
-import { banAccount, getAllAccount } from '../services/staffService'; // Import the API function for banning account
+import { banAccount, getAllAccount } from '../../services/staffService'; // Import the API function for banning account
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 

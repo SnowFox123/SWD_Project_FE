@@ -248,25 +248,38 @@ const CartRent = () => {
               Delete
             </Button>
           </Col>
-          <Col style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', justifyContent: 'flex-end', width: '100%' }}>
-            <div style={{ marginRight: '20px', fontSize: '18px' }}>
-              Total ({selectedItems.length} {selectedItems.length === 1 ? 'item' : 'items'})
-            </div>
-            <Link
-              to={selectedItems.length > 0 ? "/order" : "#"}
-              onClick={handleCreateOrderClick} // Use the new handleCreateOrderClick function
-              style={{
-                fontSize: '18px',
-                borderRadius: '4px',
-                padding: '16px 70px',
-                backgroundColor: selectedItems.length > 0 ? 'red' : '#d9d9d9', // Change color based on selection
-                color: '#fff',
-                textAlign: 'center',
-                pointerEvents: selectedItems.length > 0 ? 'auto' : 'none', // Prevent clicking when disabled
-              }}
-            >
-              Create Order
-            </Link>
+          <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Col>
+              <Row style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div style={{ marginRight: '10px', fontSize: '18px' }}>
+                  Total ({selectedItems.length} {selectedItems.length === 1 ? 'item' : 'items'})
+                </div>
+                {/* <div style={{ fontWeight: 'bold', fontSize: '26px', color: 'red', marginRight: '20px' }}>
+                  ${calculateTotalPrice}
+                </div> */}
+              </Row>
+              <Row>
+                {/* Saved */}
+              </Row>
+            </Col>
+            <Col>
+
+              <Link
+                to={selectedItems.length > 0 ? "/orderrent" : "#"}
+                onClick={handleCreateOrderClick} // Use the new handleCreateOrderClick function
+                style={{
+                  fontSize: '18px',
+                  borderRadius: '4px',
+                  padding: '16px 70px',
+                  backgroundColor: selectedItems.length > 0 ? 'red' : '#d9d9d9', // Change color based on selection
+                  color: '#fff',
+                  textAlign: 'center',
+                  pointerEvents: selectedItems.length > 0 ? 'auto' : 'none', // Prevent clicking when disabled
+                }}
+              >
+                Create Order
+              </Link>
+            </Col>
           </Col>
         </Row>
       </div>

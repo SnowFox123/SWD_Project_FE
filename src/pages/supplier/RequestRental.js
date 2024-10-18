@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { submitRentalRequest } from '../services/supplierService';
+import { submitRentalRequest } from '../../services/supplierService';
 import { Form, Input, InputNumber, Button, Upload, Select } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
 
-import { getCategories } from '../services/staffService';
+import { getCategories } from '../../services/staffService';
 
 const RequestRental = () => {
   const [toyName, setToyName] = useState('');
@@ -69,7 +69,7 @@ const RequestRental = () => {
       setStock(1);
       setImageFile(null);
       setImagePreview(null);
-      
+
       // Reset the entire form
       form.resetFields();
     } catch (err) {

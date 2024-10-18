@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getCategories, postCategories, putCategories } from '../services/staffService';
+import { getCategories, postCategories, putCategories } from '../../services/staffService';
 import { Table, Button, Input, Modal, Form } from "antd";
 import { SearchOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
@@ -54,7 +54,7 @@ const CategoryList = () => {
     const handleSubmit = async () => {
         try {
             const values = await form.validateFields();
-            
+
             // Hiển thị modal confirm trước khi gửi dữ liệu
             Modal.confirm({
                 title: selectedCategory ? 'Confirm Edit' : 'Confirm Add',

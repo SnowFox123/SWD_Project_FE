@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getAnsweredRequests, getToyByID } from '../services/staffService';
+import { getAnsweredRequests, getToyByID } from '../../services/staffService';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { Table, Spin, Button, Avatar, Modal, Image } from 'antd';
 import { toast } from 'react-toastify';

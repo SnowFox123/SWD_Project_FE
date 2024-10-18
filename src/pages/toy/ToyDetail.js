@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getToyByID } from '../services/staffService';
+import { getToyByID } from '../../services/staffService';
 
 const ToyDetail = ({ toyID }) => {
     const [toy, setToy] = useState(null); // State to store the toy details

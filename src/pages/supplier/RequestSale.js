@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { submitSaleRequest } from '../services/supplierService';
+import { submitSaleRequest } from '../../services/supplierService';
 import { Form, Input, InputNumber, Button, Upload, message, Select } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import the styles
-import { getCategories } from '../services/staffService';
+import { getCategories } from '../../services/staffService';
 
 const RequestSale = () => {
   const [form] = Form.useForm(); // Sử dụng form instance của Ant Design

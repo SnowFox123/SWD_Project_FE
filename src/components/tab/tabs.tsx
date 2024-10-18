@@ -1,26 +1,26 @@
-import React from 'react';
-import { Rate } from 'antd';
-import { Card, Col, Row } from 'antd';
-import { Link } from 'react-router-dom';
-import { Tabs as AntTabs } from 'antd';  // AntTabs is still used from Ant Design
+import React from "react";
+import { Rate } from "antd";
+import { Card, Col, Row } from "antd";
+import { Link } from "react-router-dom";
+import { Tabs as AntTabs } from "antd"; // AntTabs is still used from Ant Design
 
-import './tabs.css';
-import ToyRent from '../ToyRent';
-import ToySale from '../ToySale';
+import "./tabs.css";
+import ToyRent from "../../pages/toy/toyrent/ToyRent";
+import ToySale from "../../pages/toy/toysale/ToySale";
 
 // Define the interface for AntTabs items
 interface TabItem {
   label: string;
   key: string;
-  children: React.ReactNode;  // ReactNode to represent the JSX content
+  children: React.ReactNode; // ReactNode to represent the JSX content
 }
 
 const CustomTabs: React.FC = () => {
   const items: TabItem[] = [
     {
-      label: 'Rent Toys',  // Home Tab
-      key: '1',
-      children: <ToyRent />
+      label: "Rent Toys", // Home Tab
+      key: "1",
+      children: <ToyRent />,
       // (
       //   <div>
       //     Đánh giá cao nhất
@@ -62,9 +62,9 @@ const CustomTabs: React.FC = () => {
       // ),
     },
     {
-      label: 'Sale Toys ',  // Products Tab
-      key: '2',
-      children: <ToySale /> ,  // Content for Products Tab
+      label: "Sale Toys ", // Products Tab
+      key: "2",
+      children: <ToySale />, // Content for Products Tab
     },
     // {
     //   label: 'Liên hệ',  // Contact Tab
@@ -77,7 +77,7 @@ const CustomTabs: React.FC = () => {
     <div style={{ padding: "10px 150px", backgroundColor: "#f5f5f5" }}>
       <AntTabs
         defaultActiveKey="1"
-        type="card"  // Card type tabs
+        type="card" // Card type tabs
         size="middle"
         items={items}
       />

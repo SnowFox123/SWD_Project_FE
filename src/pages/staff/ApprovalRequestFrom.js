@@ -7,7 +7,7 @@ const items = [
   {
     key: '1',
     label: 'Unanswered Requests',
-    children: <UnansweredRequests/>,
+    children: <UnansweredRequests />,
   },
   {
     key: '2',
@@ -29,8 +29,8 @@ const items = [
 const ApprovalRequestFrom = () => {
   return (
     <>
-    <Tabs defaultActiveKey="1" items={items}/>
-        
+      <Tabs defaultActiveKey="1" items={items} />
+
     </>
   )
 }

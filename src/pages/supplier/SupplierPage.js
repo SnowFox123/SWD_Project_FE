@@ -1,26 +1,25 @@
 import React, { useState } from 'react';
 import {
   AppstoreOutlined,
-  BarChartOutlined,
+  // BarChartOutlined,
   CloudOutlined,
   ShopOutlined,
   TeamOutlined,
-  UploadOutlined,
+  // UploadOutlined,
   UserOutlined,
-  VideoCameraOutlined,
+  // VideoCameraOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 
-import { MailOutlined, SettingOutlined } from '@ant-design/icons';
-import { Dropdown, Space, Row, Col, Input } from 'antd';
+import { Dropdown, Space, Col } from 'antd';
 import { DownOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../redux/authSlice'; // Ensure this imports your updated Redux action
-import '../components/nav/navbar.css'; // Ensure this imports your updated CSS
-import CategoryList from './Categories';
+import { logout } from '../../redux/authSlice'; // Ensure this imports your updated Redux action
+import '../../../src/components/nav/navbar.css'; // Ensure this imports your updated CSS
+import RequestForm from './RequestForm';
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Sider } = Layout;
 const siderStyle = {
   overflow: 'auto',
   height: '100vh',
@@ -33,27 +32,25 @@ const siderStyle = {
 };
 
 // Define your components for different tabs
-const UserPage = () => <p>User Content</p>;
-const VideoPage = () => <p>Video Content</p>;
-const UploadPage = () => <p>Upload Content</p>;
-const BarChartPage = () => <p>Bar Chart Content</p>;
+// const VideoPage = () => <p>Video Content</p>;
+// const BarChartPage = () => <p>Bar Chart Content</p>;
 const CloudPage = () => <p>Cloud Content</p>;
 const AppStorePage = () => <p>App Store Content</p>;
 const TeamPage = () => <p>Team Content</p>;
 const ShopPage = () => <p>Shop Content</p>;
 
 const items = [
-  { key: '1', icon: <UserOutlined />, label: 'CategoryList', component: CategoryList },
-  { key: '2', icon: <VideoCameraOutlined />, label: 'Video', component: VideoPage },
-  { key: '3', icon: <UploadOutlined />, label: 'Upload', component: UploadPage },
-  { key: '4', icon: <BarChartOutlined />, label: 'Bar Chart', component: BarChartPage },
-  { key: '5', icon: <CloudOutlined />, label: 'Cloud', component: CloudPage },
-  { key: '6', icon: <AppstoreOutlined />, label: 'App Store', component: AppStorePage },
-  { key: '7', icon: <TeamOutlined />, label: 'Team', component: TeamPage },
-  { key: '8', icon: <ShopOutlined />, label: 'Shop', component: ShopPage },
+  { key: '1', icon: <UserOutlined />, label: 'RequestForm', component: RequestForm },
+  // { key: '2', icon: <VideoCameraOutlined />, label: 'Video', component: VideoPage },
+  // { key: '3', icon: <UploadOutlined />, label: 'Upload', component: BarChartPage },
+  // { key: '4', icon: <BarChartOutlined />, label: 'Bar Chart', component: BarChartPage },
+  // { key: '5', icon: <CloudOutlined />, label: 'Cloud', component: CloudPage },
+  // { key: '6', icon: <AppstoreOutlined />, label: 'App Store', component: AppStorePage },
+  // { key: '7', icon: <TeamOutlined />, label: 'Team', component: TeamPage },
+  // { key: '8', icon: <ShopOutlined />, label: 'Shop', component: ShopPage },
 ];
 
-const AdminPage = () => {
+const SupplierPage = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -83,7 +80,7 @@ const AdminPage = () => {
     <Menu>
       {isAuthenticated && (
         <Menu.Item key="logout" onClick={handleLogout}>
-          Đăng xuất
+          Logout
         </Menu.Item>
       )}
     </Menu>
@@ -119,7 +116,7 @@ const AdminPage = () => {
         >
           <div className="navbar-2" style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
             <Col style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-              <p style={{ fontSize: '18px', margin: 0 }}>Staff page</p>
+              <p style={{ fontSize: '18px', margin: 0 }}>Supplier page</p>
             </Col>
             <Col style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
               <Dropdown overlay={dropdownMenuItems}>
@@ -157,4 +154,4 @@ const AdminPage = () => {
   );
 };
 
-export default AdminPage;
+export default SupplierPage;

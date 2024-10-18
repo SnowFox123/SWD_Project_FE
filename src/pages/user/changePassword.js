@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { changePassword } from '../services/profile'; // assuming changePassword is from profile services
+import { changePassword } from '../../services/profile'; // assuming changePassword is from profile services
 import { Form, Input, Button, Row, Col, Typography } from 'antd'; // Ant Design imports
 import { SaveOutlined, CloseOutlined } from '@ant-design/icons'; // Ant Design icons
 import { toast } from 'react-toastify'; // react-toastify imports

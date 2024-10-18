@@ -1,25 +1,30 @@
 import React, { useState } from 'react';
 import {
   AppstoreOutlined,
-  // BarChartOutlined,
+  UsergroupDeleteOutlined,
   CloudOutlined,
   ShopOutlined,
   TeamOutlined,
-  // UploadOutlined,
+  UserAddOutlined,
   UserOutlined,
-  // VideoCameraOutlined,
+  FileDoneOutlined,
+  InboxOutlined
 } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 
-import { Dropdown, Space, Col } from 'antd';
+import { MailOutlined, SettingOutlined } from '@ant-design/icons';
+import { Dropdown, Space, Row, Col, Input } from 'antd';
 import { DownOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../redux/authSlice'; // Ensure this imports your updated Redux action
-import '../components/nav/navbar.css'; // Ensure this imports your updated CSS
-import RequestForm from './RequestForm';
+import { logout } from '../../redux/authSlice'; // Ensure this imports your updated Redux action
+import '../../components/nav/navbar.css'; // Ensure this imports your updated CSS
+import CategoryList from './Categories';
+import ApprovalRequestFrom from './ApprovalRequestFrom';
+import BanAccount from './BanAccount';
+import SignUpSupplier from './SignUpSupplier';
 
-const { Header, Content, Sider } = Layout;
+const { Header, Content, Footer, Sider } = Layout;
 const siderStyle = {
   overflow: 'auto',
   height: '100vh',
@@ -32,25 +37,27 @@ const siderStyle = {
 };
 
 // Define your components for different tabs
-// const VideoPage = () => <p>Video Content</p>;
-// const BarChartPage = () => <p>Bar Chart Content</p>;
+const UserPage = () => <p>User Content</p>;
+const VideoPage = () => <p>Video Content</p>;
+const UploadPage = () => <p>Upload Content</p>;
+const BarChartPage = () => <p>Bar Chart Content</p>;
 const CloudPage = () => <p>Cloud Content</p>;
 const AppStorePage = () => <p>App Store Content</p>;
 const TeamPage = () => <p>Team Content</p>;
 const ShopPage = () => <p>Shop Content</p>;
 
 const items = [
-  { key: '1', icon: <UserOutlined />, label: 'RequestForm', component: RequestForm },
-  // { key: '2', icon: <VideoCameraOutlined />, label: 'Video', component: VideoPage },
-  // { key: '3', icon: <UploadOutlined />, label: 'Upload', component: BarChartPage },
-  // { key: '4', icon: <BarChartOutlined />, label: 'Bar Chart', component: BarChartPage },
+  { key: '1', icon: <FileDoneOutlined />, label: 'Approval Request', component: ApprovalRequestFrom },
+  { key: '2', icon: <InboxOutlined />, label: 'Category List', component: CategoryList },
+  { key: '3', icon: <UserAddOutlined />, label: 'SignUp Supplier', component: SignUpSupplier },
+  { key: '4', icon: <UsergroupDeleteOutlined />, label: 'Ban Account', component: BanAccount },
   // { key: '5', icon: <CloudOutlined />, label: 'Cloud', component: CloudPage },
   // { key: '6', icon: <AppstoreOutlined />, label: 'App Store', component: AppStorePage },
   // { key: '7', icon: <TeamOutlined />, label: 'Team', component: TeamPage },
   // { key: '8', icon: <ShopOutlined />, label: 'Shop', component: ShopPage },
 ];
 
-const SupplierPage = () => {
+const StaffPage = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -116,7 +123,7 @@ const SupplierPage = () => {
         >
           <div className="navbar-2" style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
             <Col style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-              <p style={{ fontSize: '18px', margin: 0 }}>Supplier page</p>
+              <p style={{ fontSize: '18px', margin: 0 }}>Staff page</p>
             </Col>
             <Col style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
               <Dropdown overlay={dropdownMenuItems}>
@@ -154,4 +161,4 @@ const SupplierPage = () => {
   );
 };
 
-export default SupplierPage;
+export default StaffPage;

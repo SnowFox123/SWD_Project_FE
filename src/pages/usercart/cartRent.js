@@ -17,6 +17,7 @@ const CartRent = () => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [quantities, setQuantities] = useState({});
   const [orderData, setOrderData] = useState([]); // Store order data
+  // const [orderData, setOrderData] = useState([]); // Store order data
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -30,6 +31,7 @@ const CartRent = () => {
 
         const cartWithToyDetails = await Promise.all(toyDetailsPromises);
         const rentalItems = cartWithToyDetails.filter((item) => item.toy.isRental);
+        console.log(rentalItems)
         setCartItems(rentalItems);
 
         const initialQuantities = rentalItems.reduce((acc, item) => {
@@ -65,6 +67,13 @@ const CartRent = () => {
   }, [selectedItems, quantities, cartItems]);
 
   const handleQuantityChange = (cartItemId, value) => {
+    const selectedItem = cartItems.find(item => item.cartItemId === cartItemId);
+
+    if (value > selectedItem.toy.stock) {
+      message.warning(`Only ${selectedItem.toy.stock} units available for ${selectedItem.toy.toyName}`);
+      return;
+    }
+
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
       [cartItemId]: value,

@@ -137,24 +137,25 @@ function App() {
           }
         />
 
-        <Route
-          path="/toyrentaldetail/:id"
-          element={
-            <PrivateRoute allowedRoles={['1']}>
-              <ToyRentalDetail />
-            </PrivateRoute>
-          }
-        />
+<Route
+  path="/toyrentaldetail/:id"
+  element={
+    <PrivateRoute allowedRoles={['1', 'guest']} >
+      <ToyRentalDetail />
+    </PrivateRoute>
+  }
+/>
+
+<Route
+  path="/toysaledetail/:id"
+  element={
+    <PrivateRoute allowedRoles={['1', 'guest']} >
+      <ToySaleDetail />
+    </PrivateRoute>
+  }
+/>
 
 
-        <Route
-          path="/toysaledetail/:id"
-          element={
-            <PrivateRoute allowedRoles={['1']}>
-              <ToySaleDetail />
-            </PrivateRoute>
-          }
-        />
 
         {/* <Route path="/toyrentaldetail/:id" component={ToyRentalDetail} /> */}
 

@@ -3,13 +3,13 @@ import { createSlice } from '@reduxjs/toolkit';
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    accessToken: null,      // JWT access token for authenticated users
-    refreshToken: null,     // Refresh token for obtaining new access tokens
+    accessToken: null,     
+    refreshToken: null,    
     role: null,             // User's role (1: User, 2: Supplier, 3: Staff, 4: Admin)
     email: null,
     unique_name: null,
     phone: null,
-    isAuthenticated: false, // Indicates whether the user is authenticated
+    isAuthenticated: false,
   },
   reducers: {
     // Action to handle successful login
@@ -17,32 +17,32 @@ const authSlice = createSlice({
       const { accessToken, refreshToken, role, email, unique_name, phone } = action.payload;
       state.accessToken = accessToken;
       state.refreshToken = refreshToken;
-      state.role = role;               // Save role from JWT token
+      state.role = role;               
       state.email = email;               
       state.unique_name = unique_name;
       state.phone = phone;
-      state.isAuthenticated = true;    // Set authentication status to true
+      state.isAuthenticated = true;    
     },
     // Action to handle logout
     logout: (state) => {
-      state.accessToken = null;       // Clear access token
-      state.refreshToken = null;      // Clear refresh token
-      state.role = null;              // Clear role
+      state.accessToken = null;      
+      state.refreshToken = null;     
+      state.role = null;             
       state.email = null;    
       state.unique_name = null;
       state.phone = null;
-      state.isAuthenticated = false;   // Set authentication status to false
+      state.isAuthenticated = false;  
     },
     // Optional: Action to update role if needed
     updateRole: (state, action) => {
-      state.role = action.payload;    // Update user role
+      state.role = action.payload;    
     },
 
     // Action to update name and phone
     updateNamePhone: (state, action) => {
       const { accountName, phoneNumber } = action.payload;
-      state.unique_name = accountName;  // Update accountName (or unique_name)
-      state.phone = phoneNumber;        // Update phone number
+      state.unique_name = accountName;  
+      state.phone = phoneNumber;       
     },
   },
 });

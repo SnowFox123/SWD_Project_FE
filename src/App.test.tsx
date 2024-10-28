@@ -13,3 +13,6 @@ test('renders learn react link', () => {
 //npm i react-toastify
 //npm i axios
 //npm install jwt-decode
+//npm install react-redux
+//npm install @reduxjs/toolkit
+//npm i redux-persist

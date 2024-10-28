@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Pagination, Spin, message, Input, Button, Select } from 'antd';
-import { ViewToyRent, SearchToyRent, AddToCart2, SortToyRent } from '../../../services/UserServices';
+import { AddToCart2, ViewToyRentNew } from '../../../services/UserServices'; // Import the new API
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -17,28 +17,21 @@ const ToyRent = () => {
   const [pageSize] = useState(10);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
   const [keyword, setKeyword] = useState('');
-  const [sortOption, setSortOption] = useState(''); // State for sorting option
+  const [sortOption, setSortOption] = useState('');
 
   useEffect(() => {
     const fetchToys = async () => {
       try {
         setLoading(true);
-        let response;
 
-        if (keyword.trim()) {
-          // If a keyword is provided, search for toys and pass the sort option
-          response = await SearchToyRent(keyword, pageIndex , pageSize);
-        } else if (sortOption) {
-          // If no keyword but a sort option is provided, sort the toys
-          response = await SortToyRent(sortOption, pageIndex - 1, pageSize);
-        } else {
-          // If neither search nor sort is provided, fetch all toys
-          response = await ViewToyRent(pageIndex - 1, pageSize);
-        }
+        // Call the new API with combined search, sort, and pagination
+        const response = await ViewToyRentNew(keyword, sortOption, pageIndex - 1, pageSize);
+
+        console.log(response)
 
         if (response) {
-          setToys(response.items || response); // Assuming response.items contains the list of toys
-          setTotalItemsCount(response.totalItemsCount || response.length); // Assuming the total item count is provided or using the array length
+          setToys(response.items || response);
+          setTotalItemsCount(response.totalItemsCount || response.length);
         } else {
           setToys([]);
         }
@@ -51,24 +44,20 @@ const ToyRent = () => {
     };
 
     fetchToys();
-  }, [pageIndex, pageSize, keyword, sortOption]); // Reload toys when pageIndex, pageSize, keyword, or sortOption changes
+  }, [pageIndex, pageSize, keyword, sortOption]);
 
   const onPageChange = (page) => {
     setPageIndex(page);
   };
 
   const handleSearch = (value) => {
-    if (value.trim()) {
-      setKeyword(value);
-      setPageIndex(1); // Reset to the first page on a new search
-    } else {
-      setKeyword(''); // Clear keyword if the input is empty
-    }
+    setKeyword(value.trim() ? value : '');
+    setPageIndex(1);
   };
 
   const handleSortChange = (value) => {
-    setSortOption(value); // Update the sort option
-    setPageIndex(1); // Reset to the first page on a new sort
+    setSortOption(value);
+    setPageIndex(1);
   };
 
   const handleAddToCart = async (toyId, quantity = 1) => {
@@ -147,7 +136,7 @@ const ToyRent = () => {
                       type="primary"
                       onClick={() => handleAddToCart(toy.toyId, 1)}
                       className="add-to-cart-btn"
-                      loading={addingToCart[toy.toyId]} // Loading state for this specific toy
+                      loading={addingToCart[toy.toyId]}
                     >
                       {addingToCart[toy.toyId] ? 'Adding...' : 'Add to Cart'}
                     </Button>

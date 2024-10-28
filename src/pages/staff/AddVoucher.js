@@ -1,88 +1,141 @@
-import React, { useState } from 'react';
-import { Form, Input, InputNumber, DatePicker, Button, message } from 'antd';
-import { AddNewVoucher } from '../../services/staffService';
+import React, { useEffect } from 'react';
+import { Form, Input, Button, message, DatePicker } from 'antd';
+import { AddNewVoucher, PutVoucher } from '../../services/staffService';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
-const AddVoucher = ({ onCloseModal }) => {
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+const AddVoucher = ({ initialData, onCloseModal }) => {
     const [form] = Form.useForm();
-    
-    const handleSubmit = async (values) => {
-        try {
-            const formData = {
-                voucherName: values.voucherName,
-                expiredDate: values.expiredDate.toISOString(),
-                discount: values.discount,
-                quantity: values.quantity,
+
+    useEffect(() => {
+        if (initialData) {
+            const formattedData = {
+                ...initialData,
+                expiredDate: initialData.expiredDate ? dayjs(initialData.expiredDate).tz('Asia/Ho_Chi_Minh') : null,
             };
-            
-            const response = await AddNewVoucher(formData);
-            message.success("Voucher added successfully!");
-            form.resetFields(); // Reset form after submission
-            onCloseModal(true); // Close modal and trigger refresh
-        } catch (error) {
-            message.error("Error adding voucher. Please try again.");
-            console.error("Error adding voucher:", error);
+            form.setFieldsValue(formattedData);
+        } else {
+            form.resetFields();
         }
+    }, [initialData, form]);
+
+    const validateVoucherName = (_, value) => {
+        if (!value || /^[A-Za-z\s]+$/.test(value.trim())) {
+            return Promise.resolve();
+        }
+        return Promise.reject(new Error('Voucher name must contain only letters and spaces.'));
+    };
+
+    const validateExpiryDate = (_, value) => {
+        const now = dayjs().tz('Asia/Ho_Chi_Minh'); // Get the current date and time in the Vietnam timezone
+
+        // Check if the value is valid and whether it is in the future
+        if (!value || value.isAfter(now)) {
+            return Promise.resolve(); // Date is valid (either not set or in the future)
+        }
+
+        return Promise.reject(new Error('Expiry date must be a future date and time.')); // Error message for invalid date
+    };
+
+
+    const validateDiscount = (_, value) => {
+        if (value > 0 && value < 100) {
+            return Promise.resolve();
+        }
+        return Promise.reject(new Error('Discount must be greater than 0 and less than 100.'));
+    };
+
+    const validateQuantity = (_, value) => {
+        if (value > 0) {
+            return Promise.resolve();
+        }
+        return Promise.reject(new Error('Quantity must be greater than 0.'));
+    };
+
+    const handleFinish = async (formData) => {
+        // Trim all form data to remove leading/trailing spaces
+        const trimmedData = {
+            ...formData,
+            voucherName: formData.voucherName.trim(),
+            // Do NOT convert to UTC for submission; keep it in local time
+            expiredDate: formData.expiredDate ? formData.expiredDate.format('YYYY-MM-DD HH:mm:ss') : null, // format to string
+            discount: formData.discount,
+            quantity: formData.quantity,
+        };
+    
+        try {
+            // Create a FormData object for submission
+            const submissionData = new FormData();
+            Object.keys(trimmedData).forEach((key) => {
+                submissionData.append(key, trimmedData[key]);
+            });
+    
+            if (initialData && initialData.voucherId) {
+                submissionData.append("voucherId", initialData.voucherId);
+                await PutVoucher(submissionData);
+                message.success("Voucher updated successfully!");
+            } else {
+                await AddNewVoucher(submissionData);
+                message.success("Voucher added successfully!");
+            }
+    
+            form.resetFields(); // Reset all fields to empty
+            onCloseModal(true); // Close modal and refresh on success
+        } catch (error) {
+            // Error handling remains the same
+        }
+    };
+    
+
+    const handleCancel = () => {
+        form.resetFields();
+        onCloseModal();
     };
 
     return (
-        <Form
-            form={form}
-            layout="vertical"
-            onFinish={handleSubmit}
-            style={{ maxWidth: 400, margin: '0 auto', padding: 20, backgroundColor: '#fff', borderRadius: 8 }}
-        >
+        <Form form={form} onFinish={handleFinish} layout="vertical">
             <Form.Item
-                label="Voucher Name"
                 name="voucherName"
-                rules={[{ required: true, message: 'Please enter the voucher name!' }]}
+                label="Voucher Name"
+                rules={[{ required: true, message: "Voucher name is required." }, { validator: validateVoucherName }]}
             >
-                <Input placeholder="Enter voucher name" />
+                <Input />
             </Form.Item>
-
             <Form.Item
-                label="Expired Date"
                 name="expiredDate"
-                rules={[{ required: true, message: 'Please select the expiry date!' }]}
+                label="Expiry Date"
+                rules={[{ required: true, message: "Expiry date is required." }, { validator: validateExpiryDate }]}
             >
                 <DatePicker
-                    showTime
-                    format="YYYY-MM-DD HH:mm:ss"
-                    style={{ width: '100%' }}
-                    disabledDate={(current) => current && current < dayjs().startOf('day')}
+                    format="YYYY-MM-DD HH:mm:ss" // Include time in format
+                    showTime={{ format: 'HH:mm:ss' }} // Show time selector
+                    disabledDate={(current) => current.isBefore(dayjs().tz('Asia/Ho_Chi_Minh').startOf('day'))}
                 />
             </Form.Item>
-
             <Form.Item
-                label="Discount (%)"
                 name="discount"
-                rules={[{ required: true, message: 'Please enter the discount value!' }]}
+                label="Discount (%)"
+                rules={[{ required: true, message: "Discount is required." }, { validator: validateDiscount }]}
             >
-                <InputNumber
-                    min={0}
-                    max={100}
-                    placeholder="Enter discount percentage"
-                    style={{ width: '100%' }}
-                />
+                <Input type="number" min={0} max={100} />
             </Form.Item>
-
             <Form.Item
-                label="Quantity"
                 name="quantity"
-                rules={[{ required: true, message: 'Please enter the quantity!' }]}
+                label="Quantity"
+                rules={[{ required: true, message: "Quantity is required." }, { validator: validateQuantity }]}
             >
-                <InputNumber
-                    min={1}
-                    placeholder="Enter quantity"
-                    style={{ width: '100%' }}
-                />
+                <Input type="number" min={1} />
             </Form.Item>
-
-            <Form.Item>
-                <Button type="primary" htmlType="submit" block>
-                    Add Voucher
-                </Button>
-            </Form.Item>
+            <Button type="primary" htmlType="submit">
+                {initialData ? "Update Voucher" : "Add Voucher"}
+            </Button>
+            <Button type="default" onClick={handleCancel}>
+                Cancel
+            </Button>
         </Form>
     );
 };

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Modal, message } from 'antd';
-import { ListVoucher } from '../../services/staffService';
+import { ListVoucher, PutVoucher } from '../../services/staffService';
 import AddVoucher from './AddVoucher';
 
 const VoucherManager = () => {
     const [vouchers, setVouchers] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [editingVoucher, setEditingVoucher] = useState(null);
 
     const fetchVouchers = async () => {
         try {
@@ -20,11 +21,25 @@ const VoucherManager = () => {
         fetchVouchers();
     }, []);
 
-    const showModal = () => setIsModalVisible(true);
+    const showModal = (voucher = null) => {
+        setEditingVoucher(voucher);
+        setIsModalVisible(true);
+    };
 
-    const handleModalClose = (isSuccess) => {
+    const handleModalClose = async (isSuccess) => {
         setIsModalVisible(false);
+        setEditingVoucher(null); // Clear editing state on close
         if (isSuccess) fetchVouchers();
+    };
+
+    const handleEditVoucher = async (formData) => {
+        try {
+            await PutVoucher(formData);
+            message.success("Voucher updated successfully!");
+            handleModalClose(true); // Closes the modal and refreshes vouchers
+        } catch (error) {
+            message.error("Error updating voucher. Please try again.");
+        }
     };
 
     const columns = [
@@ -33,12 +48,12 @@ const VoucherManager = () => {
         { title: 'Discount (%)', dataIndex: 'discount', key: 'discount' },
         { title: 'Quantity', dataIndex: 'quantity', key: 'quantity' },
         { title: 'Used', dataIndex: 'used', key: 'used' },
-        { 
-            title: 'Status', 
-            dataIndex: 'isActive', 
-            key: 'isActive', 
+        {
+            title: 'Status',
+            dataIndex: 'isActive',
+            key: 'isActive',
             render: isActive => (
-                <span 
+                <span
                     style={{
                         padding: '5px 10px',
                         borderRadius: '4px',
@@ -50,16 +65,27 @@ const VoucherManager = () => {
                 </span>
             )
         },
+        {
+            title: 'Actions',
+            key: 'actions',
+            render: (text, record) => (
+                <Button onClick={() => showModal(record)}>Edit</Button>
+            ),
+        },
     ];
 
     return (
         <div style={{ padding: '20px' }}>
-            <Button type="primary" onClick={showModal} style={{ marginBottom: 20 }}>
+            <Button type="primary" onClick={() => showModal()} style={{ marginBottom: 20 }}>
                 Add New Voucher
             </Button>
             <Table columns={columns} dataSource={vouchers} rowKey="id" />
-            <Modal title="Add New Voucher" visible={isModalVisible} footer={null} onCancel={() => handleModalClose(false)}>
-                <AddVoucher onCloseModal={handleModalClose} />
+            <Modal title={editingVoucher ? "Edit Voucher" : "Add New Voucher"} visible={isModalVisible} footer={null} onCancel={() => handleModalClose(false)}>
+                <AddVoucher
+                    initialData={editingVoucher}
+                    onCloseModal={handleModalClose}
+                    onSubmit={editingVoucher ? handleEditVoucher : fetchVouchers}
+                />
             </Modal>
         </div>
     );

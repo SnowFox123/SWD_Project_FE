@@ -344,3 +344,62 @@ export const AcceptDenyRequest = async (requestId, requestStatus, denyReason) =>
         throw error; // Re-throw the original error if not validation-related
     }
 };
+
+export const ListVoucher = async () => {
+    try {
+        // Construct the API URL dynamically based on passed arguments
+        const url = `https://localhost:7221/api/Voucher/list-vouchers`;
+
+        // Call the API to get toy rental data
+        const response = await axiosInstance.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        throw error; // Throw the error for handling in the component
+    }
+};
+
+
+export const AddNewVoucher = async (formData) => {
+    try {
+        // Construct the API URL dynamically based on passed arguments
+        const url = `https://localhost:7221/api/Voucher/new-voucher`;
+
+        // Call the API to get toy rental data
+        const response = await axiosInstance.post(url, formData, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        throw error; // Throw the error for handling in the component
+    }
+};
+
+
+export const PutVoucher = async (formData) => {
+    try {
+        // Construct the API URL dynamically based on passed arguments
+        const url = `https://localhost:7221/api/Voucher/voucher-information`;
+
+        // Call the API to get toy rental data
+        const response = await axiosInstance.put(url, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        throw error; // Throw the error for handling in the component
+    }
+};

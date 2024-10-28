@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { OrderRentToys, UserOrderCart } from '../../../services/UserServices'; // Import both functions
 import { Spin, Alert, Form, Input, Button, DatePicker, Row, Col, Table, Image } from 'antd';
 import { toast } from 'react-toastify';
+import { GetVoucher } from '../../../services/UserServices';
 
 const OrderRent = () => {
   const orderData = useSelector((state) => state.order.orderData);
@@ -11,6 +12,7 @@ const OrderRent = () => {
   const [orderId, setOrderId] = useState(null);
   const [orderDetails, setOrderDetails] = useState(null); // State to hold order details
   const [formVisible, setFormVisible] = useState(true); // New state to control form visibility
+  const [paymentLoading, setPaymentLoading] = useState(false); // New loading state for payment
 
   const onFinish = async (values) => {
     setLoading(true);
@@ -98,6 +100,27 @@ const OrderRent = () => {
     },
   ];
 
+  const handlePayment = async () => {
+    if (!orderId) {
+      toast.error("Order ID not found. Please try again.");
+      return;
+    }
+    setPaymentLoading(true); // Set loading state for payment
+    try {
+      // Call the GetVoucher API with the orderId
+      const paymentLink = await GetVoucher(orderId);
+      console.log(paymentLink.object)
+      toast.success("Payment link generated successfully!");
+      // You can redirect to the payment link if needed
+      window.open(paymentLink.object, "_blank");
+    } catch (error) {
+      toast.error("Failed to generate payment link.");
+      console.error("Payment error:", error);
+    } finally {
+      setPaymentLoading(false); // Reset loading state
+    }
+  };
+
   // Define columns for the toy details table
   const toyColumns = [
     {
@@ -105,18 +128,6 @@ const OrderRent = () => {
       dataIndex: 'toyName',
       key: 'toyName',
     },
-    // {
-    //   title: 'Image',
-    //   dataIndex: 'image',
-    //   key: 'image',
-    //   render: (toy) => (
-    //     <Image
-    //       src={toy.imageUrl}
-    //       alt={toy.toyName}
-    //       style={{ width: '150px', height: '150px', objectFit: 'contain' }}
-    //     />
-    //   ),
-    // },
     {
       title: 'Quantity',
       dataIndex: 'quantity',
@@ -217,6 +228,18 @@ const OrderRent = () => {
             pagination={false} // Disable pagination for simplicity
             style={styles.table}
           />
+
+          <Row style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: '20px', marginRight: '10%' }}>
+            <Col style={{ fontSize: '30px' }}>
+              <Button
+                style={{ fontSize: '20px', padding: '20px', color: '#fff', backgroundColor: 'red' }}
+                onClick={handlePayment}
+                loading={paymentLoading} // Add loading state for button
+              >
+                Payment
+              </Button>
+            </Col>
+          </Row>
         </>
       )}
     </div>

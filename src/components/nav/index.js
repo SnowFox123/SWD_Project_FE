@@ -34,6 +34,12 @@ export const Navbar = () => {
     navigate('/changepassword'); // Redirect to home after logout
   };
 
+  const handleVoucher = () => {
+    // dispatch(logout());
+    navigate('/voucher'); // Redirect to home after logout
+  };
+
+
   const handleRegister = () => {
     // dispatch(logout());
     navigate('/register'); // Redirect to home after logout
@@ -51,6 +57,10 @@ export const Navbar = () => {
       },
       {
         key: '4',
+        label: <span onClick={handleVoucher}>Voucher</span>, // Trigger logout on click
+      },
+      {
+        key: '5',
         label: <span onClick={handleLogout}>Log out</span>, // Trigger logout on click
       },
     ]
@@ -96,7 +106,7 @@ export const Navbar = () => {
           </Link>
           <Divider type="vertical" style={{ backgroundColor: '#ccc' }} className="divider" />
           <Link to="/cartsale">
-            <ShoppingOutlined  style={{ fontSize: '24px', marginRight: '5px' }} />
+            <ShoppingOutlined style={{ fontSize: '24px', marginRight: '5px' }} />
             Cart Sale
           </Link>
         </Col>

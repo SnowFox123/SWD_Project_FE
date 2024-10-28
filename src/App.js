@@ -72,6 +72,24 @@ function App() {
           }
         />
 
+        <Route
+          path="/voucher"
+          element={
+            <PrivateRoute allowedRoles={['1']}>
+              <ChangePassword />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/paid"
+          element={
+            <PrivateRoute allowedRoles={['1']}>
+              <ChangePassword />
+            </PrivateRoute>
+          }
+        />
+
 
         {/* <Route
           path="/edit-profile"
@@ -137,23 +155,23 @@ function App() {
           }
         />
 
-<Route
-  path="/toyrentaldetail/:id"
-  element={
-    <PrivateRoute allowedRoles={['1', 'guest']} >
-      <ToyRentalDetail />
-    </PrivateRoute>
-  }
-/>
+        <Route
+          path="/toyrentaldetail/:id"
+          element={
+            <PrivateRoute allowedRoles={['1', 'guest']} >
+              <ToyRentalDetail />
+            </PrivateRoute>
+          }
+        />
 
-<Route
-  path="/toysaledetail/:id"
-  element={
-    <PrivateRoute allowedRoles={['1', 'guest']} >
-      <ToySaleDetail />
-    </PrivateRoute>
-  }
-/>
+        <Route
+          path="/toysaledetail/:id"
+          element={
+            <PrivateRoute allowedRoles={['1', 'guest']} >
+              <ToySaleDetail />
+            </PrivateRoute>
+          }
+        />
 
 
 

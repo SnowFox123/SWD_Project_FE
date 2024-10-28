@@ -287,6 +287,46 @@ export const SearchToySale = async (keyword, pageIndex, pageSize) => {
 };
 
 
+export const GetVoucher = async (orderId) => {
+    try {
+        // Construct the API URL dynamically based on passed arguments
+        const url = `https://localhost:7221/api/Payment/create-rent-payment-link/${orderId}`;
+
+        // Call the API to get toy rental data
+        const response = await axiosInstance.post(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        throw error; // Throw the error for handling in the component
+    }
+};
+
+
+export const GetPaid = async (orderId) => {
+    try {
+        // Construct the API URL dynamically based on passed arguments
+        const url = `https://localhost:7221/api/Payment/payment-link-info/${orderId}`;
+
+        // Call the API to get toy rental data
+        const response = await axiosInstance.post(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        throw error; // Throw the error for handling in the component
+    }
+};
+
+
 
 
 

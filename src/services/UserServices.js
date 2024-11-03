@@ -287,7 +287,7 @@ export const SearchToySale = async (keyword, pageIndex, pageSize) => {
 };
 
 
-export const GetVoucher = async (orderId) => {
+export const GetLinkPayment = async (orderId) => {
     try {
         // Construct the API URL dynamically based on passed arguments
         const url = `https://localhost:7221/api/Payment/create-rent-payment-link/${orderId}`;
@@ -560,17 +560,21 @@ export const UserGetToyByID = async (id) => {
 
 
 
-export const OrderRentToys = async (shippingAddress, receivePhoneNumber, isRentalOrder, toyList, rentalDate, returnDate) => {
+export const OrderRentToys = async (shippingAddress, receivePhoneNumber, isRentalOrder, toyList, rentalDate, returnDate, voucherId) => {
     try {
+        // Construct payload, adding voucherId only if it is defined
+        const payload = {
+            shippingAddress,
+            receivePhoneNumber,
+            isRentalOrder,
+            toyList,
+            rentalDate,
+            returnDate,
+            ...(voucherId && { voucherId })  // Conditionally add voucherId
+        };
+
         // Call the API to post the order
-        const response = await axiosInstance.post('https://localhost:7221/api/Order', {
-            shippingAddress,          // Address where the order will be shipped
-            receivePhoneNumber,       // Phone number to contact
-            isRentalOrder,            // Boolean or value indicating if this is a rental order
-            toyList,                  // Array of toy objects (with toyId and quantity)
-            rentalDate,               // Start date for the rental
-            returnDate                // Return date for the rental
-        });
+        const response = await axiosInstance.post('https://localhost:7221/api/Order', payload);
 
         // Check if the response indicates success
         if (response.data.isSuccess) {
@@ -598,10 +602,11 @@ export const OrderRentToys = async (shippingAddress, receivePhoneNumber, isRenta
 };
 
 
+
 export const UserOrderCart = async (id) => {
     try {
         // Call the API to get the toy by its ID
-        const response = await axiosInstance.get(`https://localhost:7221/user/${id}`, {
+        const response = await axiosInstance.get(`https://localhost:7221/api/Order/order-detail/user/${id}`, {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -629,6 +634,45 @@ export const UserOrderCart = async (id) => {
         }
         console.error('Error retrieving toy:', error);
         throw error; // Re-throw the original error if not validation-related
+    }
+};
+
+export const ListVoucherUser = async () => {
+    try {
+        // Construct the API URL dynamically based on passed arguments
+        const url = `https://localhost:7221/api/Voucher/for-account`;
+
+        // Call the API to get toy rental data
+        const response = await axiosInstance.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        throw error; // Throw the error for handling in the component
+    }
+};
+
+
+export const PaymentInfo = async (orderId) => {
+    try {
+        // Construct the API URL dynamically based on passed arguments
+        const url = `https://localhost:7221/api/Payment/payment-link-info/${orderId}`;
+
+        // Call the API to get toy rental data
+        const response = await axiosInstance.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        throw error; // Throw the error for handling in the component
     }
 };
 

@@ -1,0 +1,94 @@
+/* PaymentSuccess.css */
+
+.payment-success {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    background-color: #fff;
+    color: #333;
+    border-radius: 8px;
+}
+
+.payment-success h1 {
+    font-size: 24px;
+    text-align: center;
+    color: #2d862d;
+    /* Green for success */
+    margin-bottom: 10px;
+}
+
+.payment-success h1.failed {
+    color: #cc0000;
+    /* Red for failure */
+}
+
+.payment-success h2 {
+    font-size: 18px;
+    text-align: center;
+    color: #555;
+    margin: 0 0 20px;
+}
+
+.payment-success h4 {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.payment-success p {
+    font-size: 14px;
+    margin: 5px 0;
+    color: #333;
+}
+
+.label2 {
+    font-weight: bold;
+    color: #555;
+}
+
+.label3 {
+    padding: 5px 0;
+}
+
+.value {
+    color: #333;
+}
+
+.detail-item,
+.transaction-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.transaction-item {
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+.transaction-item p {
+    margin: 2px 0;
+}
+
+.amount {
+    color: #2d862d;
+    font-weight: bold;
+}
+
+.footer {
+    font-size: 16px;
+    text-align: center;
+    color: #777;
+    margin-top: 30px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+}

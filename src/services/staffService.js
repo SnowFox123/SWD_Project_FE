@@ -243,7 +243,7 @@ export const getAllAccount = async (page = 1) => {
 export const banAccount = async (accountId) => {
     try {
         // Call the API to ban the account by its ID
-        const response = await axiosInstance.put(`https://localhost:7221/api/Account/banAccount?account=${accountId}`,
+        const response = await axiosInstance.put(`https://localhost:7221/api/Account/ban-user/${accountId}`,
             // { accountId },  // Send the accountId in the request body
             {
                 headers: {
@@ -392,6 +392,45 @@ export const PutVoucher = async (formData) => {
 
         // Call the API to get toy rental data
         const response = await axiosInstance.put(url, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        throw error; // Throw the error for handling in the component
+    }
+};
+
+
+export const ActiveDeactiveVoucher = async (formData) => {
+    try {
+        // Construct the API URL dynamically based on passed arguments
+        const url = `https://localhost:7221/api/Voucher/active-deactive-voucher`;
+
+        // Call the API to get toy rental data
+        const response = await axiosInstance.put(url, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        throw error; // Throw the error for handling in the component
+    }
+};
+
+export const AssignVoucherToUser = async (formData) => {
+    try {
+        // Construct the API URL dynamically based on passed arguments
+        const url = `https://localhost:7221/api/Voucher/assign-voucher-to-user`;
+
+        // Call the API to get toy rental data
+        const response = await axiosInstance.post(url, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },

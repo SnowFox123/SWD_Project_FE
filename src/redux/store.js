@@ -12,13 +12,13 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
-import sessionStorage from 'redux-persist/lib/storage/session'; // Use sessionStorage instead of localStorage
+import storage from 'redux-persist/lib/storage'; // Use localStorage instead of sessionStorage
 
 // Configure redux-persist
 const persistConfig = {
   key: 'root',
   version: 1,
-  storage: sessionStorage, // Persist the store in sessionStorage
+  storage, // Persist the store in localStorage
 };
 
 // Combine your reducers

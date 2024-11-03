@@ -36,7 +36,7 @@ export const Navbar = () => {
 
   const handleVoucher = () => {
     // dispatch(logout());
-    navigate('/voucher'); // Redirect to home after logout
+    navigate('/voucheruser'); // Redirect to home after logout
   };
 
 

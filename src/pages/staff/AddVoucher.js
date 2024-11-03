@@ -62,18 +62,18 @@ const AddVoucher = ({ initialData, onCloseModal }) => {
             ...formData,
             voucherName: formData.voucherName.trim(),
             // Do NOT convert to UTC for submission; keep it in local time
-            expiredDate: formData.expiredDate ? formData.expiredDate.format('YYYY-MM-DD HH:mm:ss') : null, // format to string
+            expiredDate: formData.expiredDate ? formData.expiredDate.format('YYYY-MM-DD') : null, // format to string
             discount: formData.discount,
             quantity: formData.quantity,
         };
-    
+
         try {
             // Create a FormData object for submission
             const submissionData = new FormData();
             Object.keys(trimmedData).forEach((key) => {
                 submissionData.append(key, trimmedData[key]);
             });
-    
+
             if (initialData && initialData.voucherId) {
                 submissionData.append("voucherId", initialData.voucherId);
                 await PutVoucher(submissionData);
@@ -82,14 +82,14 @@ const AddVoucher = ({ initialData, onCloseModal }) => {
                 await AddNewVoucher(submissionData);
                 message.success("Voucher added successfully!");
             }
-    
+
             form.resetFields(); // Reset all fields to empty
             onCloseModal(true); // Close modal and refresh on success
         } catch (error) {
             // Error handling remains the same
         }
     };
-    
+
 
     const handleCancel = () => {
         form.resetFields();

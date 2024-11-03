@@ -31,6 +31,8 @@ import ToyRentalDetail from "./pages/toy/toyrent/ToyRentalDetail";
 import OrderRent from "./pages/user/order/OrderRent";
 import OrderSale from "./pages/user/order/OrderSale";
 import ToySaleDetail from "./pages/toy/toysale/ToySaleDetail";
+import VoucherUser from "./pages/user/VoucherUser";
+import PaymentSuccess from "./pages/user/PaymentSuccess";
 
 function App() {
   const role = useSelector((state) => state.auth.role); // 
@@ -72,11 +74,21 @@ function App() {
           }
         />
 
+
         <Route
-          path="/voucher"
+          path="/paymentinfo"
           element={
             <PrivateRoute allowedRoles={['1']}>
-              <ChangePassword />
+              <PaymentSuccess />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/voucheruser"
+          element={
+            <PrivateRoute allowedRoles={['1']}>
+              <VoucherUser />
             </PrivateRoute>
           }
         />

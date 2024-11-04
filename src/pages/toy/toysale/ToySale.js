@@ -1,38 +1,37 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Row, Col, Pagination, Spin, message, Input, Button } from 'antd';
-import { ViewToyRent, SearchToyRent, AddToCart, AddToCart2, ViewToySale, SearchToySale } from '../../../services/UserServices'; // Import your service functions
+import { Card, Row, Col, Pagination, Spin, message, Input, Button, Select } from 'antd';
+import { AddToCart2, ViewToySaleNew } from '../../../services/UserServices'; // Import the new API
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import './card.css';  // Create and import a CSS file
+import './card.css';
 
 const { Search } = Input;
+const { Option } = Select;
 
 const ToySale = () => {
     const [toys, setToys] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [addingToCart, setAddingToCart] = useState({}); // State for tracking add-to-cart loading for individual toys
+    const [addingToCart, setAddingToCart] = useState({});
     const [pageIndex, setPageIndex] = useState(1);
     const [pageSize] = useState(10);
     const [totalItemsCount, setTotalItemsCount] = useState(0);
-    const [keyword, setKeyword] = useState(''); // State for search keyword
+    const [keyword, setKeyword] = useState('');
+    const [sortOption, setSortOption] = useState('');
 
     useEffect(() => {
         const fetchToys = async () => {
             try {
                 setLoading(true);
-                let response;
 
-                // Conditionally fetch toys based on keyword presence
-                if (keyword.trim()) {
-                    response = await SearchToySale(keyword, pageIndex, pageSize);
-                } else {
-                    response = await ViewToySale(pageIndex - 1, pageSize);
-                }
+                // Call the new API with combined search, sort, and pagination
+                const response = await ViewToySaleNew(keyword, sortOption, pageIndex - 1, pageSize);
+
+                console.log(response)
 
                 if (response) {
-                    setToys(response); // Assuming response.toys contains the list of toys
-                    setTotalItemsCount(response.totalItemsCount); // Assuming the total item count is provided
+                    setToys(response.items || response);
+                    setTotalItemsCount(response.totalItemsCount || response.length);
                 } else {
                     setToys([]);
                 }
@@ -45,32 +44,30 @@ const ToySale = () => {
         };
 
         fetchToys();
-    }, [pageIndex, pageSize, keyword]); // Reload toys when pageIndex, pageSize, or keyword changes
+    }, [pageIndex, pageSize, keyword, sortOption]);
 
     const onPageChange = (page) => {
         setPageIndex(page);
     };
 
     const handleSearch = (value) => {
-        if (value.trim()) {
-            setKeyword(value);
-            setPageIndex(1); // Reset to the first page on a new search
-        } else {
-            setKeyword(''); // Clear keyword if the input is empty
-        }
+        setKeyword(value.trim() ? value : '');
+        setPageIndex(1);
+    };
+
+    const handleSortChange = (value) => {
+        setSortOption(value);
+        setPageIndex(1);
     };
 
     const handleAddToCart = async (toyId, quantity = 1) => {
         if (quantity < 1 || quantity > 2147483647) {
             toast.error('Invalid quantity. Please enter a value between 1 and 2147483647.');
-            return;  // Early return to avoid making a request with invalid quantity
+            return;
         }
 
         try {
-            // Set loading state only for the specific toy being added to the cart
             setAddingToCart((prevState) => ({ ...prevState, [toyId]: true }));
-
-            console.log(`Adding toy ${toyId} to cart with quantity: ${quantity}`);  // Log the quantity
 
             const response = await AddToCart2(toyId, quantity);
 
@@ -83,22 +80,35 @@ const ToySale = () => {
             toast.error(error.message || 'Failed to add item to cart.');
             console.error('Add to cart error:', error);
         } finally {
-            // Reset loading state for the specific toy
             setAddingToCart((prevState) => ({ ...prevState, [toyId]: false }));
         }
     };
 
-
     return (
         <div style={{ padding: '20px' }}>
-            <div style={{ marginBottom: '20px', width: '400px' }}>
-                <Search
-                    placeholder="Search for toys"
-                    enterButton="Search"
-                    size="large"
-                    className="custom-search"
-                    onSearch={handleSearch}
-                />
+            <div style={{ display: 'flex' }}>
+                <div style={{ marginBottom: '20px', width: '600px' }}>
+                    <Search
+                        placeholder="Search for toys"
+                        enterButton="Search"
+                        size="large"
+                        className="custom-search"
+                        onSearch={handleSearch}
+                    />
+                </div>
+
+                <div style={{ marginBottom: '20px', marginLeft: '20px' }}>
+                    <Select
+                        placeholder="Sort by"
+                        onChange={handleSortChange}
+                        style={{ width: 200 }}
+                    >
+                        <Option value="name_asc">Name Ascending</Option>
+                        <Option value="name_desc">Name Descending</Option>
+                        <Option value="price_asc">Price Ascending</Option>
+                        <Option value="price_desc">Price Descending</Option>
+                    </Select>
+                </div>
             </div>
 
             {loading ? (
@@ -109,11 +119,8 @@ const ToySale = () => {
                         {toys && toys.length > 0 ? (
                             toys.map((toy) => (
                                 <Col key={toy.toyId} span={6}>
-                                    <Card
-                                        className="toy-card"  // Reference the class for custom styling
-                                        hoverable={true}
-                                    >
-                                        <Link to="/register" style={{ textDecoration: 'none' }}>
+                                    <Card className="toy-card" hoverable={true}>
+                                        <Link to={`/toyrentaldetail/${toy.toyId}`} style={{ textDecoration: 'none' }}>
                                             <img
                                                 className="toy-card__image"
                                                 alt={toy.toyName}
@@ -123,14 +130,13 @@ const ToySale = () => {
                                             <div className="toy-card__price">
                                                 <span className="price-current">${toy.buyPrice}</span>
                                             </div>
-                                            <p className="toy-card__description">{toy.description}</p>
                                         </Link>
 
                                         <Button
                                             type="primary"
                                             onClick={() => handleAddToCart(toy.toyId, 1)}
                                             className="add-to-cart-btn"
-                                            loading={addingToCart[toy.toyId]} // Loading state for this specific toy
+                                            loading={addingToCart[toy.toyId]}
                                         >
                                             {addingToCart[toy.toyId] ? 'Adding...' : 'Add to Cart'}
                                         </Button>

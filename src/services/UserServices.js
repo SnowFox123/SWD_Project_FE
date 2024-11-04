@@ -150,48 +150,35 @@ export const SortToyRent = async (sortoption, pageIndex, pageSize) => {
 
 export const ViewToyRentNew = async (keyword, sortoption, pageIndex, pageSize) => {
     try {
-        // Construct the API URL dynamically based on passed arguments
         const url = `https://localhost:7221/api/Toy/view-toys/rent?search=${keyword}&sort=${sortoption}&pageIndex=${pageIndex}&pageSize=${pageSize}`;
-
-        // Call the API to get toy rental data
         const response = await axiosInstance.get(url, {
             headers: {
                 'Content-Type': 'application/json',
             },
         });
 
-        // Check if the response indicates success
-        if (response.status === 200) {
-            const responseData = response.data;
-
-            // Check if response data contains the necessary fields
-            if (responseData && responseData.items) {
-                return responseData.items; // Return the list of toys from the response
-            } else {
-                throw new Error('No toy data found.');
-            }
-        } else {
-            throw new Error('Failed to retrieve toy rental data.');
-        }
+        return response.data;
     } catch (error) {
-        if (error.response && error.response.data.errors) {
-            // Handle validation errors returned from the backend
-            const validationErrors = error.response.data.errors;
-
-            // Create a new Error object and attach validation errors to it
-            const validationError = new Error('Validation errors occurred');
-            validationError.validationErrors = Object.keys(validationErrors).reduce((acc, key) => {
-                acc[key] = validationErrors[key].join(' '); // Join multiple messages if any
-                return acc;
-            }, {});
-
-            throw validationError; // Throw the error object with validation data
-        }
-        console.error('Error retrieving toy rental data:', error);
-        throw error; // Re-throw the original error if not validation-related
+        console.error("Error fetching data: ", error);
+        throw error;
     }
 };
 
+export const ViewToySaleNew = async (keyword, sortoption, pageIndex, pageSize) => {
+    try {
+        const url = `https://localhost:7221/api/Toy/view-toys/sale?search=${keyword}&sort=${sortoption}&pageIndex=${pageIndex}&pageSize=${pageSize}`;
+        const response = await axiosInstance.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        throw error;
+    }
+};
 
 
 export const ViewToySale = async (pageIndex, pageSize) => {
@@ -291,6 +278,25 @@ export const GetLinkPayment = async (orderId) => {
     try {
         // Construct the API URL dynamically based on passed arguments
         const url = `https://localhost:7221/api/Payment/create-rent-payment-link/${orderId}`;
+
+        // Call the API to get toy rental data
+        const response = await axiosInstance.post(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        throw error; // Throw the error for handling in the component
+    }
+};
+
+export const GetLinkPayment2 = async (orderId) => {
+    try {
+        // Construct the API URL dynamically based on passed arguments
+        const url = `https://localhost:7221/api/Payment/create-sale-payment-link/${orderId}`;
 
         // Call the API to get toy rental data
         const response = await axiosInstance.post(url, {
@@ -675,6 +681,67 @@ export const PaymentInfo = async (orderId) => {
         throw error; // Throw the error for handling in the component
     }
 };
+
+
+export const ViewOrderStatus = async (isRent, status) => {
+    try {
+        // Construct the API URL dynamically based on passed arguments
+        const url = `https://localhost:7221/api/Order/user?isRent=${isRent}&status=${status}`;
+
+        // Call the API to get toy rental data
+        const response = await axiosInstance.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        throw error; // Throw the error for handling in the component
+    }
+};
+
+
+export const CompleteOrder = async (orderId) => {
+    try {
+        // Construct the API URL dynamically based on passed arguments
+        const url = `https://localhost:7221/api/Order/user-complete-order/${orderId}`;
+
+        // Call the API to get toy rental data
+        const response = await axiosInstance.put(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        throw error; // Throw the error for handling in the component
+    }
+};
+
+export const ReturnRentOrder = async (orderId) => {
+    try {
+        // Construct the API URL dynamically based on passed arguments
+        const url = `https://localhost:7221/api/Order/user-return-order/${orderId}`;
+
+        // Call the API to get toy rental data
+        const response = await axiosInstance.put(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        throw error; // Throw the error for handling in the component
+    }
+};
+
+
 
 
 

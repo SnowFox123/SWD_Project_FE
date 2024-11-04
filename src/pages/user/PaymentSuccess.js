@@ -47,20 +47,17 @@ const PaymentSuccess = () => {
     // Function to extract content after the specific phrase "Payment for order"
     // Function to extract content after the specific phrase "Payment for order" and remove the trailing "Trace"
     // Function to extract the specific payment description
+    // 
+
+    // Function to extract specific parts of the payment description
     const extractDescriptionContent = (description) => {
-        // Find the start of the payment description
-        const startIndex = description.indexOf("Payment for order");
+        // Regular expression to match "Order <text> paymentId<id>"
+        const match = description.match(/Order\s[\w\s]+\spaymentId\d+/);
 
-        // If found, extract the relevant part
-        if (startIndex !== -1) {
-            // Split the description by spaces to isolate the payment part
-            const descriptionParts = description.substring(startIndex).split("Trace")[0]; // Only take content before "Trace"
-            return descriptionParts.trim(); // Trim whitespace
-        }
-
-        // Fallback if the phrase is not found
-        return description;
+        // If a match is found, return it; otherwise, return the whole description as a fallback
+        return match ? match[0] : description;
     };
+
 
 
 

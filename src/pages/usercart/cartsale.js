@@ -1,29 +1,23 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Table, Spin, message, InputNumber, Checkbox, Button, Modal, Input, Row, Col, Image } from 'antd';
-import { GiftOutlined } from '@ant-design/icons';
-import { GetCart, GetCart2, getToyByID } from '../../services/UserServices'; // Import API functions
-import {  Link, useLocation } from 'react-router-dom'
+import { Table, Spin, message, InputNumber, Checkbox, Button, Row, Col, Image } from 'antd';
+import { GetCart2, getToyByID } from '../../services/UserServices';
+import { Link, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux'; // Import useDispatch
 import { saveOrderData } from '../../redux/orderSlice'; // Import saveOrderData action
 
 const CartSale = () => {
   const location = useLocation();
+  const { selectedToyId, rentalDuration } = location.state || {};
+
+  const dispatch = useDispatch(); // Initialize useDispatch
 
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [voucherCode, setVoucherCode] = useState('');
-  const [discount, setDiscount] = useState(0);
-
   const [quantities, setQuantities] = useState({});
-
   const [orderData, setOrderData] = useState([]); // Store order data
-
-
-  const dispatch = useDispatch(); // Initialize useDispatch
-
+  // const [orderData, setOrderData] = useState([]); // Store order data
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -36,11 +30,9 @@ const CartSale = () => {
         });
 
         const cartWithToyDetails = await Promise.all(toyDetailsPromises);
-
         const saleItems = cartWithToyDetails.filter((item) => !item.toy.isRental);
-
+        // console.log(saleItems)
         setCartItems(saleItems);
-
 
         const initialQuantities = saleItems.reduce((acc, item) => {
           acc[item.cartItemId] = item.quantity || 1; // Ensure default quantity
@@ -48,6 +40,13 @@ const CartSale = () => {
         }, {});
 
         setQuantities(initialQuantities);
+
+        if (selectedToyId) {
+          const selectedItem = saleItems.find(item => item.toy.toyId === selectedToyId);
+          if (selectedItem) {
+            setSelectedItems([selectedItem.cartItemId]);
+          }
+        }
       } catch (err) {
         setError(err);
         message.error('Failed to load cart items. Please try again later.');
@@ -57,7 +56,7 @@ const CartSale = () => {
     };
 
     fetchCart();
-  }, []);
+  }, [selectedToyId]);
 
   useEffect(() => {
     const updatedOrderData = selectedItems.map(cartItemId => ({
@@ -65,14 +64,20 @@ const CartSale = () => {
       quantity: quantities[cartItemId] || 1,
     }));
     setOrderData(updatedOrderData);
-  }, [selectedItems, quantities, cartItems])
+  }, [selectedItems, quantities, cartItems]);
 
   const handleQuantityChange = (cartItemId, value) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.cartItemId === cartItemId ? { ...item, quantity: value } : item
-      )
-    );
+    const selectedItem = cartItems.find(item => item.cartItemId === cartItemId);
+
+    if (value > selectedItem.toy.stock) {
+      message.warning(`Only ${selectedItem.toy.stock} units available for ${selectedItem.toy.toyName}`);
+      return;
+    }
+
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [cartItemId]: value,
+    }));
   };
 
   const handleCheckboxChange = (cartItemId) => {
@@ -83,11 +88,6 @@ const CartSale = () => {
         return [...prevSelected, cartItemId];
       }
     });
-  };
-
-  const handleCreateOrder = () => {
-
-    dispatch(saveOrderData(orderData)); // Dispatch the saveOrderData action
   };
 
   const handleCreateOrderClick = () => {
@@ -111,38 +111,21 @@ const CartSale = () => {
     setSelectedItems([]);
   };
 
-  const calculateTotalPrice = useMemo(() => {
-    const total = selectedItems.reduce((total, cartItemId) => {
-      const item = cartItems.find(item => item.cartItemId === cartItemId);
-      if (item) {
-        const { toy, quantity } = item;
-        const buyPrice = toy.buyPrice;
-        return total + (buyPrice * quantity);
-      }
-      return total;
-    }, 0);
+  // const calculateTotalPrice = useMemo(() => {
+  //   return selectedItems.reduce((total, cartItemId) => {
+  //     const item = cartItems.find(item => item.cartItemId === cartItemId);
+  //     if (item) {
+  //       const { toy } = item;
+  //       const quantity = quantities[cartItemId] || 1;
+  //       return total + (toy.rentPricePerDay * quantity);
+  //     }
+  //     return total;
+  //   }, 0);
+  // }, [cartItems, selectedItems, quantities]);
 
-    return (total - discount);
-  }, [cartItems, selectedItems, discount]);
+  const handleCreateOrder = () => {
 
-  const handleVoucherSubmit = () => {
-    if (voucherCode === "DISCOUNT10") {
-      const total = selectedItems.reduce((total, cartItemId) => {
-        const item = cartItems.find(item => item.cartItemId === cartItemId);
-        if (item) {
-          const { toy, quantity } = item;
-          return total + (toy.buyPrice * quantity);
-        }
-        return total;
-      }, 0);
-
-      setDiscount(total * 0.1); // 10% discount
-      message.success("Voucher applied successfully!");
-    } else {
-      message.error("Invalid voucher code!");
-    }
-    setIsModalVisible(false);
-    setVoucherCode('');
+    dispatch(saveOrderData(orderData)); // Dispatch the saveOrderData action
   };
 
   const columns = [
@@ -164,7 +147,7 @@ const CartSale = () => {
         <Image
           src={toy.imageUrl}
           alt={toy.toyName}
-          style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+          style={{ width: '150px', height: '150px', objectFit: 'contain' }}
         />
       ),
     },
@@ -189,24 +172,13 @@ const CartSale = () => {
       dataIndex: 'quantity',
       key: 'quantity',
       render: (text, record) => (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <InputNumber
-            min={1}
-            value={record.quantity}
-            onChange={(value) => handleQuantityChange(record.cartItemId, value)}
-          />
-        </div>
+        <InputNumber
+          min={1}
+          value={quantities[record.cartItemId]}
+          onChange={(value) => handleQuantityChange(record.cartItemId, value)}
+        />
       ),
     },
-    // {
-    //   title: 'Total Price',
-    //   key: 'totalPrice',
-    //   render: (text, record) => {
-    //     const { quantity, toy } = record;
-    //     const buyPrice = toy.buyPrice;
-    //     return <div>${(buyPrice * quantity)}</div>;
-    //   },
-    // },
     {
       title: 'Delete',
       dataIndex: 'Delete',
@@ -258,20 +230,10 @@ const CartSale = () => {
         backgroundColor: '#ffffff',
         border: '1px solid #d9d9d9',
         borderTop: 'none',
-        padding: '10px 180px',
+        padding: '16px 180px',
         zIndex: 1000,
         boxShadow: '0 -2px 10px rgba(0, 0, 0, 0.1)',
       }}>
-        <Row style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
-          <Row style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <span style={{ marginRight: '120px', fontSize: '16px' }}>
-              <GiftOutlined style={{ fontSize: '22px', color: 'red' }} /> Platform Voucher
-            </span>
-            <Button type="default" onClick={() => setIsModalVisible(true)} style={{ borderRadius: '4px', borderColor: '#d9d9d9', }}>
-              Select or enter voucher
-            </Button>
-          </Row>
-        </Row>
         <Row style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Col>
             <Button onClick={toggleSelectAll} style={{ marginRight: '10px', borderRadius: '4px', borderColor: '#d9d9d9', fontSize: '18px' }}>
@@ -289,12 +251,12 @@ const CartSale = () => {
                 <div style={{ marginRight: '10px', fontSize: '18px' }}>
                   Total ({selectedItems.length} {selectedItems.length === 1 ? 'item' : 'items'})
                 </div>
-                <div style={{ fontWeight: 'bold', fontSize: '26px', color: 'red', marginRight: '20px' }}>
+                {/* <div style={{ fontWeight: 'bold', fontSize: '26px', color: 'red', marginRight: '20px' }}>
                   ${calculateTotalPrice}
-                </div>
+                </div> */}
               </Row>
-              <Row style={{fontSize: '18px'}}>
-                Saved
+              <Row>
+                {/* Saved */}
               </Row>
             </Col>
             <Col>
@@ -319,21 +281,6 @@ const CartSale = () => {
         </Row>
       </div>
 
-      <Modal
-        title="Apply Voucher"
-        visible={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
-        onOk={handleVoucherSubmit}
-        okText="Apply"
-        cancelText="Cancel"
-      >
-        <Input
-          value={voucherCode}
-          onChange={(e) => setVoucherCode(e.target.value)}
-          placeholder="Enter your voucher code"
-          style={{ borderRadius: '4px' }}
-        />
-      </Modal>
     </div>
   );
 };

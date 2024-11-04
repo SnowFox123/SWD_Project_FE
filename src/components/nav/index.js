@@ -39,6 +39,10 @@ export const Navbar = () => {
     navigate('/voucheruser'); // Redirect to home after logout
   };
 
+  const handleOrderStatus = () => {
+    // dispatch(logout());
+    navigate('/statusorderpage'); // Redirect to home after logout
+  };
 
   const handleRegister = () => {
     // dispatch(logout());
@@ -55,12 +59,17 @@ export const Navbar = () => {
         key: '3',
         label: <span onClick={handleChangePassword}>Change Password</span>, // Trigger logout on click
       },
+      ,
       {
         key: '4',
-        label: <span onClick={handleVoucher}>Voucher</span>, // Trigger logout on click
+        label: <span onClick={handleOrderStatus}>Order Status</span>, // Trigger logout on click
       },
       {
         key: '5',
+        label: <span onClick={handleVoucher}>Voucher</span>, // Trigger logout on click
+      },
+      {
+        key: '6',
         label: <span onClick={handleLogout}>Log out</span>, // Trigger logout on click
       },
     ]

@@ -4,10 +4,10 @@ import {
   // BarChartOutlined,
   CloudOutlined,
   ShopOutlined,
-  TeamOutlined,
-  // UploadOutlined,
+  FileProtectOutlined,
+  // FileProtectOutlined,
   UserOutlined,
-  // VideoCameraOutlined,
+  RobotOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 
@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../redux/authSlice'; // Ensure this imports your updated Redux action
 import '../../../src/components/nav/navbar.css'; // Ensure this imports your updated CSS
 import RequestForm from './RequestForm';
+import OrderDetailSupplierPage from './OrderDetailSupplierPage';
 
 const { Header, Content, Sider } = Layout;
 const siderStyle = {
@@ -40,8 +41,8 @@ const TeamPage = () => <p>Team Content</p>;
 const ShopPage = () => <p>Shop Content</p>;
 
 const items = [
-  { key: '1', icon: <UserOutlined />, label: 'RequestForm', component: RequestForm },
-  // { key: '2', icon: <VideoCameraOutlined />, label: 'Video', component: VideoPage },
+  { key: '1', icon: <FileProtectOutlined />, label: 'Request Form', component: RequestForm },
+  { key: '2', icon: <RobotOutlined />, label: 'View Toy', component: OrderDetailSupplierPage },
   // { key: '3', icon: <UploadOutlined />, label: 'Upload', component: BarChartPage },
   // { key: '4', icon: <BarChartOutlined />, label: 'Bar Chart', component: BarChartPage },
   // { key: '5', icon: <CloudOutlined />, label: 'Cloud', component: CloudPage },

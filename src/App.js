@@ -33,6 +33,8 @@ import OrderSale from "./pages/user/order/OrderSale";
 import ToySaleDetail from "./pages/toy/toysale/ToySaleDetail";
 import VoucherUser from "./pages/user/VoucherUser";
 import PaymentSuccess from "./pages/user/PaymentSuccess";
+import OrderStatus from "./pages/user/order/OrderRentStatus";
+import StatusOrderPage from "./pages/user/order/StatusOrderPage";
 
 function App() {
   const role = useSelector((state) => state.auth.role); // 
@@ -52,6 +54,7 @@ function App() {
 
       <Routes>
         {/* Unrestricted routes */}
+
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login2 />} />
         <Route path="/logout" element={<Logout />} />
@@ -89,6 +92,15 @@ function App() {
           element={
             <PrivateRoute allowedRoles={['1']}>
               <VoucherUser />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/statusorderpage"
+          element={
+            <PrivateRoute allowedRoles={['1']}>
+              <StatusOrderPage />
             </PrivateRoute>
           }
         />

@@ -106,7 +106,7 @@ export const putCategories = async (categoryId, categoryName) => {
 export const getAnsweredRequests = async () => {
     try {
         // Call the API to get categories
-        const response = await axiosInstance.get('https://localhost:7221/api/Request/answered-requests?page=1&size=10', {
+        const response = await axiosInstance.get('https://localhost:7221/api/Request/answered-requests?page=1', {
             headers: {
                 'Content-Type': 'application/json',
             },

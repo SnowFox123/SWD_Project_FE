@@ -85,7 +85,7 @@ const ToySaleDetail = () => {
 
 
                 // Navigate to the CartRent page, passing the toy details, quantity, and rental duration
-                navigate('/cartrental', {
+                navigate('/cartsale', {
                     state: {
                         selectedToyId: toy.toyId,
                         // quantity: quantity,

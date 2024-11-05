@@ -758,6 +758,23 @@ export const ReturnRentOrder = async (orderId) => {
     }
 };
 
+export const GetPaymentIdByOrderId = async (orderId) => {
+    try {
+        const url = `https://localhost:7221/api/Payment/order-id/${orderId}`;
+
+        const response = await axiosInstance.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        throw error;
+    }
+};
+
 
 
 

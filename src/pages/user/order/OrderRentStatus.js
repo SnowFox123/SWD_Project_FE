@@ -120,12 +120,12 @@ const OrderRentStatus = () => {
         {
             title: 'Final Amount',
             dataIndex: 'finalMoney',
-            render: (text) => `$${text.toFixed(2)}`,
+            render: (text) => `$${text}`,
         },
         {
             title: 'Payment Status',
             dataIndex: 'paymentStatus',
-            render: (text) => (text ? 'Paid' : 'Pending'),
+            render: (text) => (text ? 'Paid' : 'Not Paid'),
         },
         // New column for View Detail
         {
@@ -226,14 +226,14 @@ const OrderRentStatus = () => {
                                     dataIndex: 'returnDate',
                                     render: (text) => new Date(text).toLocaleString(),
                                 },
-                                { title: 'Rental Price', dataIndex: 'rentalPrice', render: (text) => `$${text.toFixed(2)}` },
+                                { title: 'Rental Price', dataIndex: 'rentalPrice', render: (text) => `$${text}` },
                             ]}
                             rowKey="toyName"
                             pagination={false}
                         />
-                        <p><strong>Total Money:</strong> ${orderDetails.totalMoney.toFixed(2)}</p>
+                        <p><strong>Total Money:</strong> ${orderDetails.totalMoney}</p>
                         <p><strong>Discount: </strong>{orderDetails.discount}</p>
-                        <p><strong>Final Amount:</strong> ${orderDetails.finalMoney.toFixed(2)}</p>
+                        <p><strong>Final Amount:</strong> ${orderDetails.finalMoney}</p>
 
                     </div>
                 ) : (

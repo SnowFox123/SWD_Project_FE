@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { PaymentInfo } from '../../services/UserServices';
+import { GetOrderIdByPaymentId, GetPaymentIdByOrderId, PaymentInfo } from '../../services/UserServices';
 import { ReturnRentOrder } from '../../services/UserServices'; // Import ReturnRentOrder here
 import './PaymentSuccess.css';
 
@@ -27,8 +27,14 @@ const PaymentSuccess = () => {
                         transaction.description.includes('rent2')
                     );
 
+                   
+
                     if (rentTransaction) {
-                        await ReturnRentOrder(orderId);
+                        const orderIdbyPaymentId = await GetPaymentIdByOrderId(orderId);
+                        console.log(orderIdbyPaymentId.object, 'orderId la')
+
+
+                        await ReturnRentOrder(orderIdbyPaymentId.object);
                         console.log("ReturnRentOrder API called successfully");
                     }
                 } catch (err) {

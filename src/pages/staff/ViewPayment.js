@@ -57,7 +57,7 @@ const ViewPayment = () => {
             title: 'Amount',
             dataIndex: 'amount',
             key: 'amount',
-            render: (amount) => `$${amount.toFixed(2)}`, // Format as currency
+            render: (amount) => `$${amount}`, // Format as currency
         },
         {
             title: 'Payment Method',

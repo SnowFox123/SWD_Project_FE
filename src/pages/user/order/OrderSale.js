@@ -157,11 +157,15 @@ const OrderSale = () => {
                 <Form.Item
                   label="Receive Phone Number"
                   name="receivePhoneNumber"
-                  rules={[{ required: true, message: 'Please input your phone number!' }]}
+                  rules={[
+                    { required: true, message: 'Please input your phone number!' },
+                    { pattern: /^\d{10}$/, message: 'Phone number must be exactly 10 digits!' }
+                  ]}
                   style={styles.formItem}
                 >
-                  <Input placeholder="Enter your phone number" />
+                  <Input placeholder="Enter your phone number" maxLength={10} />
                 </Form.Item>
+
               </Col>
             </Row>
             <Row style={{ padding: '0 0 20px 0', display: 'flex', justifyContent: "flex-end" }}>

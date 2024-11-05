@@ -66,6 +66,10 @@ const OrderRent = () => {
         returnDayjs.format(),
         voucherId
       );
+      console.log("🚀 ~ onFinish ~ orderId:", orderId)
+
+      // console.log("🚀 ~ onFinish ~ orderId.error.message:", orderId.error.message)
+
       // // // console.log("🚀 ~ onFinish ~ orderId:", orderId)
 
 
@@ -75,6 +79,7 @@ const OrderRent = () => {
         // setError(null);
 
         const orderDetails = await UserOrderCart(orderId);
+        console.log("🚀 ~ onFinish ~ orderDetails:", orderDetails)
         setOrderDetails(orderDetails);
         setFormVisible(false);
       } else {
@@ -197,10 +202,13 @@ const OrderRent = () => {
                 <Form.Item
                   label="Receive Phone Number"
                   name="receivePhoneNumber"
-                  rules={[{ required: true, message: 'Please input your phone number!' }]}
+                  rules={[
+                    { required: true, message: 'Please input your phone number!' },
+                    { pattern: /^\d{10}$/, message: 'Phone number must be exactly 10 digits!' }
+                  ]}
                   style={styles.formItem}
                 >
-                  <Input placeholder="Enter your phone number" />
+                  <Input placeholder="Enter your phone number" maxLength={10} />
                 </Form.Item>
               </Col>
               <Col xs={24} sm={12}>

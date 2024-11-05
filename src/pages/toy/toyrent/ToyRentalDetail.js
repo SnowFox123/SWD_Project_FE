@@ -183,7 +183,7 @@ const ToyRentalDetail = () => {
                                     </Text>
                                 </Col>
                                 <Col style={{ display: 'flex', flexDirection: 'column', marginLeft: '10px' }}>
-                                    <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#ee4d2d' }}>${toy.buyPrice}</span>
+                                    <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#ee4d2d' }}>${toy.rentPricePerDay}</span>
                                     <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#ee4d2d' }}>${toy.rentPricePerWeek}</span>
                                     <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#ee4d2d' }}>${toy.rentPricePerTwoWeeks}</span>
                                 </Col>

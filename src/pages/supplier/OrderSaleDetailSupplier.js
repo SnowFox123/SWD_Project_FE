@@ -15,7 +15,7 @@ const OrderSaleDetailSupplier = () => {
                 const data = await GetSaleOrderDetail();
 
                 const rentOrdersWithToyDetails = await Promise.all(
-                    data.map(async (order) => {
+                    data.object.map(async (order) => {
                         try {
                             const toyData = await getToyByID(order.toyId);
                             return {

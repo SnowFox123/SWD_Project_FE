@@ -65,12 +65,12 @@ const PaymentSuccess = () => {
         return (
             <div className="payment-message payment-cancelled">
                 <h1>Payment Cancelled</h1>
-                <h2>Order ID: {paymentDetails.object.orderCode}</h2>
+                {/* <h2>Order ID: {paymentDetails.object.orderCode}</h2> */}
                 <div>
-                    <div className="detail-item">
+                    {/* <div className="detail-item">
                         <span className="label2">Order Code:</span>
                         <span className="value">{paymentDetails.object.orderCode}</span>
-                    </div>
+                    </div> */}
                     <div className="detail-item">
                         <span className="label2">Amount:</span>
                         <span className="value status-cancel">{paymentDetails.object.amount} VND</span>
@@ -104,16 +104,16 @@ const PaymentSuccess = () => {
             <h1 className={isSuccess ? '' : 'failed'}>
                 {isSuccess ? 'Payment Successful!' : 'Payment Failed!'}
             </h1>
-            <h2>Order ID: {orderId}</h2>
+            {/* <h2>Order ID: {orderId}</h2> */}
 
             <div>
                 <h4>Payment Details</h4>
                 {paymentDetails.object.transactions.map((transaction, index) => (
                     <div key={index}>
-                        <div className="detail-item">
+                        {/* <div className="detail-item">
                             <span className="label2">Order Code:</span>
                             <span className="value">{paymentDetails.object.orderCode}</span>
-                        </div>
+                        </div> */}
                         <div className="detail-item">
                             <span className="label2">Account Name:</span>
                             <span className="value">{transaction.counterAccountName}</span>

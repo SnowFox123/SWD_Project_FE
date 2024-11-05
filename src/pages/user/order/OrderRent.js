@@ -27,8 +27,9 @@ const OrderRent = () => {
     try {
       const availableVouchers = await ListVoucherUser();
       setVouchers(availableVouchers.object);
+      console.log(availableVouchers.object)
     } catch (error) {
-      toast.error('Failed to load vouchers.');
+      toast.error('Failed to load vouchers.', error);
       console.error('Voucher error:', error);
     }
   };

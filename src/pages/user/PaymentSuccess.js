@@ -12,6 +12,7 @@ const PaymentSuccess = () => {
     const params = new URLSearchParams(location.search);
     const orderId = params.get('orderCode');
     const code = params.get('code');
+    const cancel = params.get('cancel') === 'true';
 
     useEffect(() => {
         const fetchPaymentInfo = async () => {
@@ -41,29 +42,57 @@ const PaymentSuccess = () => {
         return <div>{error}</div>;
     }
 
-    const isSuccess = code === '00';
-
-    // Updated function to extract description starting from the second space
-    // Function to extract content after the specific phrase "Payment for order"
-    // Function to extract content after the specific phrase "Payment for order" and remove the trailing "Trace"
-    // Function to extract the specific payment description
-    // 
+    const isSuccess = code === '00' && paymentDetails && !cancel;
+    const isCancelled = cancel && paymentDetails?.object?.status === "CANCELLED";
 
     // Function to extract specific parts of the payment description
     const extractDescriptionContent = (description) => {
-        // Regular expression to match "Order <text> paymentId<id>"
         const match = description.match(/Order\s[\w\s]+\spaymentId\d+/);
-
-        // If a match is found, return it; otherwise, return the whole description as a fallback
         return match ? match[0] : description;
     };
 
+    // Render cancelled message with specific details if the status is "CANCELLED"
+    if (isCancelled) {
+        return (
+            <div className="payment-message payment-cancelled">
+                <h1>Payment Cancelled</h1>
+                <h2>Order ID: {paymentDetails.object.orderCode}</h2>
+                <div>
+                    <div className="detail-item">
+                        <span className="label2">Order Code:</span>
+                        <span className="value">{paymentDetails.object.orderCode}</span>
+                    </div>
+                    <div className="detail-item">
+                        <span className="label2">Amount:</span>
+                        <span className="value status-cancel">{paymentDetails.object.amount} VND</span>
+                    </div>
+                    <div className="detail-item">
+                        <span className="label2">Amount Paid:</span>
+                        <span className="value">{paymentDetails.object.amountPaid} VND</span>
+                    </div>
+                    <div className="detail-item">
+                        <span className="label2">Amount Remaining:</span>
+                        <span className="value status-cancel">{paymentDetails.object.amountRemaining} VND</span>
+                    </div>
+                    <div className="detail-item">
+                        <span className="label2">Created At:</span>
+                        <span className="value">{new Date(paymentDetails.object.createdAt).toLocaleString()}</span>
+                    </div>
+                    <div className="detail-item">
+                        <span className="label2">Status:</span>
+                        <span className="value status-cancel">{paymentDetails.object.status}</span>
+                    </div>
+                </div>
+                <div className="footer">
+                    <p style={{ fontSize: '16px', color: 'red', fontWeight: 'bold' }}>Your payment has been cancelled</p>
+                </div>
+            </div>
+        );
+    }
 
-
-
-
+    // Render payment success or failure based on response data
     return (
-        <div className="payment-success">
+        <div className="payment-message payment-success">
             <h1 className={isSuccess ? '' : 'failed'}>
                 {isSuccess ? 'Payment Successful!' : 'Payment Failed!'}
             </h1>
@@ -72,13 +101,13 @@ const PaymentSuccess = () => {
             <div>
                 <h4>Payment Details</h4>
                 {paymentDetails.object.transactions.map((transaction, index) => (
-                    <div>
+                    <div key={index}>
                         <div className="detail-item">
                             <span className="label2">Order Code:</span>
                             <span className="value">{paymentDetails.object.orderCode}</span>
                         </div>
                         <div className="detail-item">
-                            <span className="label2">Account Name::</span>
+                            <span className="label2">Account Name:</span>
                             <span className="value">{transaction.counterAccountName}</span>
                         </div>
                         <div className="detail-item">
@@ -103,7 +132,7 @@ const PaymentSuccess = () => {
                         </div>
                         <div className="detail-item">
                             <span className="label2">Status:</span>
-                            <span className="value">{paymentDetails.object.status}</span>
+                            <span className="value status-success">{paymentDetails.object.status}</span>
                         </div>
                     </div>
                 ))}

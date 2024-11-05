@@ -92,55 +92,71 @@ export const submitSaleRequest = async (
 
 export const GetRentOrderDetail = async () => {
   try {
-      const url = `https://localhost:7221/api/Order/rent-details-for-supplier`;
+    const url = `https://localhost:7221/api/Order/rent-details-for-supplier`;
 
-      const response = await axiosInstance.get(url, {
-          headers: {
-              'Content-Type': 'application/json',
-          },
-      });
+    const response = await axiosInstance.get(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-      return response.data;
+    return response.data;
   } catch (error) {
-      console.error("Error fetching data: ", error);
-      throw error;
+    console.error("Error fetching data: ", error);
+    throw error;
   }
 };
 
 export const GetSaleOrderDetail = async () => {
   try {
-      const url = `https://localhost:7221/api/Order/sale-details-for-supplier`;
+    const url = `https://localhost:7221/api/Order/sale-details-for-supplier`;
 
-      const response = await axiosInstance.get(url, {
-          headers: {
-              'Content-Type': 'application/json',
-          },
-      });
+    const response = await axiosInstance.get(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-      return response.data;
+    return response.data;
   } catch (error) {
-      console.error("Error fetching data: ", error);
-      throw error; 
+    console.error("Error fetching data: ", error);
+    throw error;
   }
 };
 
 
 export const getToyByID = async (toyId) => {
   try {
-      const url = `https://localhost:7221/api/Toy/${toyId}`;
+    const url = `https://localhost:7221/api/Toy/${toyId}`;
 
-      const response = await axiosInstance.get(url, {
-          headers: {
-              'Content-Type': 'application/json',
-          },
-      });
+    const response = await axiosInstance.get(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-      return response.data.object;
-    } catch (error) {
-      console.error("Error fetching data: ", error);
-      throw error;
+    return response.data.object;
+  } catch (error) {
+    console.error("Error fetching data: ", error);
+    throw error;
   }
 };
 
+export const SupplierConfirmShip = async (orderDetailId) => {
+  try {
+    const url = `https://localhost:7221/api/Order/supplier-confirm-ship/${orderDetailId}`;
+
+    const response = await axiosInstance.put(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data: ", error);
+    throw error;
+  }
+};
 
 

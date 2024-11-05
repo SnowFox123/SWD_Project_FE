@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Spin, Alert } from 'antd';
+import { Table, Spin, Alert, Button, message } from 'antd';
 import { GetSaleOrderDetail } from '../../services/supplierService';
-import { getToyByID } from '../../services/supplierService';
+import { getToyByID, SupplierConfirmShip } from '../../services/supplierService';
 
 const OrderSaleDetailSupplier = () => {
     const [rentOrderDetails, setRentOrderDetails] = useState([]);
@@ -23,8 +23,9 @@ const OrderSaleDetailSupplier = () => {
                                 toyName: toyData.toyName,
                                 imageUrl: toyData.imageUrl,
                                 categoryName: toyData.categoryName,
-                                rentPricePerDay: toyData.rentPricePerDay,
+                                // rentPricePerDay: toyData.rentPricePerDay,
                                 stock: toyData.stock,
+                                buyPrice: toyData.buyPrice
                             };
                         } catch (toyError) {
                             console.error(`Failed to fetch toy with ID ${order.toyId}`, toyError);
@@ -43,6 +44,17 @@ const OrderSaleDetailSupplier = () => {
 
         fetchRentOrderDetails();
     }, []);
+
+    const handleConfirmShip = async (orderDetailId) => {
+        try {
+            const response = await SupplierConfirmShip(orderDetailId);
+            message.success(`Order ${orderDetailId} has been confirmed for shipping!`);
+            // Optionally, you can refetch the order details here if needed
+            // fetchRentOrderDetails();
+        } catch (error) {
+            message.error(`Failed to confirm shipping for order ${orderDetailId}: ${error.message}`);
+        }
+    };
 
     // Define the columns for the table
     const columns = [
@@ -78,21 +90,9 @@ const OrderSaleDetailSupplier = () => {
             key: 'categoryName',
         },
         {
-            title: 'Rental Date',
-            dataIndex: 'rentalDate',
-            key: 'rentalDate',
-            render: (text) => new Date(text).toLocaleDateString(),
-        },
-        {
-            title: 'Return Date',
-            dataIndex: 'returnDate',
-            key: 'returnDate',
-            render: (text) => new Date(text).toLocaleDateString(),
-        },
-        {
-            title: 'Rental Price',
-            dataIndex: 'rentalPrice',
-            key: 'rentalPrice',
+            title: 'Buy Price',
+            dataIndex: 'buyPrice',
+            key: 'buyPrice',
             render: (price) => (
                 <span style={{
                     fontWeight: 'bold',
@@ -103,7 +103,19 @@ const OrderSaleDetailSupplier = () => {
                 </span>
             ),
         },
-        
+        {
+            title: 'Actions',
+            key: 'actions',
+            render: (text, record) => (
+                <Button
+                    type="primary"
+                    onClick={() => handleConfirmShip(record.orderDetailId)}
+                >
+                    Confirm Ship
+                </Button>
+            ),
+        },
+
     ];
 
     if (loading) {

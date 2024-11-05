@@ -724,10 +724,8 @@ export const CompleteOrder = async (orderId) => {
 
 export const ReturnRentOrder = async (orderId) => {
     try {
-        // Construct the API URL dynamically based on passed arguments
         const url = `https://localhost:7221/api/Order/user-return-order/${orderId}`;
 
-        // Call the API to get toy rental data
         const response = await axiosInstance.put(url, {
             headers: {
                 'Content-Type': 'application/json',
@@ -737,7 +735,7 @@ export const ReturnRentOrder = async (orderId) => {
         return response.data;
     } catch (error) {
         console.error("Error fetching data: ", error);
-        throw error; // Throw the error for handling in the component
+        throw error; 
     }
 };
 

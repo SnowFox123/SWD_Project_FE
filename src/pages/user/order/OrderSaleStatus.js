@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { ViewOrderStatus, CompleteOrder } from '../../../services/UserServices';
+import { ViewOrderStatus, CompleteOrder, UserOrderCart } from '../../../services/UserServices';
 import { Tabs, Table, Spin, Alert, Button, Modal, notification } from 'antd';
 
 const OrderSaleStatus = () => {
     const [orderData, setOrderData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [activeStatus, setActiveStatus] = useState(1);
+    const [activeStatus, setActiveStatus] = useState(1); // Default to the first status tab
+    const [orderDetails, setOrderDetails] = useState(null); // State to hold order details for modal
+    const [detailsLoading, setDetailsLoading] = useState(false); // Loading state for details modal
 
     const fetchOrderStatus = async () => {
         setLoading(true);
@@ -53,7 +55,25 @@ const OrderSaleStatus = () => {
     };
 
 
-    // Determine if we should show the Action column based on order statuses
+    const handleViewDetail = async (orderId) => {
+        setDetailsLoading(true);
+        setOrderDetails(null); // Reset order details before fetching
+
+        try {
+            const details = await UserOrderCart(orderId);
+            setOrderDetails(details); // Set the fetched order details
+        } catch (error) {
+            notification.error({ message: 'Failed to fetch order details. Please try again.' });
+            console.error(error);
+        } finally {
+            setDetailsLoading(false);
+        }
+    };
+
+    const handleModalClose = () => {
+        setOrderDetails(null); // Reset order details on close
+    };
+
     const showActionColumn = orderData.some((order) =>
         order.statusName === 'Shipping' || order.statusName === 'Complete get toy'
     );
@@ -79,28 +99,30 @@ const OrderSaleStatus = () => {
         {
             title: 'Final Amount',
             dataIndex: 'finalMoney',
-            render: (text) => `$${text.toFixed(2)}`,
+            render: (text) => `$${text}`,
         },
         {
             title: 'Payment Status',
             dataIndex: 'paymentStatus',
             render: (text) => (text ? 'Paid' : 'Pending'),
         },
-        // Conditionally add the Action column
-        ...(showActionColumn ? [{
+        // New column for View Detail
+        {
             title: 'Action',
             dataIndex: 'orderId',
-            render: (orderId, record) => {
-                if (record.statusName === 'Shipping') {
-                    return (
-                        <Button type="primary" onClick={() => handleCompleteOrder(orderId)}>
+            render: (orderId, record) => (
+                <>
+                    <Button type="primary" onClick={() => handleViewDetail(orderId)}>
+                        View Detail
+                    </Button>
+                    {record.statusName === 'Shipping' && (
+                        <Button type="primary" onClick={() => handleCompleteOrder(orderId)} style={{ marginLeft: 8 }}>
                             Complete
                         </Button>
-                    );
-                }
-                return null; // Return null for other statuses
-            },
-        }] : []), // Include Action column if showActionColumn is true
+                    )}
+                </>
+            ),
+        }
     ];
 
     const statusNames = {
@@ -140,8 +162,50 @@ const OrderSaleStatus = () => {
                     locale={{ emptyText: 'No orders found for this status' }}
                 />
             )}
+
+            {/* Modal for Order Details */}
+            <Modal
+                title="Order Details"
+                visible={!!orderDetails}
+                onCancel={handleModalClose}
+                footer={null}
+                confirmLoading={detailsLoading}
+            >
+                {detailsLoading ? (
+                    <Spin />
+                ) : orderDetails ? (
+                    <div>
+                        <p><strong>Account Name:</strong> {orderDetails.accountName}</p>
+                        <p><strong>Shipping Address:</strong> {orderDetails.shippingAddress}</p>
+                        <p><strong>Phone Number:</strong> {orderDetails.receivePhoneNumber}</p>
+                        {/* <p><strong>Status:</strong> {orderDetails.statusName}</p> */}
+                        <p><strong>Order Date:</strong> {new Date(orderDetails.orderDate).toLocaleString()}</p>
+                        {/* <p><strong>Payment Status:</strong> {orderDetails.paymentStatus ? 'Paid' : 'Pending'}</p> */}
+
+                        <h3>Order Items</h3>
+                        <Table
+                            dataSource={orderDetails.ordersDetail}
+                            columns={[
+                                { title: 'Toy Name', dataIndex: 'toyName' },
+                                { title: 'Quantity', dataIndex: 'quantity' },
+                                { title: 'Price', dataIndex: 'price', render: (text) => `$${text}` },
+                            ]}
+                            rowKey="toyName"
+                            pagination={false}
+                        />
+                        <p><strong>Total Money:</strong> ${orderDetails.totalMoney}</p>
+                        <p><strong>Discount: </strong>{orderDetails.discount}</p>
+                        <p><strong>Final Amount:</strong> ${orderDetails.finalMoney}</p>
+
+                    </div>
+                ) : (
+                    <div>No details available.</div>
+                )}
+            </Modal>
         </div>
     );
 };
 
 export default OrderSaleStatus;
+
+

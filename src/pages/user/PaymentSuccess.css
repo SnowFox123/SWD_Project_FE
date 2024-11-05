@@ -1,6 +1,5 @@
-/* PaymentSuccess.css */
-
-.payment-success {
+/* General Styles */
+.payment-message {
     font-family: Arial, sans-serif;
     max-width: 600px;
     margin: 20px auto;
@@ -12,17 +11,16 @@
     border-radius: 8px;
 }
 
+/* Success Styles */
+.payment-success {
+    color: #2d862d;
+    /* Green for success */
+}
+
 .payment-success h1 {
     font-size: 24px;
     text-align: center;
-    color: #2d862d;
-    /* Green for success */
     margin-bottom: 10px;
-}
-
-.payment-success h1.failed {
-    color: #cc0000;
-    /* Red for failure */
 }
 
 .payment-success h2 {
@@ -51,22 +49,51 @@
     color: #555;
 }
 
-.label3 {
-    padding: 5px 0;
-}
-
 .value {
     color: #333;
 }
 
-.detail-item,
-.transaction-item {
+.detail-item {
     display: flex;
     justify-content: space-between;
     padding: 10px 0;
     border-bottom: 1px solid #eee;
 }
 
+/* Cancel Styles */
+.payment-cancelled {
+    color: red;
+    /* Red for failure */
+}
+
+.payment-cancelled h1 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.payment-cancelled h2 {
+    font-size: 18px;
+    text-align: center;
+    color: #555;
+    margin: 0 0 20px;
+}
+
+.payment-cancelled h4 {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.payment-cancelled p {
+    font-size: 14px;
+    margin: 5px 0;
+    color: #333;
+}
+
+/* Transaction Item Styles */
 .transaction-item {
     padding: 15px;
     background-color: #f9f9f9;
@@ -84,6 +111,17 @@
     font-weight: bold;
 }
 
+.status-success {
+    color: #2d862d;
+    font-weight: bold;
+}
+
+.status-cancel {
+    color: red;
+    font-weight: bold;
+}
+
+/* Footer Styles */
 .footer {
     font-size: 16px;
     text-align: center;

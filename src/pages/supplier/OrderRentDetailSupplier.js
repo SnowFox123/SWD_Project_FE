@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Spin, Alert } from 'antd';
-import { GetRentOrderDetail } from '../../services/supplierService';
-import { getToyByID } from '../../services/supplierService';
+import { Table, Spin, Alert, Button, message } from 'antd';
+import { GetRentOrderDetail, getToyByID, SupplierConfirmShip } from '../../services/supplierService';
 
 const OrderRentDetailSupplier = () => {
     const [rentOrderDetails, setRentOrderDetails] = useState([]);
@@ -43,6 +42,17 @@ const OrderRentDetailSupplier = () => {
 
         fetchRentOrderDetails();
     }, []);
+
+    const handleConfirmShip = async (orderDetailId) => {
+        try {
+            const response = await SupplierConfirmShip(orderDetailId);
+            message.success(`Order ${orderDetailId} has been confirmed for shipping!`);
+            // Optionally, you can refetch the order details here if needed
+            // fetchRentOrderDetails();
+        } catch (error) {
+            message.error(`Failed to confirm shipping for order ${orderDetailId}: ${error.message}`);
+        }
+    };
 
     // Define the columns for the table
     const columns = [
@@ -101,6 +111,18 @@ const OrderRentDetailSupplier = () => {
                 }}>
                     {price.toLocaleString('vi-VN')} ₫
                 </span>
+            ),
+        },
+        {
+            title: 'Actions',
+            key: 'actions',
+            render: (text, record) => (
+                <Button
+                    type="primary"
+                    onClick={() => handleConfirmShip(record.orderDetailId)}
+                >
+                    Confirm Ship
+                </Button>
             ),
         },
     ];

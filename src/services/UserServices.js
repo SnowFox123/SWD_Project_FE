@@ -293,6 +293,25 @@ export const GetLinkPayment = async (orderId) => {
     }
 };
 
+export const GetRentLinkPayment2 = async (orderId) => {
+    try {
+        // Construct the API URL dynamically based on passed arguments
+        const url = `https://localhost:7221/api/Payment/create-rent-payment2-link/${orderId}`;
+
+        // Call the API to get toy rental data
+        const response = await axiosInstance.post(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        throw error; // Throw the error for handling in the component
+    }
+};
+
 export const GetLinkPayment2 = async (orderId) => {
     try {
         // Construct the API URL dynamically based on passed arguments
@@ -735,7 +754,7 @@ export const ReturnRentOrder = async (orderId) => {
         return response.data;
     } catch (error) {
         console.error("Error fetching data: ", error);
-        throw error; 
+        throw error;
     }
 };
 

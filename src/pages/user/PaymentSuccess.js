@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PaymentInfo } from '../../services/UserServices';
+import { ReturnRentOrder } from '../../services/UserServices'; // Import ReturnRentOrder here
 import './PaymentSuccess.css';
 
 const PaymentSuccess = () => {
@@ -20,6 +21,16 @@ const PaymentSuccess = () => {
                 try {
                     const data = await PaymentInfo(orderId);
                     setPaymentDetails(data);
+
+                    // Check if 'rent2' is in the payment description and call ReturnRentOrder if true
+                    const rentTransaction = data.object.transactions.find((transaction) =>
+                        transaction.description.includes('rent2')
+                    );
+
+                    if (rentTransaction) {
+                        await ReturnRentOrder(orderId);
+                        console.log("ReturnRentOrder API called successfully");
+                    }
                 } catch (err) {
                     setError("Failed to fetch payment information.");
                 } finally {
@@ -45,13 +56,11 @@ const PaymentSuccess = () => {
     const isSuccess = code === '00' && paymentDetails && !cancel;
     const isCancelled = cancel && paymentDetails?.object?.status === "CANCELLED";
 
-    // Function to extract specific parts of the payment description
     const extractDescriptionContent = (description) => {
         const match = description.match(/Order\s[\w\s]+\spaymentId\d+/);
         return match ? match[0] : description;
     };
 
-    // Render cancelled message with specific details if the status is "CANCELLED"
     if (isCancelled) {
         return (
             <div className="payment-message payment-cancelled">
@@ -90,7 +99,6 @@ const PaymentSuccess = () => {
         );
     }
 
-    // Render payment success or failure based on response data
     return (
         <div className="payment-message payment-success">
             <h1 className={isSuccess ? '' : 'failed'}>

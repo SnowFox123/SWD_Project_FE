@@ -66,6 +66,7 @@ const OrderRent = () => {
         returnDayjs.format(),
         voucherId
       );
+      // // // console.log("🚀 ~ onFinish ~ orderId:", orderId)
 
 
       if (typeof orderId === 'number') {
@@ -111,8 +112,8 @@ const OrderRent = () => {
   };
 
   const handleVoucherSelect = (voucher) => {
-    console.log("🚀 ~ handleVoucherSelect ~ selectedVoucher:", selectedVoucher)
-    console.log("🚀 ~ handleVoucherSelect ~ voucher.voucherId:", voucher.voucherId)
+    // // // console.log("🚀 ~ handleVoucherSelect ~ selectedVoucher:", selectedVoucher)
+    // // // console.log("🚀 ~ handleVoucherSelect ~ voucher.voucherId:", voucher.voucherId)
 
     if (selectedVoucher && selectedVoucher.voucherId === voucher.voucherId) {
       setSelectedVoucher(null);
@@ -305,12 +306,18 @@ const OrderRent = () => {
             >
               <List.Item.Meta
                 title={<span style={styles.voucherTitle}>{voucher.voucherName}</span>}
-                description={`Discount: ${voucher.discount}%`}
+                description={
+                  <>
+                    <div>Discount: {voucher.discount}%</div>
+                    <div>Expiry Date: {voucher.expiredDate}</div>
+                  </>
+                }
               />
             </List.Item>
           )}
         />
       </Modal>
+
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ViewOrderStatus, CompleteOrder, ReturnRentOrder, UserOrderCart } from '../../../services/UserServices';
+import { ViewOrderStatus, CompleteOrder, ReturnRentOrder, UserOrderCart, GetRentLinkPayment2 } from '../../../services/UserServices';
 import { Tabs, Table, Spin, Alert, Button, Modal, notification } from 'antd';
 
 const OrderRentStatus = () => {
@@ -59,7 +59,12 @@ const OrderRentStatus = () => {
             title: 'Are you sure you want to return this order?',
             onOk: async () => {
                 try {
-                    await ReturnRentOrder(orderId);
+                    const linkpayment2 = await GetRentLinkPayment2(orderId);
+
+                    if (linkpayment2) {
+                        window.open(linkpayment2.object, '_blank'); // Open the link in a new tab
+                    }
+
                     notification.success({ message: 'Order returned successfully!' });
                     await fetchOrderStatus();
                 } catch (error) {
@@ -69,6 +74,7 @@ const OrderRentStatus = () => {
             },
         });
     };
+
 
     const handleViewDetail = async (orderId) => {
         setDetailsLoading(true);

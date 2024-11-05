@@ -208,7 +208,7 @@ const RequestRental = () => {
 
 
       {/* Display server response or error */}
-      {response && (
+      {/* {response && (
         <div>
           <h3>Response from server:</h3>
           <pre>{JSON.stringify(response, null, 2)}</pre>
@@ -220,7 +220,7 @@ const RequestRental = () => {
           <h3>Error:</h3>
           <pre>{JSON.stringify(error, null, 2)}</pre>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

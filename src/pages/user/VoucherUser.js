@@ -15,7 +15,8 @@ const VoucherUser = () => {
                 // Call the ListVoucherUser function
                 const data = await ListVoucherUser();
                 console.log(data.object);
-                setVouchers(data.object); // Update the vouchers state
+                // Only set vouchers where isActive is true
+                setVouchers(data.object.filter(voucher => voucher.isActive));
             } catch (error) {
                 setError("Error fetching vouchers");
                 console.error("Error:", error);
@@ -53,7 +54,7 @@ const VoucherUser = () => {
                     style={{ paddingLeft: '100px', paddingRight: '100px' }}
                     dataSource={vouchers}
                     renderItem={(voucher) => (
-                        <List.Item > {/* Add horizontal padding */}
+                        <List.Item> {/* Add horizontal padding */}
                             <Card title={`Code: ${voucher.voucherName}`}>
                                 <p>Discount: {voucher.discount}%</p>
                                 <p>Expiry Date: {formatDate(voucher.expiredDate)}</p> {/* Use the formatDate function here */}

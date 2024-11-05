@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { submitSaleRequest } from '../../services/supplierService';
 import { Form, Input, InputNumber, Button, Upload, message, Select } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import the styles
 import { getCategories } from '../../services/staffService';
 
@@ -138,7 +138,7 @@ const RequestSale = () => {
         </Form.Item>
       </Form>
 
-      {response && (
+      {/* {response && (
         <div>
           <h3>Response from server:</h3>
           <pre>{JSON.stringify(response, null, 2)}</pre>
@@ -150,9 +150,9 @@ const RequestSale = () => {
           <h3>Error:</h3>
           <pre>{JSON.stringify(error, null, 2)}</pre>
         </div>
-      )}
+      )} */}
 
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </div>
   );
 };

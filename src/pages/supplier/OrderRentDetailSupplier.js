@@ -13,27 +13,32 @@ const OrderRentDetailSupplier = () => {
             try {
                 const data = await GetRentOrderDetail();
 
-                const rentOrdersWithToyDetails = await Promise.all(
-                    data.map(async (order) => {
-                        try {
-                            const toyData = await getToyByID(order.toyId);
-                            return {
-                                ...order,
-                                toyName: toyData.toyName,
-                                imageUrl: toyData.imageUrl,
-                                categoryName: toyData.categoryName,
-                                rentPricePerDay: toyData.rentPricePerDay,
-                                stock: toyData.stock,
-                            };
-                        } catch (toyError) {
-                            console.error(`Failed to fetch toy with ID ${order.toyId}`, toyError);
-                            return { ...order, toyName: 'Unknown Toy' };
-                        }
-                    })
-                );
-
-                setRentOrderDetails(rentOrdersWithToyDetails);
+                // Ensure that isSuccess is true and object is an array
+                if (data.isSuccess && Array.isArray(data.object)) {
+                    const rentOrdersWithToyDetails = await Promise.all(
+                        data.object.map(async (order) => {
+                            try {
+                                const toyData = await getToyByID(order.toyId);
+                                return {
+                                    ...order,
+                                    toyName: toyData.toyName,
+                                    imageUrl: toyData.imageUrl,
+                                    categoryName: toyData.categoryName,
+                                    rentPricePerDay: toyData.rentPricePerDay,
+                                    stock: toyData.stock,
+                                };
+                            } catch (toyError) {
+                                console.error(`Failed to fetch toy with ID ${order.toyId}`, toyError);
+                                return { ...order, toyName: 'Unknown Toy' };
+                            }
+                        })
+                    );
+                    setRentOrderDetails(rentOrdersWithToyDetails);
+                } else {
+                    throw new Error('Failed to load rent order details.');
+                }
             } catch (err) {
+                console.error("Failed to fetch rent order details:", err);
                 setError(err);
             } finally {
                 setLoading(false);
@@ -45,7 +50,7 @@ const OrderRentDetailSupplier = () => {
 
     const handleConfirmShip = async (orderDetailId) => {
         try {
-            const response = await SupplierConfirmShip(orderDetailId);
+            await SupplierConfirmShip(orderDetailId);
             message.success(`Order ${orderDetailId} has been confirmed for shipping!`);
             // Optionally, you can refetch the order details here if needed
             // fetchRentOrderDetails();
@@ -106,8 +111,8 @@ const OrderRentDetailSupplier = () => {
             render: (price) => (
                 <span style={{
                     fontWeight: 'bold',
-                    color: '#d32f2f', // Dark red color for emphasis
-                    fontSize: '1.1em', // Slightly larger font size
+                    color: '#d32f2f',
+                    fontSize: '1.1em',
                 }}>
                     {price.toLocaleString('vi-VN')} ₫
                 </span>

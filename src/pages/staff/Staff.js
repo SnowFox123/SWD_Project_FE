@@ -25,6 +25,7 @@ import BanAccount from './BanAccount';
 import SignUpSupplier from './SignUpSupplier';
 import AddVoucher from './AddVoucher';
 import VoucherManager from './VoucherManager';
+import ViewPayment from './ViewPayment';
 
 const { Header, Content, Footer, Sider } = Layout;
 const siderStyle = {
@@ -54,7 +55,7 @@ const items = [
   { key: '3', icon: <UserAddOutlined />, label: 'SignUp Supplier', component: SignUpSupplier },
   { key: '4', icon: <UsergroupDeleteOutlined />, label: 'Ban Account', component: BanAccount },
   { key: '5', icon: <AppstoreOutlined />, label: 'Voucher Manager', component: VoucherManager },
-  // { key: '7', icon: <TeamOutlined />, label: 'Team', component: TeamPage },
+  { key: '7', icon: <TeamOutlined />, label: 'View Payment', component: ViewPayment },
   // { key: '8', icon: <ShopOutlined />, label: 'Shop', component: ShopPage },
 ];
 

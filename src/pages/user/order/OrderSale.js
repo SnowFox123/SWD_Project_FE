@@ -236,7 +236,12 @@ const OrderSale = () => {
             >
               <List.Item.Meta
                 title={<span style={styles.voucherTitle}>{voucher.voucherName}</span>}
-                description={`Discount: ${voucher.discount}%`}
+                description={
+                  <>
+                    <div>Discount: {voucher.discount}%</div>
+                    <div>Expiry Date: {voucher.expiredDate}</div>
+                  </>
+                }
               />
             </List.Item>
           )}
@@ -277,19 +282,17 @@ const styles = {
     width: '100%',
   },
   voucherButton: {
-    marginBottom: '20px',
-    backgroundColor: 'green',
-    color: 'white',
-    fontWeight: 'bold',
+    marginLeft: '10px',
   },
   table: {
     marginBottom: '20px',
     backgroundColor: '#fff',
   },
   selectedVoucher: {
-    marginRight: '20px',
-    fontSize: '18px',
-    fontWeight: 'bold',
+    marginTop: '4px',
+    fontSize: '16px',
+    color: '#333',
+    marginLeft: '20px'
   },
   listItem: {
     padding: '10px',
@@ -298,7 +301,6 @@ const styles = {
   voucherTitle: {
     fontSize: '16px',
     fontWeight: 'bold',
-    color: 'blue',
   },
 };
 

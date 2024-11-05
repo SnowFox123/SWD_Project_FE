@@ -331,26 +331,23 @@ export const AcceptDenyRequest = async (requestId, requestStatus, denyReason) =>
             // Handle validation errors returned from the backend
             const validationErrors = error.response.data.errors;
 
-            // Create a new Error object and attach validation errors to it
             const validationError = new Error('Validation errors occurred');
             validationError.validationErrors = Object.keys(validationErrors).reduce((acc, key) => {
-                acc[key] = validationErrors[key].join(' '); // Join multiple messages if any
+                acc[key] = validationErrors[key].join(' ');
                 return acc;
             }, {});
 
-            throw validationError; // Throw the error object with validation data
+            throw validationError;
         }
         console.error('Error retrieving categories:', error);
-        throw error; // Re-throw the original error if not validation-related
+        throw error;
     }
 };
 
 export const ListVoucher = async () => {
     try {
-        // Construct the API URL dynamically based on passed arguments
         const url = `https://localhost:7221/api/Voucher/list-vouchers`;
 
-        // Call the API to get toy rental data
         const response = await axiosInstance.get(url, {
             headers: {
                 'Content-Type': 'application/json',
@@ -360,17 +357,15 @@ export const ListVoucher = async () => {
         return response.data;
     } catch (error) {
         console.error("Error fetching data: ", error);
-        throw error; // Throw the error for handling in the component
+        throw error;
     }
 };
 
 
 export const AddNewVoucher = async (formData) => {
     try {
-        // Construct the API URL dynamically based on passed arguments
         const url = `https://localhost:7221/api/Voucher/new-voucher`;
 
-        // Call the API to get toy rental data
         const response = await axiosInstance.post(url, formData, {
             headers: {
                 'Content-Type': 'application/json',
@@ -380,17 +375,15 @@ export const AddNewVoucher = async (formData) => {
         return response.data;
     } catch (error) {
         console.error("Error fetching data: ", error);
-        throw error; // Throw the error for handling in the component
+        throw error;
     }
 };
 
 
 export const PutVoucher = async (formData) => {
     try {
-        // Construct the API URL dynamically based on passed arguments
         const url = `https://localhost:7221/api/Voucher/voucher-information`;
 
-        // Call the API to get toy rental data
         const response = await axiosInstance.put(url, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -400,17 +393,15 @@ export const PutVoucher = async (formData) => {
         return response.data;
     } catch (error) {
         console.error("Error fetching data: ", error);
-        throw error; // Throw the error for handling in the component
+        throw error;
     }
 };
 
 
 export const ActiveDeactiveVoucher = async (formData) => {
     try {
-        // Construct the API URL dynamically based on passed arguments
         const url = `https://localhost:7221/api/Voucher/active-deactive-voucher`;
 
-        // Call the API to get toy rental data
         const response = await axiosInstance.put(url, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -420,16 +411,14 @@ export const ActiveDeactiveVoucher = async (formData) => {
         return response.data;
     } catch (error) {
         console.error("Error fetching data: ", error);
-        throw error; // Throw the error for handling in the component
+        throw error;
     }
 };
 
 export const AssignVoucherToUser = async (formData) => {
     try {
-        // Construct the API URL dynamically based on passed arguments
         const url = `https://localhost:7221/api/Voucher/assign-voucher-to-user`;
 
-        // Call the API to get toy rental data
         const response = await axiosInstance.post(url, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -439,6 +428,24 @@ export const AssignVoucherToUser = async (formData) => {
         return response.data;
     } catch (error) {
         console.error("Error fetching data: ", error);
-        throw error; // Throw the error for handling in the component
+        throw error;
+    }
+};
+
+
+export const ViewPaymentForStaff = async (status) => {
+    try {
+        const url = `https://localhost:7221/api/Payment/staff/${status}`;
+
+        const response = await axiosInstance.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        throw error;
     }
 };

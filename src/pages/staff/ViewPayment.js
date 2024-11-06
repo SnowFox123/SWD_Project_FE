@@ -1,7 +1,7 @@
-// ViewPaymentForStaff.js
 import React, { useState, useEffect } from 'react';
 import { Tabs, Table, Spin, message } from 'antd';
 import { ViewPaymentForStaff } from '../../services/staffService'; // Ensure correct path for ViewPaymentForStaff function
+import { getAllAccount } from '../../services/staffService'; // Adjust path if necessary
 
 const { TabPane } = Tabs;
 
@@ -10,14 +10,31 @@ const ViewPayment = () => {
     const [data, setData] = useState([]);
     const [activeTab, setActiveTab] = useState("0"); // default to status 0 (Tab 1)
 
-    // Function to fetch payment data based on status
+    // Function to fetch payment data and account details
     const fetchData = async (status) => {
         setLoading(true);
         try {
+            // Fetch payment data based on status
             const response = await ViewPaymentForStaff(status);
-            // Ensure response contains the expected structure
             if (response.isSuccess && Array.isArray(response.object)) {
-                setData(response.object);
+                const paymentData = response.object;
+
+                // Fetch all account details
+                const accounts = await getAllAccount();
+
+                // Map account info to each payment record
+                const mergedData = paymentData.map(payment => {
+                    const account = accounts.find(acc => acc.accountId === payment.accountId);
+                    return {
+                        ...payment,
+                        accountName: account ? account.accountName : 'N/A',
+                        accountEmail: account ? account.accountEmail : 'N/A',
+                        address: account ? account.address : 'N/A',
+                        phoneNumber: account ? account.phoneNumber : 'N/A',
+                    };
+                });
+
+                setData(mergedData);
             } else {
                 setData([]);
                 message.error("Unexpected data format from the server.");
@@ -49,9 +66,24 @@ const ViewPayment = () => {
             key: 'orderId',
         },
         {
-            title: 'Account ID',
-            dataIndex: 'accountId',
-            key: 'accountId',
+            title: 'Account Name', // Add account name column
+            dataIndex: 'accountName',
+            key: 'accountName',
+        },
+        {
+            title: 'Email',
+            dataIndex: 'accountEmail',
+            key: 'accountEmail',
+        },
+        {
+            title: 'Address',
+            dataIndex: 'address',
+            key: 'address',
+        },
+        {
+            title: 'Phone Number',
+            dataIndex: 'phoneNumber',
+            key: 'phoneNumber',
         },
         {
             title: 'Amount',
@@ -93,10 +125,10 @@ const ViewPayment = () => {
                     {loading ? (
                         <Spin />
                     ) : (
-                        <Table 
-                            columns={columns} 
-                            dataSource={data} 
-                            rowKey="paymentId" 
+                        <Table
+                            columns={columns}
+                            dataSource={data}
+                            rowKey="paymentId"
                         />
                     )}
                 </TabPane>
@@ -104,10 +136,10 @@ const ViewPayment = () => {
                     {loading ? (
                         <Spin />
                     ) : (
-                        <Table 
-                            columns={columns} 
-                            dataSource={data} 
-                            rowKey="paymentId" 
+                        <Table
+                            columns={columns}
+                            dataSource={data}
+                            rowKey="paymentId"
                         />
                     )}
                 </TabPane>

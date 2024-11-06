@@ -605,7 +605,7 @@ export const OrderRentToys = async (shippingAddress, receivePhoneNumber, isRenta
         if (response.data.isSuccess) {
             return response.data.object; // Return the response object if success
         } else {
-            throw new Error('Failed to place order.'); // Handle generic failure cases
+            throw new Error(response.data.error.message || 'Failed to place order.'); // Use backend error message if available
         }
     } catch (error) {
         if (error.response && error.response.data.errors) {
@@ -620,11 +620,16 @@ export const OrderRentToys = async (shippingAddress, receivePhoneNumber, isRenta
             }, {});
 
             throw validationError; // Throw the error object with validation data
+        } else if (error.response && error.response.data.error) {
+            // If there's a backend error message, use it directly
+            throw new Error(error.response.data.error.message);
         }
+
         console.error('Error placing order:', error);
         throw error; // Re-throw the original error if not validation-related
     }
 };
+
 
 
 

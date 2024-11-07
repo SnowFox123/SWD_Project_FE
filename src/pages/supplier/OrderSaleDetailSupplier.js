@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table, Spin, Alert, Button, message } from 'antd';
 import { GetSaleOrderDetail } from '../../services/supplierService';
 import { getToyByID, SupplierConfirmShip } from '../../services/supplierService';
+import { formatCurrency } from '../../utils/currency';
 
 const OrderSaleDetailSupplier = () => {
     const [rentOrderDetails, setRentOrderDetails] = useState([]);
@@ -99,7 +100,7 @@ const OrderSaleDetailSupplier = () => {
                     color: '#d32f2f', // Dark red color for emphasis
                     fontSize: '1.1em', // Slightly larger font size
                 }}>
-                    {price !== undefined ? `${price.toLocaleString('vi-VN')} ₫` : 'N/A'}
+                    {formatCurrency(price)}
                 </span>
             ),
         },

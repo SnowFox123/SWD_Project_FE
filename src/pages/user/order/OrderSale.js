@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { OrderRentToys, UserOrderCart, ListVoucherUser, GetLinkPayment2 } from '../../../services/UserServices';
 import { Spin, Alert, Form, Input, Button, Row, Col, Table, Modal, List } from 'antd';
 import { toast } from 'react-toastify';
+import { formatCurrency } from '../../../utils/currency';
 
 const OrderSale = () => {
   const orderData = useSelector((state) => state.order.orderData);
@@ -133,7 +134,7 @@ const OrderSale = () => {
       title: 'Price',
       dataIndex: 'price',
       key: 'price',
-      render: (text) => `${text} VNĐ`,
+      render: (text) => formatCurrency(text),
     },
   ];
 

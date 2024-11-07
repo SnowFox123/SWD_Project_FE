@@ -4,6 +4,7 @@ import { OrderRentToys, UserOrderCart, GetLinkPayment, ListVoucherUser } from '.
 import { Spin, Alert, Form, Input, Button, DatePicker, Row, Col, Table, Modal, List } from 'antd';
 import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
+import { formatCurrency } from '../../../utils/currency';
 
 const OrderRent = () => {
   const orderData = useSelector((state) => state.order.orderData);
@@ -178,7 +179,7 @@ const OrderRent = () => {
       title: 'Rental Price',
       dataIndex: 'rentalPrice',
       key: 'rentalPrice',
-      render: (text) => `${text} VNĐ`,
+      render: (text) => formatCurrency(text),
     },
   ];
 

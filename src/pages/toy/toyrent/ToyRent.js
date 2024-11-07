@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import './card.css';
+import { formatCurrency } from '../../../utils/currency';
 
 const { Search } = Input;
 const { Option } = Select;
@@ -59,6 +60,7 @@ const ToyRent = () => {
     setSortOption(value);
     setPageIndex(1);
   };
+
 
   const handleAddToCart = async (toyId, quantity = 1) => {
     if (quantity < 1 || quantity > 2147483647) {
@@ -128,7 +130,7 @@ const ToyRent = () => {
                       />
                       <h4 className="toy-card__name">{toy.toyName}</h4>
                       <div className="toy-card__price">
-                        <span className="price-current">${toy.rentPricePerDay}/Day</span>
+                        <span className="price-current">{formatCurrency(toy.rentPricePerDay)}/Day</span>
                       </div>
                     </Link>
 

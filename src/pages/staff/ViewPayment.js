@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Tabs, Table, Spin, message } from 'antd';
 import { ViewPaymentForStaff } from '../../services/staffService'; // Ensure correct path for ViewPaymentForStaff function
 import { getAllAccount } from '../../services/staffService'; // Adjust path if necessary
+import { formatCurrency } from '../../utils/currency';
 
 const { TabPane } = Tabs;
 
@@ -10,6 +11,7 @@ const ViewPayment = () => {
     const [data, setData] = useState([]);
     const [activeTab, setActiveTab] = useState("0"); // default to status 0 (Tab 1)
 
+    // Function to fetch payment data and account details
     // Function to fetch payment data and account details
     const fetchData = async (status) => {
         setLoading(true);
@@ -34,6 +36,9 @@ const ViewPayment = () => {
                     };
                 });
 
+                // Sort mergedData by paymentId in descending order
+                mergedData.sort((a, b) => b.paymentId - a.paymentId);
+
                 setData(mergedData);
             } else {
                 setData([]);
@@ -47,6 +52,7 @@ const ViewPayment = () => {
             setLoading(false);
         }
     };
+
 
     // Fetch data when activeTab changes
     useEffect(() => {
@@ -89,7 +95,9 @@ const ViewPayment = () => {
             title: 'Amount',
             dataIndex: 'amount',
             key: 'amount',
-            render: (amount) => `$${amount}`, // Format as currency
+            render: (amount) => (
+                formatCurrency(amount)
+            ),
         },
         {
             title: 'Payment Method',
@@ -100,8 +108,26 @@ const ViewPayment = () => {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
-            render: (status) => (status === 0 ? 'Pending' : 'Completed'),
+            render: (status) => {
+                const text = status === 0 ? 'Pending' : 'Completed';
+                const backgroundColor = status === 0 ? 'yellow' : 'green'; // Set background color
+                const color = status === 0 ? 'black' : 'white'; // Set text color for readability
+                return (
+                    <span
+                        style={{
+                            backgroundColor,
+                            color,
+                            padding: '5px 10px',
+                            borderRadius: '5px',
+                            display: 'inline-block',
+                        }}
+                    >
+                        {text}
+                    </span>
+                );
+            },
         },
+
         {
             title: 'Transaction ID',
             dataIndex: 'transactionId',
@@ -111,7 +137,7 @@ const ViewPayment = () => {
             title: 'Transaction Date',
             dataIndex: 'transactionDate',
             key: 'transactionDate',
-            render: (date) => new Date(date).toLocaleDateString(), // Format as local date
+            render: (date) => new Date(date).toLocaleString(), // Format as local date
         },
     ];
 

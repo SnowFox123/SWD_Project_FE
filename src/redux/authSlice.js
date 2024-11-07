@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
+    AccountId: null,
     accessToken: null,     
     refreshToken: null,    
     role: null,             // User's role (1: User, 2: Supplier, 3: Staff, 4: Admin)
@@ -14,9 +15,10 @@ const authSlice = createSlice({
   reducers: {
     // Action to handle successful login
     loginSuccess: (state, action) => {
-      const { accessToken, refreshToken, role, email, unique_name, phone } = action.payload;
+      const { accessToken, refreshToken,AccountId, role, email, unique_name, phone } = action.payload;
       state.accessToken = accessToken;
       state.refreshToken = refreshToken;
+      state.AccountId = AccountId;
       state.role = role;               
       state.email = email;               
       state.unique_name = unique_name;
@@ -27,6 +29,7 @@ const authSlice = createSlice({
     logout: (state) => {
       state.accessToken = null;      
       state.refreshToken = null;     
+      state.AccountId = null;
       state.role = null;             
       state.email = null;    
       state.unique_name = null;

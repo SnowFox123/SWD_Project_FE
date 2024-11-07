@@ -4,6 +4,7 @@ import { GetCart, getToyByID } from '../../services/UserServices';
 import { Link, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux'; // Import useDispatch
 import { saveOrderData } from '../../redux/orderSlice'; // Import saveOrderData action
+import { formatCurrency } from '../../utils/currency';
 
 const CartRent = () => {
   const location = useLocation();
@@ -156,7 +157,7 @@ const CartRent = () => {
       dataIndex: 'toy',
       key: 'name',
       render: (toy) => (
-        <Link to={`/toyrentaldetail/${toy.toyId}`} style={{ color: 'black', fontSize: '16px' }}>
+        <Link to={`/toyrentaldetail/${toy.toyId}`} style={{ color: 'blue', fontSize: '16px' }}>
           {toy.toyName}
         </Link>
       )
@@ -165,19 +166,25 @@ const CartRent = () => {
       title: 'Price Per Day',
       dataIndex: 'toy',
       key: 'pricePerDay',
-      render: (toy) => <div>${toy.rentPricePerDay}</div>,
+      render: (toy) => (
+        <div style={{ color: 'red', fontWeight: 'bold' }}> {formatCurrency(toy.rentPricePerDay)}</div>
+      ),
     },
     {
       title: 'Price Per Week',
       dataIndex: 'toy',
       key: 'pricePerWeek',
-      render: (toy) => <div>${toy.rentPricePerWeek}</div>,
+      render: (toy) => (
+        <div style={{ color: 'red', fontWeight: 'bold' }}> {formatCurrency(toy.rentPricePerWeek)}</div>
+      ),
     },
     {
       title: 'Price Per Two Weeks',
       dataIndex: 'toy',
       key: 'pricePerTwoWeeks',
-      render: (toy) => <div>${toy.rentPricePerTwoWeeks}</div>,
+      render: (toy) => (
+        <div style={{ color: 'red', fontWeight: 'bold' }}> {formatCurrency(toy.rentPricePerTwoWeeks)}</div>
+      ),
     },
     {
       title: 'Quantity',

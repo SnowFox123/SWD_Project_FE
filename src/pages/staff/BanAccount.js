@@ -148,7 +148,7 @@ const BanAccount = () => {
 
     return (
         <div style={{ padding: '20px' }}>
-            <h2>Ban Account</h2>
+            <h2>View Account</h2>
 
             <Table
                 columns={columns}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Spin, Alert, Button, message } from 'antd';
 import { GetRentOrderDetail, getToyByID, SupplierConfirmShip } from '../../services/supplierService';
+import { formatCurrency } from '../../utils/currency';
 
 const OrderRentDetailSupplier = () => {
     const [rentOrderDetails, setRentOrderDetails] = useState([]);
@@ -114,7 +115,7 @@ const OrderRentDetailSupplier = () => {
                     color: '#d32f2f',
                     fontSize: '1.1em',
                 }}>
-                    {price.toLocaleString('vi-VN')} ₫
+                    {formatCurrency(price)}
                 </span>
             ),
         },

@@ -26,6 +26,7 @@ import SignUpSupplier from './SignUpSupplier';
 import AddVoucher from './AddVoucher';
 import VoucherManager from './VoucherManager';
 import ViewPayment from './ViewPayment';
+import ViewReportPage from './ViewReport';
 
 const { Header, Content, Footer, Sider } = Layout;
 const siderStyle = {
@@ -51,12 +52,12 @@ const ShopPage = () => <p>Shop Content</p>;
 
 const items = [
   { key: '1', icon: <FileDoneOutlined />, label: 'Approval Request', component: ApprovalRequestFrom },
-  { key: '2', icon: <InboxOutlined />, label: 'Category List', component: CategoryList },
-  { key: '3', icon: <UserAddOutlined />, label: 'SignUp Supplier', component: SignUpSupplier },
-  { key: '4', icon: <UsergroupDeleteOutlined />, label: 'Ban Account', component: BanAccount },
+  { key: '2', icon: <ShopOutlined />, label: 'Report Request', component: ViewReportPage },
+  { key: '3', icon: <InboxOutlined />, label: 'Category List', component: CategoryList },
+  // { key: '3', icon: <UserAddOutlined />, label: 'SignUp Supplier', component: SignUpSupplier },
+  { key: '4', icon: <UsergroupDeleteOutlined />, label: 'View Account', component: BanAccount },
   { key: '5', icon: <AppstoreOutlined />, label: 'Voucher Manager', component: VoucherManager },
-  { key: '7', icon: <TeamOutlined />, label: 'View Payment', component: ViewPayment },
-  // { key: '8', icon: <ShopOutlined />, label: 'Shop', component: ShopPage },
+  { key: '6', icon: <TeamOutlined />, label: 'View Payment', component: ViewPayment },
 ];
 
 const StaffPage = () => {

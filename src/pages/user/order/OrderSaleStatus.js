@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ViewOrderStatus, CompleteOrder, UserOrderCart } from '../../../services/UserServices';
 import { Tabs, Table, Spin, Alert, Button, Modal, notification } from 'antd';
+import { formatCurrency } from '../../../utils/currency';
 
 const OrderSaleStatus = () => {
     const [orderData, setOrderData] = useState([]);
@@ -99,7 +100,7 @@ const OrderSaleStatus = () => {
         {
             title: 'Final Amount',
             dataIndex: 'finalMoney',
-            render: (text) => `$${text}`,
+            render: (text) => formatCurrency(text),
         },
         {
             title: 'Payment Status',
@@ -188,14 +189,14 @@ const OrderSaleStatus = () => {
                             columns={[
                                 { title: 'Toy Name', dataIndex: 'toyName' },
                                 { title: 'Quantity', dataIndex: 'quantity' },
-                                { title: 'Price', dataIndex: 'price', render: (text) => `$${text}` },
+                                { title: 'Price', dataIndex: 'price', render: (text) => formatCurrency(text) },
                             ]}
                             rowKey="toyName"
                             pagination={false}
                         />
-                        <p><strong>Total Money:</strong> ${orderDetails.totalMoney}</p>
-                        <p><strong>Discount: </strong>{orderDetails.discount}</p>
-                        <p><strong>Final Amount:</strong> ${orderDetails.finalMoney}</p>
+                        <p><strong>Total Money:</strong> {formatCurrency(orderDetails.totalMoney)}</p>
+                        <p><strong>Discount: </strong>{formatCurrency(orderDetails.discount)}</p>
+                        <p><strong>Final Amount:</strong> {formatCurrency(orderDetails.finalMoney)}</p>
 
                     </div>
                 ) : (

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ViewOrderStatus, CompleteOrder, ReturnRentOrder, UserOrderCart, GetRentLinkPayment2 } from '../../../services/UserServices';
 import { Tabs, Table, Spin, Alert, Button, Modal, notification } from 'antd';
+import { formatCurrency } from '../../../utils/currency';
 
 const OrderRentStatus = () => {
     const [orderData, setOrderData] = useState([]);
@@ -120,7 +121,7 @@ const OrderRentStatus = () => {
         {
             title: 'Final Amount',
             dataIndex: 'finalMoney',
-            render: (text) => `$${text}`,
+            render: (text) => formatCurrency(text),
         },
         {
             title: 'Payment Status',
@@ -226,14 +227,14 @@ const OrderRentStatus = () => {
                                     dataIndex: 'returnDate',
                                     render: (text) => new Date(text).toLocaleString(),
                                 },
-                                { title: 'Rental Price', dataIndex: 'rentalPrice', render: (text) => `$${text}` },
+                                { title: 'Rental Price', dataIndex: 'rentalPrice', render: (text) => formatCurrency(text) },
                             ]}
                             rowKey="toyName"
                             pagination={false}
                         />
-                        <p><strong>Total Money:</strong> ${orderDetails.totalMoney}</p>
-                        <p><strong>Discount: </strong>{orderDetails.discount}</p>
-                        <p><strong>Final Amount:</strong> ${orderDetails.finalMoney}</p>
+                        <p><strong>Total Money:</strong> {formatCurrency(orderDetails.totalMoney)}</p>
+                        <p><strong>Discount: </strong>{formatCurrency(orderDetails.discount)}</p>
+                        <p><strong>Final Amount:</strong> {formatCurrency(orderDetails.finalMoney)}</p>
 
                     </div>
                 ) : (

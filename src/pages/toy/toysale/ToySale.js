@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import './card.css';
+import { formatCurrency } from '../../../utils/currency';
 
 const { Search } = Input;
 const { Option } = Select;
@@ -120,7 +121,7 @@ const ToySale = () => {
                             toys.map((toy) => (
                                 <Col key={toy.toyId} span={6}>
                                     <Card className="toy-card" hoverable={true}>
-                                        <Link to={`/toyrentaldetail/${toy.toyId}`} style={{ textDecoration: 'none' }}>
+                                        <Link to={`/toysaledetail/${toy.toyId}`} style={{ textDecoration: 'none' }}>
                                             <img
                                                 className="toy-card__image"
                                                 alt={toy.toyName}
@@ -128,7 +129,7 @@ const ToySale = () => {
                                             />
                                             <h4 className="toy-card__name">{toy.toyName}</h4>
                                             <div className="toy-card__price">
-                                                <span className="price-current">${toy.buyPrice}</span>
+                                                <span className="price-current">{formatCurrency(toy.buyPrice)}</span>
                                             </div>
                                         </Link>
 

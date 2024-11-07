@@ -30,11 +30,13 @@ const Login2 = () => {
       if (response.accessToken) {
         const { accessToken, refreshToken } = response;
         const decodedToken = decodeJWT(accessToken);
+        // console.log("🚀 ~ handleLogin ~ decodedToken:", decodedToken)
+        const AccountId = decodedToken.AccountId;
         const role = decodedToken.role;
         const unique_name = decodedToken.unique_name;
         const phone = decodedToken.Phone;
 
-        dispatch(loginSuccess({ accessToken, refreshToken, role, email, unique_name, phone }));
+        dispatch(loginSuccess({ accessToken, refreshToken, AccountId, role, email, unique_name, phone }));
 
         toast.success("Login successful!");
 
@@ -219,7 +221,7 @@ const Login2 = () => {
 
             <Form.Item style={{ display: 'flex', justifyContent: 'right' }}>
               <Link style={{ fontSize: "16px" }} to="/forgotpassword">
-              Forgot password?
+                Forgot password?
               </Link>
             </Form.Item>
 
@@ -256,9 +258,9 @@ const Login2 = () => {
             }}
           >
             Don't have an account yet?
-            
+
             <Link className="btn-register" to="/register">
-            Register an account
+              Register an account
             </Link>
           </div>
 

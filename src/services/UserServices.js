@@ -781,6 +781,24 @@ export const GetPaymentIdByOrderId = async (orderId) => {
 };
 
 
+export const UserReport = async (toyid, accountId, reportdetail) => {
+    try {
+        const url = `https://localhost:7221/api/Report/create-report?ToyId=${toyid}&ReportById=${accountId}&ReportDetail=${reportdetail}`;
+
+        const response = await axiosInstance.post(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        throw error;
+    }
+};
+
+
 
 
 

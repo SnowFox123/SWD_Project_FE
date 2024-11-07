@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Spin, message, Card, Button, Row, Col, InputNumber, Typography, Space, Image, Radio } from 'antd';
-import { AddToCart2, UserGetToyByID } from '../../../services/UserServices';
+import { Spin, message, Card, Button, Row, Col, InputNumber, Typography, Space, Image, Modal, Input } from 'antd';
+import { AddToCart2, UserGetToyByID, UserReport } from '../../../services/UserServices';
 import { toast } from 'react-toastify';
 import { ShoppingCartOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
+import { formatCurrency } from '../../../utils/currency';
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Text } = Typography;
 
-// Constants for rental durations
 const DURATIONS = {
     DAY: 'day',
     WEEK: 'week',
@@ -15,15 +16,17 @@ const DURATIONS = {
 };
 
 const ToySaleDetail = () => {
+    const AccountId = useSelector((state) => state.auth.AccountId);
+
     const { id } = useParams();
     const [toy, setToy] = useState(null);
     const [loading, setLoading] = useState(false);
     const [quantity, setQuantity] = useState(1);
     const [rentalDuration, setRentalDuration] = useState(DURATIONS.DAY);
-    const [totalPrice, setTotalPrice] = useState(0);
+    const [reportModalVisible, setReportModalVisible] = useState(false); // To control the visibility of the report modal
+    const [reportDetail, setReportDetail] = useState(''); // To store the report detail text
     const navigate = useNavigate();
 
-    // Fetch toy details by ID
     useEffect(() => {
         const fetchToyDetails = async () => {
             try {
@@ -32,7 +35,6 @@ const ToySaleDetail = () => {
                 setToy(toyData);
             } catch (error) {
                 message.error('Failed to load toy details.');
-                console.error('Error fetching toy details:', error);
             } finally {
                 setLoading(false);
             }
@@ -41,27 +43,6 @@ const ToySaleDetail = () => {
         fetchToyDetails();
     }, [id]);
 
-    // Update total price based on rental duration and quantity
-    // useEffect(() => {
-    //     if (toy) {
-    //         let pricePerUnit;
-    //         switch (rentalDuration) {
-    //             case DURATIONS.WEEK:
-    //                 pricePerUnit = toy.rentPricePerWeek;
-    //                 break;
-    //             case DURATIONS.TWO_WEEKS:
-    //                 pricePerUnit = toy.rentPricePerTwoWeeks;
-    //                 break;
-    //             default:
-    //                 pricePerUnit = toy.rentPricePerDay;
-    //         }
-    //         setTotalPrice(pricePerUnit * quantity);
-    //         // console.log('rentalDuration', rentalDuration)
-
-    //     }
-    // }, [rentalDuration, quantity, toy]);
-
-    // Handle adding to cart
     const handleAddToCart = async () => {
         try {
             const response = await AddToCart2(toy.toyId, quantity);
@@ -75,21 +56,14 @@ const ToySaleDetail = () => {
         }
     };
 
-    // Handle buy now functionality
     const handleBuyNow = async () => {
         try {
             const response = await AddToCart2(toy.toyId, quantity);
             if (response) {
                 toast.success('Item added to cart successfully!');
-                // console.log('rentalDuration2', rentalDuration)
-
-
-                // Navigate to the CartRent page, passing the toy details, quantity, and rental duration
                 navigate('/cartsale', {
                     state: {
                         selectedToyId: toy.toyId,
-                        // quantity: quantity,
-                        // rentalDuration: rentalDuration
                     }
                 });
             } else {
@@ -100,7 +74,6 @@ const ToySaleDetail = () => {
         }
     };
 
-    // Handle quantity change, preventing overflow based on stock
     const handleQuantityChange = (value) => {
         if (value <= toy.stock) {
             setQuantity(value);
@@ -109,11 +82,31 @@ const ToySaleDetail = () => {
         }
     };
 
-    // Handle rental duration change
-    const handleDurationChange = (e) => {
-        setRentalDuration(e.target.value);
-        console.log(e.target.value)
+    const handleReport = async () => {
+        if (!reportDetail) {
+            toast.error('Please provide a report detail.');
+            return;
+        }
 
+        try {
+            const response = await UserReport(toy.toyId, AccountId, reportDetail);
+            if (response) {
+                toast.success('Report submitted successfully!');
+                setReportModalVisible(false); // Close the report modal
+            } else {
+                throw new Error('Failed to submit the report.');
+            }
+        } catch (error) {
+            toast.error(error.message || 'Failed to submit the report.');
+        }
+    };
+
+    const handleOpenReportModal = () => {
+        setReportModalVisible(true);
+    };
+
+    const handleCancelReportModal = () => {
+        setReportModalVisible(false);
     };
 
     if (loading) {
@@ -121,9 +114,7 @@ const ToySaleDetail = () => {
     }
 
     if (!toy) {
-        return (
-            <p>No toy details available.</p>
-        );
+        return <p>No toy details available.</p>;
     }
 
     return (
@@ -133,12 +124,12 @@ const ToySaleDetail = () => {
                     <div
                         style={{
                             padding: '16px',
-                            backgroundColor: '#fff',
-                            borderRadius: '8px',
-                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                            backgroundColor: '#f9f9f9',
+                            borderRadius: '10px',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
                             display: 'flex',
                             justifyContent: 'center',
-                            alignItems: 'center'
+                            alignItems: 'center',
                         }}
                     >
                         <Image
@@ -146,9 +137,9 @@ const ToySaleDetail = () => {
                             alt={toy.toyName}
                             style={{
                                 width: '100%',
-                                borderRadius: '8px',
+                                borderRadius: '10px',
                                 objectFit: 'contain',
-                                height: '400px'
+                                height: '450px',
                             }}
                         />
                     </div>
@@ -158,37 +149,41 @@ const ToySaleDetail = () => {
                         bordered={false}
                         style={{
                             background: '#fff',
-                            borderRadius: '8px',
-                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+                            borderRadius: '10px',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
                         }}
                     >
-                        <Space direction="vertical" size="large" style={{ width: '100%' }}>
-                            <Title style={{ color: '#222', marginBottom: '8px', fontSize: '26px' }}>{toy.toyName}</Title>
-                            <span
-                                style={{ fontSize: '18px', color: '#555' }}
-                            >
-                                {toy.description}
-                            </span>
+                        <Button
+                            type="default"
+                            onClick={handleOpenReportModal}
+                            style={{
+                                position: 'absolute',
+                                top: '16px',
+                                right: '16px',
+                                backgroundColor: '#f44336',
+                                borderColor: '#f44336',
+                                color: '#fff',
+                                fontSize: '14px',
+                                fontWeight: 'bold',
+                            }}
+                        >
+                            Report
+                        </Button>
 
-                            <Row>
+                        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+                            <Title style={{ color: '#e64545', marginBottom: '8px', fontSize: '28px' }}>{toy.toyName}</Title>
+                            <Text style={{ color: '#666', fontSize: '16px', fontWeight: 'bold' }}>Supplier: {toy.supplierName}</Text>
+                            <Text style={{ color: 'blue', fontSize: '15px', fontStyle: 'italic' }}>Category: {toy.categoryName}</Text>
+                            <Text style={{ color: '#444', fontSize: '16px' }}>Description: {toy.description}</Text>
+
+                            <Row gutter={16} style={{ marginTop: '16px' }}>
                                 <Col style={{ display: 'flex', flexDirection: 'column' }}>
-                                    <Text style={{ fontSize: '18px', fontWeight: '400', color: '#757575' }}>
-                                        Buy Price
-                                    </Text>
+                                    <Text style={{ fontSize: '16px', color: '#666' }}>Buy Price</Text>
                                 </Col>
                                 <Col style={{ display: 'flex', flexDirection: 'column', marginLeft: '10px' }}>
-                                    <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#ee4d2d' }}>${toy.buyPrice}</span>
+                                    <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#e64545' }}>{formatCurrency(toy.buyPrice)}</span>
                                 </Col>
                             </Row>
-
-                            {/* <div>
-                                <Text style={{ marginRight: '8px', fontSize: '16px' }}>Rental Duration:</Text>
-                                <Radio.Group onChange={handleDurationChange} value={rentalDuration}>
-                                    <Radio value={DURATIONS.DAY}>Per Day</Radio>
-                                    <Radio value={DURATIONS.WEEK}>Per Week</Radio>
-                                    <Radio value={DURATIONS.TWO_WEEKS}>Per Two Weeks</Radio>
-                                </Radio.Group>
-                            </div> */}
 
                             <div>
                                 <Text style={{ marginRight: '8px', fontSize: '16px' }}>Quantity:</Text>
@@ -203,17 +198,13 @@ const ToySaleDetail = () => {
                                     style={{
                                         fontSize: '16px',
                                         fontWeight: 'bold',
-                                        color: '#222',
-                                        marginLeft: '10px'
+                                        color: '#333',
+                                        marginLeft: '10px',
                                     }}
                                 >
                                     {toy.stock} available
                                 </Text>
                             </div>
-
-                            {/* <Text style={{ fontSize: '18px', fontWeight: 'bold', color: '#222' }}>
-                                Price: <span style={{ color: 'red' }}>${totalPrice}</span>
-                            </Text> */}
 
                             <Row gutter={16} style={{ marginTop: '16px' }}>
                                 <Col span={12}>
@@ -222,14 +213,14 @@ const ToySaleDetail = () => {
                                         onClick={handleAddToCart}
                                         disabled={quantity > toy.stock || quantity < 1 || toy.stock === 0}
                                         style={{
-                                            backgroundColor: '#ee4d2d',
-                                            borderColor: '#ee4d2d',
+                                            backgroundColor: '#e64545',
+                                            borderColor: '#e64545',
                                             color: '#fff',
                                             width: '100%',
                                             height: '48px',
                                             fontSize: '16px',
                                             fontWeight: 'bold',
-                                            borderRadius: '4px'
+                                            borderRadius: '6px',
                                         }}
                                     >
                                         <ShoppingCartOutlined style={{ fontSize: '20px' }} /> Add to Cart
@@ -241,14 +232,14 @@ const ToySaleDetail = () => {
                                         onClick={handleBuyNow}
                                         disabled={quantity > toy.stock || quantity < 1 || toy.stock === 0}
                                         style={{
-                                            backgroundColor: '#ff9900',
-                                            borderColor: '#ff9900',
+                                            backgroundColor: '#ff9800',
+                                            borderColor: '#ff9800',
                                             color: '#fff',
                                             width: '100%',
                                             height: '48px',
                                             fontSize: '16px',
                                             fontWeight: 'bold',
-                                            borderRadius: '4px'
+                                            borderRadius: '6px',
                                         }}
                                     >
                                         Buy Now
@@ -259,8 +250,27 @@ const ToySaleDetail = () => {
                     </Card>
                 </Col>
             </Row>
+
+            <Modal
+                title="Report Toy"
+                visible={reportModalVisible}
+                onCancel={handleCancelReportModal}
+                onOk={handleReport}
+                okText="Submit Report"
+                cancelText="Cancel"
+            >
+                <Input.TextArea
+                    rows={4}
+                    value={reportDetail}
+                    onChange={(e) => setReportDetail(e.target.value)}
+                    placeholder="Please provide a reason for the report..."
+                />
+            </Modal>
         </div>
     );
 };
 
 export default ToySaleDetail;
+
+
+

@@ -449,3 +449,38 @@ export const ViewPaymentForStaff = async (status) => {
         throw error;
     }
 };
+
+
+export const ViewReport = async (pageIndex, pageSize) => {
+    try {
+        const url = `https://localhost:7221/api/Report/get-report?pageIndex=${pageIndex}&pageSize=${pageSize}`;
+
+        const response = await axiosInstance.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        throw error;
+    }
+};
+
+export const SetStatusReport = async (ReportId, NewStatus) => {
+    try {
+        const url = `https://localhost:7221/api/Report/change-report-status?ReportId=${ReportId}&NewStatus=${NewStatus}`;
+
+        const response = await axiosInstance.put(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        throw error;
+    }
+};

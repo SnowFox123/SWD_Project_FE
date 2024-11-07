@@ -4,6 +4,7 @@ import { GetCart2, getToyByID } from '../../services/UserServices';
 import { Link, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux'; // Import useDispatch
 import { saveOrderData } from '../../redux/orderSlice'; // Import saveOrderData action
+import { formatCurrency } from '../../utils/currency';
 
 const CartSale = () => {
   const location = useLocation();
@@ -156,7 +157,7 @@ const CartSale = () => {
       dataIndex: 'toy',
       key: 'name',
       render: (toy) => (
-        <Link to={`/toysaledetail/${toy.toyId}`} style={{ color: 'black', fontSize: '16px' }}>
+        <Link to={`/toysaledetail/${toy.toyId}`} style={{ color: 'blue', fontSize: '16px' }}>
           {toy.toyName}
         </Link>
       )
@@ -165,7 +166,9 @@ const CartSale = () => {
       title: 'Buy Price',
       dataIndex: 'toy',
       key: 'buyPrice',
-      render: (toy) => <div>${toy.buyPrice}</div>,
+      render: (toy) => (
+        <div style={{ color: 'red', fontWeight: 'bold' }}>{formatCurrency(toy.buyPrice)}</div>
+      ),
     },
     {
       title: 'Quantity',

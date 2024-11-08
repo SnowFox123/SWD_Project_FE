@@ -159,4 +159,72 @@ export const SupplierConfirmShip = async (orderDetailId) => {
   }
 };
 
+export const ViewToyRentSupplier = async (keyword, sortoption, pageIndex, pageSize) => {
+  try {
+    const url = `https://localhost:7221/api/Toy/view-toys/for-rent-supplier?search=${keyword}&sort=${sortoption}&pageIndex=${pageIndex}&pageSize=${pageSize}`;
+    const response = await axiosInstance.get(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data: ", error);
+    throw error;
+  }
+};
+
+export const UpdateToySupplier = async (toyId, updatedToyData) => {
+  try {
+    const url = `https://localhost:7221/api/Toy/update${toyId}`;
+    const response = await axiosInstance.put(url, updatedToyData, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error updating toy: ", error);
+    throw error;
+  }
+};
+
+
+export const GetCategorySupplier = async () => {
+  try {
+    const url = `https://localhost:7221/api/Category`;
+    const response = await axiosInstance.get(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data: ", error);
+    throw error;
+  }
+};
+
+export const PutCategorySupplier = async (categoryId, categoryName) => {
+  try {
+    const url = `https://localhost:7221/api/Category`; // Assuming the API endpoint uses categoryId in the URL
+    const response = await axiosInstance.put(url, {
+      categoryId: categoryId,
+      categoryName: categoryName,
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error updating category: ", error);
+    throw error;
+  }
+};
+
 

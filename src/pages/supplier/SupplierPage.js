@@ -8,6 +8,7 @@ import {
   // FileProtectOutlined,
   UserOutlined,
   RobotOutlined,
+  CarryOutOutlined
 } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 
@@ -19,6 +20,7 @@ import { logout } from '../../redux/authSlice'; // Ensure this imports your upda
 import '../../../src/components/nav/navbar.css'; // Ensure this imports your updated CSS
 import RequestForm from './RequestForm';
 import OrderDetailSupplierPage from './OrderDetailSupplierPage';
+import ViewToySupplierPage from './ViewToySupplierPage';
 
 const { Header, Content, Sider } = Layout;
 const siderStyle = {
@@ -43,7 +45,7 @@ const ShopPage = () => <p>Shop Content</p>;
 const items = [
   { key: '1', icon: <FileProtectOutlined />, label: 'Request Form', component: RequestForm },
   { key: '2', icon: <RobotOutlined />, label: 'View Toy', component: OrderDetailSupplierPage },
-  // { key: '3', icon: <UploadOutlined />, label: 'Upload', component: BarChartPage },
+  { key: '3', icon: <CarryOutOutlined />, label: 'Upload', component: ViewToySupplierPage },
   // { key: '4', icon: <BarChartOutlined />, label: 'Bar Chart', component: BarChartPage },
   // { key: '5', icon: <CloudOutlined />, label: 'Cloud', component: CloudPage },
   // { key: '6', icon: <AppstoreOutlined />, label: 'App Store', component: AppStorePage },

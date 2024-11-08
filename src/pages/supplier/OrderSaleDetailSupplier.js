@@ -1,21 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Spin, Alert, Button, message } from 'antd';
-import { GetSaleOrderDetail } from '../../services/supplierService';
+import { Table, Spin, Alert, Button, message, Modal, Input, Form } from 'antd';
+import { GetSaleOrderDetail, GetInfoShip } from '../../services/supplierService';
 import { getToyByID, SupplierConfirmShip } from '../../services/supplierService';
 import { formatCurrency } from '../../utils/currency';
 
 const OrderSaleDetailSupplier = () => {
-    const [rentOrderDetails, setRentOrderDetails] = useState([]);
+    const [saleOrderDetails, setSaleOrderDetails] = useState([]); // Renamed to saleOrderDetails
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [shippingInfo, setShippingInfo] = useState(null);
+    const [currentOrderDetailId, setCurrentOrderDetailId] = useState(null);
+    const [form] = Form.useForm();
 
     useEffect(() => {
-        const fetchRentOrderDetails = async () => {
+        const fetchSaleOrderDetails = async () => { // Adjusted function name
             setLoading(true);
             try {
-                const data = await GetSaleOrderDetail();
-
-                const rentOrdersWithToyDetails = await Promise.all(
+                const data = await GetSaleOrderDetail(); // Fetch sale orders
+                if (data.isSuccess && Array.isArray(data.object)) {
+                const saleOrdersWithToyDetails = await Promise.all(
                     data.object.map(async (order) => {
                         try {
                             const toyData = await getToyByID(order.toyId);
@@ -24,9 +28,8 @@ const OrderSaleDetailSupplier = () => {
                                 toyName: toyData.toyName,
                                 imageUrl: toyData.imageUrl,
                                 categoryName: toyData.categoryName,
-                                // rentPricePerDay: toyData.rentPricePerDay,
                                 stock: toyData.stock,
-                                buyPrice: toyData.buyPrice
+                                buyPrice: toyData.buyPrice // Relevant for sales
                             };
                         } catch (toyError) {
                             console.error(`Failed to fetch toy with ID ${order.toyId}`, toyError);
@@ -35,7 +38,10 @@ const OrderSaleDetailSupplier = () => {
                     })
                 );
 
-                setRentOrderDetails(rentOrdersWithToyDetails);
+                setSaleOrderDetails(saleOrdersWithToyDetails); // Updated state variable
+            } else {
+                throw new Error('Failed to load rent order details.');
+            }
             } catch (err) {
                 setError(err);
             } finally {
@@ -43,18 +49,46 @@ const OrderSaleDetailSupplier = () => {
             }
         };
 
-        fetchRentOrderDetails();
+        fetchSaleOrderDetails(); // Fetch sale details on mount
     }, []);
 
     const handleConfirmShip = async (orderDetailId) => {
         try {
-            const response = await SupplierConfirmShip(orderDetailId);
-            message.success(`Order ${orderDetailId} has been confirmed for shipping!`);
-            // Optionally, you can refetch the order details here if needed
-            // fetchRentOrderDetails();
+            setLoading(true);
+            const info = await GetInfoShip(orderDetailId);
+            setShippingInfo(info.object);
+            setCurrentOrderDetailId(orderDetailId);
+            setIsModalVisible(true);
         } catch (error) {
             message.error(`Failed to confirm shipping for order ${orderDetailId}: ${error.message}`);
+        } finally {
+            setLoading(false);
         }
+    };
+    
+    const handleModalOk = async () => {
+        try {
+            const values = await form.validateFields();
+            await SupplierConfirmShip({
+                orderDetailId: currentOrderDetailId,
+                shipper: values.shipper,
+                shipperPhone: values.shipperPhone,
+            });
+            message.success(`Order ${currentOrderDetailId} has been confirmed for shipping!`);
+            setIsModalVisible(false);
+            form.resetFields();
+            setShippingInfo(null);
+            setCurrentOrderDetailId(null);
+        } catch (error) {
+            message.error(`Failed to confirm shipping: ${error.message}`);
+        }
+    };
+
+    const handleModalCancel = () => {
+        setIsModalVisible(false);
+        form.resetFields();
+        setShippingInfo(null);
+        setCurrentOrderDetailId(null);
     };
 
     // Define the columns for the table
@@ -91,7 +125,7 @@ const OrderSaleDetailSupplier = () => {
             key: 'categoryName',
         },
         {
-            title: 'Buy Price',
+            title: 'Buy Price', // Changed to Buy Price for sales context
             dataIndex: 'buyPrice',
             key: 'buyPrice',
             render: (price) => (
@@ -116,7 +150,6 @@ const OrderSaleDetailSupplier = () => {
                 </Button>
             ),
         },
-
     ];
 
     if (loading) {
@@ -132,10 +165,42 @@ const OrderSaleDetailSupplier = () => {
             <h1>Sale Order Details</h1>
             <Table
                 columns={columns}
-                dataSource={rentOrderDetails}
+                dataSource={saleOrderDetails} // Renamed to saleOrderDetails
                 rowKey="orderDetailId"
                 pagination={{ pageSize: 5 }}
             />
+            <Modal
+                title="Shipping Information"
+                visible={isModalVisible}
+                onOk={handleModalOk}
+                onCancel={handleModalCancel}
+            >
+                {shippingInfo ? (
+                    <div>
+                        <p><strong>Account Name:</strong> {shippingInfo.accountName}</p>
+                        <p><strong>Shipping Address:</strong> {shippingInfo.shippingAddress}</p>
+                        <p><strong>Phone Number:</strong> {shippingInfo.receivePhoneNumber}</p>
+                        <Form form={form} layout="vertical">
+                            <Form.Item
+                                name="shipper"
+                                label="Shipper Name"
+                                rules={[{ required: true, message: 'Please enter the shipper name' }]}
+                            >
+                                <Input placeholder="Enter shipper name" />
+                            </Form.Item>
+                            <Form.Item
+                                name="shipperPhone"
+                                label="Shipper Phone"
+                                rules={[{ required: true, message: 'Please enter the shipper phone number' }]}
+                            >
+                                <Input placeholder="Enter shipper phone number" />
+                            </Form.Item>
+                        </Form>
+                    </div>
+                ) : (
+                    <Spin tip="Loading shipping information..." />
+                )}
+            </Modal>
         </div>
     );
 };

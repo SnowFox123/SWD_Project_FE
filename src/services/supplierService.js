@@ -142,11 +142,11 @@ export const getToyByID = async (toyId) => {
   }
 };
 
-export const SupplierConfirmShip = async (orderDetailId) => {
+export const GetInfoShip = async (orderDetailId) => {
   try {
-    const url = `https://localhost:7221/api/Order/supplier-confirm-ship/${orderDetailId}`;
+    const url = `https://localhost:7221/api/Order/information-ship/${orderDetailId}`;
 
-    const response = await axiosInstance.put(url, {
+    const response = await axiosInstance.get(url, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -158,6 +158,28 @@ export const SupplierConfirmShip = async (orderDetailId) => {
     throw error;
   }
 };
+
+export const SupplierConfirmShip = async ({ orderDetailId, shipper, shipperPhone }) => {
+  try {
+    const url = `https://localhost:7221/api/Order/supplier-confirm-ship`;
+
+    const response = await axiosInstance.put(
+      url,
+      { orderDetailId, shipper, shipperPhone },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error confirming shipping: ", error);
+    throw error;
+  }
+};
+
 
 export const ViewToyRentSupplier = async (keyword, sortoption, pageIndex, pageSize) => {
   try {
@@ -227,4 +249,21 @@ export const PutCategorySupplier = async (categoryId, categoryName) => {
   }
 };
 
+
+
+export const DeleteToySupplier = async (toyId) => {
+  try {
+    const url = `https://localhost:7221/api/Toy/delete?id=${toyId}`;
+    const response = await axiosInstance.put(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error updating toy: ", error);
+    throw error;
+  }
+};
 

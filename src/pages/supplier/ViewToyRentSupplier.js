@@ -1,11 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Row, Col, Pagination, Spin, message, Input, Select, Typography, Image, Button, Modal, Form, InputNumber } from 'antd';
-import { ViewToyRentSupplier, UpdateToySupplier, GetCategorySupplier, PutCategorySupplier } from '../../services/supplierService'; // Import both APIs
+import {
+    Table,
+    Pagination,
+    Spin,
+    message,
+    Input,
+    Select,
+    Typography,
+    Image,
+    Button,
+    Modal,
+    Form,
+    InputNumber
+} from 'antd';
+import {
+    ViewToyRentSupplier,
+    UpdateToySupplier,
+    GetCategorySupplier,
+    DeleteToySupplier // Import Delete API
+} from '../../services/supplierService';
 import { formatCurrency } from '../../utils/currency';
 
 const { Search } = Input;
 const { Option } = Select;
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const ViewToyRentBySupplier = () => {
     const [toys, setToys] = useState([]);
@@ -15,9 +33,8 @@ const ViewToyRentBySupplier = () => {
     const [totalItemsCount, setTotalItemsCount] = useState(0);
     const [keyword, setKeyword] = useState('');
     const [sortOption, setSortOption] = useState('');
-    const [isModalVisible, setIsModalVisible] = useState(false); // For modal visibility
-    const [currentToy, setCurrentToy] = useState(null); // For storing selected toy
-
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [currentToy, setCurrentToy] = useState(null);
     const [categories, setCategories] = useState([]);
 
     // Fetch toys data
@@ -26,10 +43,13 @@ const ViewToyRentBySupplier = () => {
             setLoading(true);
             const response = await ViewToyRentSupplier(keyword, sortOption, pageIndex - 1, pageSize);
             if (response) {
-                setToys(response.items || response);
-                setTotalItemsCount(response.totalItemsCount || response.length);
+                // Filter out toys where isDelete is true
+                const filteredToys = (response.items || response).filter(toy => !toy.isDelete);
+                setToys(filteredToys);
+                setTotalItemsCount(response.totalItemsCount || filteredToys.length);
             } else {
                 setToys([]);
+                setTotalItemsCount(0);
             }
         } catch (error) {
             message.error('Error fetching toy rental data.');
@@ -51,6 +71,7 @@ const ViewToyRentBySupplier = () => {
                 setCategories(data.object || []);
             } catch (error) {
                 message.error('Error fetching categories.');
+                console.error('Error fetching categories:', error);
             }
         };
 
@@ -78,143 +99,181 @@ const ViewToyRentBySupplier = () => {
     const handleUpdate = (toyId) => {
         const toy = toys.find((toy) => toy.toyId === toyId);
         if (toy) {
-            setCurrentToy(toy); // Set the selected toy data
-            setIsModalVisible(true); // Show the modal
+            setCurrentToy(toy);
+            setIsModalVisible(true);
         }
     };
 
     // Close the modal
     const handleModalCancel = () => {
-        setIsModalVisible(false); // Close the modal
+        setIsModalVisible(false);
+        setCurrentToy(null);
     };
 
     // Handle form submission for updating toy
     const handleFormSubmit = async (values) => {
+        if (!currentToy) {
+            message.error('No toy selected for updating.');
+            return;
+        }
+
         const updatedToy = {
             ...values,
-            toyId: currentToy.toyId, // Use the toyId from the current selected toy
-            buyPrice: values.buyPrice !== undefined ? values.buyPrice : 0, // Default buyPrice to 0 if not provided
-            isActive: currentToy.isActive, // Keep the same active status (assuming you want to preserve this)
+            toyId: currentToy.toyId,
+            toyName: currentToy.toyName,
+            imageUrl: currentToy.imageUrl,
+            isActive: currentToy.isActive,
+            categoryId: currentToy.categoryId,
+            buyPrice: currentToy.buyPrice || 0,
         };
 
         try {
-            // Update the toy data
             await UpdateToySupplier(updatedToy.toyId, updatedToy);
             message.success('Toy updated successfully!');
 
-            // If the category has changed, update the category
-            if (updatedToy.categoryId !== currentToy.categoryId) {
-                const category = categories.find(category => category.categoryId === updatedToy.categoryId);
-                if (category) {
-                    await PutCategorySupplier(updatedToy.categoryId, category.categoryName); // Pass categoryId and categoryName
-                    message.success('Category updated successfully!');
-                }
-            }
-
-            // Update the toy in the state without refetching all toys
             setToys(prevToys =>
                 prevToys.map((toy) =>
                     toy.toyId === updatedToy.toyId ? { ...toy, ...updatedToy } : toy
                 )
             );
 
-            setIsModalVisible(false); // Close the modal after successful update
+            setIsModalVisible(false);
+            setCurrentToy(null);
         } catch (error) {
             message.error('Error updating toy.');
             console.error('Error updating toy:', error);
         }
     };
 
+    // Handle delete toy
+    const handleDelete = async (toyId) => {
+        try {
+            await DeleteToySupplier(toyId);
+            message.success('Toy deleted successfully!');
+            // Remove deleted toy from the list
+            // setToys(prevToys => prevToys.filter(toy => toy.toyId !== toyId));
+        } catch (error) {
+            message.error('Error deleting toy.');
+            console.error('Error deleting toy:', error);
+        }
+    };
+
+    // Table columns definition
+    const columns = [
+        {
+            title: 'Image',
+            dataIndex: 'imageUrl',
+            render: (url) => (
+                <Image
+                    src={url}
+                    alt="Toy"
+                    width={150}
+                    height={150}
+                    style={{ objectFit: 'contain' }}
+                />
+            ),
+        },
+        {
+            title: 'Toy Name',
+            dataIndex: 'toyName',
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+        },
+        {
+            title: 'Day Price',
+            dataIndex: 'rentPricePerDay',
+            render: (price) => formatCurrency(price),
+        },
+        {
+            title: 'Week Price',
+            dataIndex: 'rentPricePerWeek',
+            render: (price) => formatCurrency(price),
+        },
+        {
+            title: 'Two Weeks Price',
+            dataIndex: 'rentPricePerTwoWeeks',
+            render: (price) => formatCurrency(price),
+        },
+        {
+            title: 'Category',
+            dataIndex: 'categoryName',
+        },
+        {
+            title: 'Stock',
+            dataIndex: 'stock',
+        },
+        {
+            title: 'Actions',
+            render: (_, record) => (
+                <>
+                    <Button
+                        type="primary"
+                        onClick={() => handleUpdate(record.toyId)}
+                        style={{ marginRight: 8 }}
+                    >
+                        Update
+                    </Button>
+                    <Button
+                        type="primary"
+                        danger
+                        onClick={() => handleDelete(record.toyId)} // Call delete handler
+                    >
+                        Delete
+                    </Button>
+                </>
+            ),
+        },
+    ];
+
     return (
         <div style={{ padding: '20px' }}>
-            <div style={{ display: 'flex' }}>
-                <div style={{ marginBottom: '20px', width: '600px' }}>
-                    <Search
-                        placeholder="Search for toys"
-                        enterButton="Search"
-                        size="large"
-                        className="custom-search"
-                        onSearch={handleSearch}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '20px', marginLeft: '20px' }}>
-                    <Select
-                        placeholder="Sort by"
-                        onChange={handleSortChange}
-                        style={{ width: 200 }}
-                    >
-                        <Option value="name_asc">Name Ascending</Option>
-                        <Option value="name_desc">Name Descending</Option>
-                        <Option value="dayprice_asc">Day Price Ascending</Option>
-                        <Option value="dayprice_desc">Day Price Descending</Option>
-                        <Option value="weekyprice_asc">Week Price Ascending</Option>
-                        <Option value="weekprice_desc"> Week Price Descending</Option>
-                        <Option value="twoweekprice_asc">Two Weeks Price Ascending</Option>
-                        <Option value="twowekprice_desc">Two Weeks Price Descending</Option>
-                    </Select>
-                </div>
+            <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+                <Search
+                    placeholder="Search for toys"
+                    enterButton="Search"
+                    size="large"
+                    onSearch={handleSearch}
+                    allowClear
+                />
+                <Select
+                    placeholder="Sort by"
+                    onChange={handleSortChange}
+                    style={{ width: 200 }}
+                    allowClear
+                >
+                    <Option value="name_asc">Name Ascending</Option>
+                    <Option value="name_desc">Name Descending</Option>
+                    <Option value="dayprice_asc">Day Price Ascending</Option>
+                    <Option value="dayprice_desc">Day Price Descending</Option>
+                    <Option value="weekyprice_asc">Week Price Ascending</Option>
+                    <Option value="weekprice_desc">Week Price Descending</Option>
+                    <Option value="twoweekprice_asc">Two Weeks Price Ascending</Option>
+                    <Option value="twowekprice_desc">Two Weeks Price Descending</Option>
+                </Select>
             </div>
 
             {loading ? (
-                <Spin size="large" />
+                <Spin size="large" style={{ display: 'block', marginTop: '50px', textAlign: 'center' }} />
             ) : (
-                <div>
-                    <Row gutter={60}>
-                        {toys && toys.length > 0 ? (
-                            toys.map((toy) => (
-                                <Col key={toy.toyId} span={6}>
-                                    <Card className="toy-card" hoverable={true}>
-                                        <Image
-                                            className="toy-card__image"
-                                            alt={toy.toyName}
-                                            src={toy.imageUrl}
-                                            style={{
-                                                width: '100%',
-                                                maxHeight: '200px',
-                                                height: '200px',
-                                                objectFit: 'contain',
-                                                marginBottom: '10px',
-                                            }}
-                                        />
-
-                                        <h4 className="toy-card__name">{toy.toyName}</h4>
-                                        <div className="toy-card__price">
-                                            <span className="price-current">{formatCurrency(toy.rentPricePerDay)}/Day</span>
-                                        </div>
-                                        <div className="toy-card__price">
-                                            <span className="price-current">{formatCurrency(toy.rentPricePerWeek)}/Week</span>
-                                        </div>
-                                        <div className="toy-card__price">
-                                            <span className="price-current">{formatCurrency(toy.rentPricePerTwoWeeks)}/TwoWeeks</span>
-                                        </div>
-                                        <p style={{ color: 'blue', fontSize: '15px', fontStyle: 'italic' }}>Category: {toy.categoryName}</p>
-                                        <p style={{ color: '#444', fontSize: '16px' }}>Description: {toy.description}</p>
-                                        <p>Stock: {toy.stock}</p>
-
-                                        <Button
-                                            type="primary"
-                                            onClick={() => handleUpdate(toy.toyId)}
-                                            style={{ marginTop: '10px', padding: '20px', fontSize: '20px' }}
-                                        >
-                                            Update
-                                        </Button>
-                                    </Card>
-                                </Col>
-                            ))
-                        ) : (
-                            <p>No toys found.</p>
-                        )}
-                    </Row>
-
+                <>
+                    <Table
+                        columns={columns}
+                        dataSource={toys}
+                        rowKey="toyId"
+                        pagination={false}
+                        bordered
+                    />
                     <Pagination
                         current={pageIndex}
                         pageSize={pageSize}
                         total={totalItemsCount}
                         onChange={onPageChange}
-                        style={{ textAlign: 'center', marginTop: '20px' }}
+                        style={{ marginTop: '20px', textAlign: 'center' }}
+                        showSizeChanger={false}
                     />
-                </div>
+                </>
             )}
 
             {/* Modal for Updating Toy */}
@@ -223,100 +282,77 @@ const ViewToyRentBySupplier = () => {
                 visible={isModalVisible}
                 onCancel={handleModalCancel}
                 footer={null}
+                destroyOnClose
             >
-                <Form
-                    initialValues={{
-                        ...currentToy,
-                        buyPrice: currentToy?.buyPrice || 0, // Default buyPrice to 0 if not set
-                    }} // Ensure buyPrice defaults to 0 in the form
-                    onFinish={handleFormSubmit}
-                    layout="vertical"
-                    key={currentToy ? currentToy.toyId : 'default'} // Key is used to re-render the form on toy change
-                >
-                    <Form.Item
-                        label="Toy Name"
-                        name="toyName"
-                        rules={[{ required: true, message: 'Please input the toy name!' }]}
-
+                {currentToy && (
+                    <Form
+                        initialValues={{
+                            description: currentToy.description,
+                            rentPricePerDay: currentToy.rentPricePerDay,
+                            rentPricePerWeek: currentToy.rentPricePerWeek,
+                            rentPricePerTwoWeeks: currentToy.rentPricePerTwoWeeks,
+                            stock: currentToy.stock,
+                            buyPrice: currentToy.buyPrice || 0, // Default buyPrice to 0 if not set
+                            categoryId: currentToy.categoryId, // Pre-select current category
+                        }}
+                        onFinish={handleFormSubmit}
+                        layout="vertical"
+                        key={currentToy.toyId} // Key is used to re-render the form on toy change
                     >
-                        <Input />
-                    </Form.Item>
 
-                    {/* <Form.Item
-                        label="Category"
-                        name="categoryId"
-                        rules={[{ required: true, message: 'Please select a category!' }]}
+                        {/* Description */}
+                        <Form.Item
+                            label="Description"
+                            name="description"
+                            rules={[{ required: true, message: 'Please input the toy description!' }]}
+                        >
+                            <Input.TextArea />
+                        </Form.Item>
 
-                    >
-                        <Select placeholder="Select Category">
-                            {categories.map((category) => (
-                                <Option key={category.categoryId} value={category.categoryId}>
-                                    {category.categoryName}
-                                </Option>
-                            ))}
-                        </Select>
-                    </Form.Item> */}
+                        {/* Rent Price Per Day */}
+                        <Form.Item
+                            label="Rent Price Per Day"
+                            name="rentPricePerDay"
+                            rules={[{ required: true, message: 'Please input the rent price per day!' }]}
+                        >
+                            <InputNumber min={0} style={{ width: '100%' }} />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Description"
-                        name="description"
-                        rules={[{ required: true, message: 'Please input the toy description!' }]}
+                        {/* Rent Price Per Week */}
+                        <Form.Item
+                            label="Rent Price Per Week"
+                            name="rentPricePerWeek"
+                            rules={[{ required: true, message: 'Please input the rent price per week!' }]}
+                        >
+                            <InputNumber min={0} style={{ width: '100%' }} />
+                        </Form.Item>
 
-                    >
-                        <Input.TextArea />
-                    </Form.Item>
+                        {/* Rent Price Per Two Weeks */}
+                        <Form.Item
+                            label="Rent Price Per Two Weeks"
+                            name="rentPricePerTwoWeeks"
+                            rules={[{ required: true, message: 'Please input the rent price per two weeks!' }]}
+                        >
+                            <InputNumber min={0} style={{ width: '100%' }} />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Rent Price Per Day"
-                        name="rentPricePerDay"
-                        rules={[{ required: true, message: 'Please input the rent price per day!' }]}
+                        {/* Stock */}
+                        <Form.Item
+                            label="Stock"
+                            name="stock"
+                            rules={[{ required: true, message: 'Please input the stock!' }]}
+                        >
+                            <InputNumber min={0} style={{ width: '100%' }} />
+                        </Form.Item>
 
-                    >
-                        <InputNumber min={0} />
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Rent Price Per Week"
-                        name="rentPricePerWeek"
-                        rules={[{ required: true, message: 'Please input the rent price per week!' }]}
-
-                    >
-                        <InputNumber min={0} />
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Rent Price Per Two Weeks"
-                        name="rentPricePerTwoWeeks"
-                        rules={[{ required: true, message: 'Please input the rent price per two weeks!' }]}
-
-                    >
-                        <InputNumber min={0} />
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Stock"
-                        name="stock"
-                        rules={[{ required: true, message: 'Please input the stock!' }]}
-
-                    >
-                        <InputNumber min={0} />
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Image URL"
-                        name="imageUrl"
-                        rules={[{ required: true, message: 'Please input the image URL!' }]}
-
-                    >
-                        <Input />
-                    </Form.Item>
-
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit">
-                            Update Toy
-                        </Button>
-                    </Form.Item>
-                </Form>
+                        {/* Submit Button */}
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit" block>
+                                Update Toy
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                )}
             </Modal>
         </div>
     );

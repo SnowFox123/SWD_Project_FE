@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { formatCurrency } from '../../../utils/currency';
 
 const OrderSale = () => {
+  const phone = useSelector((state) => state.auth.phone);
   const orderData = useSelector((state) => state.order.orderData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -158,9 +159,10 @@ const OrderSale = () => {
                 <Form.Item
                   label="Receive Phone Number"
                   name="receivePhoneNumber"
+                  initialValue={phone} // Add this line to set the default value from Redux
                   rules={[
                     { required: true, message: 'Please input your phone number!' },
-                    { pattern: /^\d{10}$/, message: 'Phone number must be exactly 10 digits!' }
+                    { pattern: /^\d{10}$/, message: 'Phone number must be exactly 10 digits!' },
                   ]}
                   style={styles.formItem}
                 >

@@ -197,6 +197,7 @@ const OrderRentStatus = () => {
                 title="Order Details"
                 visible={!!orderDetails}
                 onCancel={handleModalClose}
+                width={1000}
                 footer={null}
                 confirmLoading={detailsLoading}
             >
@@ -228,6 +229,16 @@ const OrderRentStatus = () => {
                                     render: (text) => new Date(text).toLocaleString(),
                                 },
                                 { title: 'Rental Price', dataIndex: 'rentalPrice', render: (text) => formatCurrency(text) },
+                                {
+                                    title: 'Shipper',
+                                    dataIndex: 'shipper',
+                                    render: (text) => text || 'Not Available',
+                                },
+                                {
+                                    title: 'Shipper Phone',
+                                    dataIndex: 'shipperPhone',
+                                    render: (text) => text || 'Not Available',
+                                },
                             ]}
                             rowKey="toyName"
                             pagination={false}

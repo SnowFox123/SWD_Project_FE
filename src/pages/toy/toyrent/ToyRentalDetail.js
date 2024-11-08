@@ -45,6 +45,11 @@ const ToyRentalDetail = () => {
     }, [id]);
 
     const handleAddToCart = async () => {
+        if (quantity > toy.stock) {
+            toast.warning('Quantity exceeds available stock');
+            return;
+        }
+
         try {
             const response = await AddToCart2(toy.toyId, quantity);
             if (response) {
@@ -58,6 +63,11 @@ const ToyRentalDetail = () => {
     };
 
     const handleBuyNow = async () => {
+        if (quantity > toy.stock) {
+            toast.warning('Quantity exceeds available stock');
+            return;
+        }
+
         try {
             const response = await AddToCart2(toy.toyId, quantity);
             if (response) {
@@ -74,6 +84,7 @@ const ToyRentalDetail = () => {
             toast.error(error.message || 'Failed to add item to cart.');
         }
     };
+
 
     const handleQuantityChange = (value) => {
         if (value <= toy.stock) {

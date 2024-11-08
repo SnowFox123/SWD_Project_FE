@@ -169,6 +169,7 @@ const OrderSaleStatus = () => {
                 title="Order Details"
                 visible={!!orderDetails}
                 onCancel={handleModalClose}
+                width={600}
                 footer={null}
                 confirmLoading={detailsLoading}
             >
@@ -190,6 +191,16 @@ const OrderSaleStatus = () => {
                                 { title: 'Toy Name', dataIndex: 'toyName' },
                                 { title: 'Quantity', dataIndex: 'quantity' },
                                 { title: 'Price', dataIndex: 'price', render: (text) => formatCurrency(text) },
+                                {
+                                    title: 'Shipper',
+                                    dataIndex: 'shipper',
+                                    render: (text) => text || 'Not Available',
+                                },
+                                {
+                                    title: 'Shipper Phone',
+                                    dataIndex: 'shipperPhone',
+                                    render: (text) => text || 'Not Available',
+                                },
                             ]}
                             rowKey="toyName"
                             pagination={false}

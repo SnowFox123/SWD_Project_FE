@@ -8,6 +8,10 @@ import { formatCurrency } from '../../../utils/currency';
 
 const OrderRent = () => {
   const orderData = useSelector((state) => state.order.orderData);
+  const phone = useSelector((state) => state.auth.phone);
+  // console.log("🚀 ~ OrderRent ~ phone:", phone)
+
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [orderId, setOrderId] = useState(null);
@@ -203,14 +207,16 @@ const OrderRent = () => {
                 <Form.Item
                   label="Receive Phone Number"
                   name="receivePhoneNumber"
+                  initialValue={phone} // Add this line to set the default value from Redux
                   rules={[
                     { required: true, message: 'Please input your phone number!' },
-                    { pattern: /^\d{10}$/, message: 'Phone number must be exactly 10 digits!' }
+                    { pattern: /^\d{10}$/, message: 'Phone number must be exactly 10 digits!' },
                   ]}
                   style={styles.formItem}
                 >
                   <Input placeholder="Enter your phone number" maxLength={10} />
                 </Form.Item>
+
               </Col>
               <Col xs={24} sm={12}>
                 <Form.Item

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, Radio } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import './register.css';
 import { signup } from "../../services/authService";
+import { signupSupplier } from "../../services/authService"; // Assuming you've added this in your service
 import { toast } from "react-toastify";
 
 const Register2 = () => {
@@ -12,6 +13,7 @@ const Register2 = () => {
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [isSupplier, setIsSupplier] = useState(false); // State for switching between user and supplier
 
   const navigate = useNavigate();
   const [form] = Form.useForm(); // Ant Design form instance
@@ -26,9 +28,19 @@ const Register2 = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
     try {
-      const response = await signup(name, email, password, address, phone);
-      toast.success("Signup successful", response);
+      let response;
+      if (isSupplier) {
+        // Call signupSupplier for suppliers
+        response = await signupSupplier(name, email, password, address, phone);
+        toast.success("Supplier registration successful", response);
+      } else {
+        // Call signup for regular users
+        response = await signup(name, email, password, address, phone);
+        toast.success("User registration successful", response);
+      }
+
       navigate("/login");
     } catch (err) {
       toast.error("Signup failed");
@@ -44,7 +56,7 @@ const Register2 = () => {
 
   return (
     <div>
-      <div style={{ position: "relative", width: "100%", height: "600px" }}>
+      <div style={{ position: "relative", width: "100%", height: "650px" }}>
         <img
           alt=""
           src="loginbg.png"
@@ -65,7 +77,7 @@ const Register2 = () => {
               width: "52%",
               marginLeft: "55%",
               height: "90%",
-              marginTop: "4%",
+              marginTop: "2%",
               zIndex: "3",
             }}
             className="fade-in"
@@ -81,7 +93,7 @@ const Register2 = () => {
               width: "34%",
               height: "85%",
               zIndex: "1",
-              marginTop: "6%",
+              marginTop: "4%",
             }}
             className="fade-in"
           />
@@ -115,7 +127,7 @@ const Register2 = () => {
                 marginBottom: "10px",
               }}
             >
-              Register a member with ERT System
+              {isSupplier ? "Register Supplier with ERT System" : "Register User with ERT System"}
             </p>
 
             <div
@@ -131,6 +143,17 @@ const Register2 = () => {
               <Link className="btn-register" to="/login">
                 Sign in here!
               </Link>
+            </div>
+
+            <div style={{ marginBottom: "20px", display: "flex", justifyContent: "center" }}>
+              <Radio.Group
+                value={isSupplier}
+                onChange={(e) => setIsSupplier(e.target.value)}
+                buttonStyle="solid"
+              >
+                <Radio.Button value={false}>User</Radio.Button>
+                <Radio.Button value={true}>Supplier</Radio.Button>
+              </Radio.Group>
             </div>
 
             <Form
@@ -210,9 +233,7 @@ const Register2 = () => {
               <Form.Item
                 label="Address"
                 name="address"
-                rules={[
-                  { required: true, message: "Please input your address!" },
-                ]}
+                rules={[{ required: true, message: "Please input your address!" }]}
               >
                 <Input
                   placeholder="Address"
@@ -281,14 +302,12 @@ const Register2 = () => {
                     background: isButtonDisabled ? "#d9d9d9" : "red", // Gray when disabled, red when enabled
                     padding: "20px",
                     color: isButtonDisabled ? "#a0a0a0" : "#fff", // Adjust text color when disabled
-                    cursor: isButtonDisabled ? "not-allowed" : "pointer" // Change cursor when disabled
+                    cursor: isButtonDisabled ? "not-allowed" : "pointer", // Change cursor when disabled
                   }}
                 >
                   Register
                 </Button>
               </Form.Item>
-
-
             </Form>
           </div>
         </div>

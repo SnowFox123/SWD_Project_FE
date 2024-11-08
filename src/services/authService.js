@@ -61,3 +61,25 @@ export const signup = async (accountName, accountEmail, accountPassword, address
 };
 
 
+export const signupSupplier = async (accountName, accountEmail, accountPassword, address, phoneNumber) => {
+  try {
+    const response = await axiosInstance.post('https://localhost:7221/api/Account/sign-up-supplier', {
+      accountName,
+      accountEmail,
+      accountPassword,
+      address,
+      phoneNumber
+    });
+    if (response.data.isSuccess) {
+      return response.data.object;
+    } else {
+      throw new Error('Invalid credentials');
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    throw error;
+  }
+
+};
+
+

@@ -16,7 +16,7 @@ const ProfileUser = () => {
   const [initialProfile, setInitialProfile] = useState(null); // Store the initial profile data
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
-  
+
   const [form] = Form.useForm(); // Ant Design's form instance
 
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const ProfileUser = () => {
         setProfile(userProfile);
         setInitialProfile(userProfile);
         form.setFieldsValue(userProfile); // Initialize form with profile data
-        console.log(userProfile)
+        // console.log(userProfile)
       } catch (err) {
         notification.error({
           message: 'Error',
@@ -62,7 +62,7 @@ const ProfileUser = () => {
       setIsEditing(false);
       setInitialProfile({ accountName, address, phoneNumber });
       setProfile({ accountName, address, phoneNumber }); // Update current profile
-      dispatch(updateNamePhone({accountName, phoneNumber})); 
+      dispatch(updateNamePhone({ accountName, phoneNumber }));
     } catch (err) {
       if (err.response && err.response.data.errors) {
         const backendErrors = err.response.data.errors;

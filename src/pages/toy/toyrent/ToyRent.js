@@ -28,7 +28,7 @@ const ToyRent = () => {
         // Call the new API with combined search, sort, and pagination
         const response = await ViewToyRentNew(keyword, sortOption, pageIndex - 1, pageSize);
 
-        console.log(response)
+        // console.log(response)
 
         if (response) {
           setToys(response.items || response);

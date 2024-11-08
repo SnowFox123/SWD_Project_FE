@@ -146,8 +146,12 @@ const ViewToyRentBySupplier = () => {
                     >
                         <Option value="name_asc">Name Ascending</Option>
                         <Option value="name_desc">Name Descending</Option>
-                        <Option value="price_asc">Price Ascending</Option>
-                        <Option value="price_desc">Price Descending</Option>
+                        <Option value="dayprice_asc">Day Price Ascending</Option>
+                        <Option value="dayprice_desc">Day Price Descending</Option>
+                        <Option value="weekyprice_asc">Week Price Ascending</Option>
+                        <Option value="weekprice_desc"> Week Price Descending</Option>
+                        <Option value="twoweekprice_asc">Two Weeks Price Ascending</Option>
+                        <Option value="twowekprice_desc">Two Weeks Price Descending</Option>
                     </Select>
                 </div>
             </div>
@@ -238,7 +242,7 @@ const ViewToyRentBySupplier = () => {
                         <Input />
                     </Form.Item>
 
-                    <Form.Item
+                    {/* <Form.Item
                         label="Category"
                         name="categoryId"
                         rules={[{ required: true, message: 'Please select a category!' }]}
@@ -251,7 +255,7 @@ const ViewToyRentBySupplier = () => {
                                 </Option>
                             ))}
                         </Select>
-                    </Form.Item>
+                    </Form.Item> */}
 
                     <Form.Item
                         label="Description"

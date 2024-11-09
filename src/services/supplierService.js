@@ -267,9 +267,9 @@ export const PutCategorySupplier = async (categoryId, categoryName) => {
 
 
 
-export const DeleteToySupplier = async (toyId) => {
+export const DeleteToySupplier = async (toyId, flag) => {
   try {
-    const url = `https://localhost:7221/api/Toy/delete?id=${toyId}`;
+    const url = `https://localhost:7221/api/Toy/delete-undelete-toy?id=${toyId}&flag=${flag}`;
     const response = await axiosInstance.put(url, {
       headers: {
         'Content-Type': 'application/json',

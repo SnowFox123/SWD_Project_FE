@@ -109,7 +109,7 @@ const RequestRental = () => {
 
   return (
     <div style={{ maxWidth: 600, margin: '0 auto' }}>
-      <h1>Request Toy Rental</h1>
+      <h1>Post Toy Rental</h1>
       <Form layout="vertical" onFinish={handleSubmit} form={form}>
         <Form.Item
           label="Toy Name"

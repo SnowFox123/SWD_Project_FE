@@ -45,7 +45,7 @@ const TeamPage = () => <p>Team Content</p>;
 const ShopPage = () => <p>Shop Content</p>;
 
 const items = [
-  { key: '1', icon: <FileProtectOutlined />, label: 'Request Form', component: RequestForm },
+  { key: '1', icon: <FileProtectOutlined />, label: 'Post Form', component: RequestForm },
   { key: '2', icon: <CarryOutOutlined />, label: 'Toy Posted', component: ViewToySupplierPage },
   { key: '3', icon: <RobotOutlined />, label: 'Order Details', component: OrderDetailSupplierPage },
   { key: '4', icon: <AlertOutlined />, label: 'Report', component: ViewReportPage },

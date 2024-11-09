@@ -40,21 +40,42 @@ const ViewToySaleBySupplier = () => {
     const [form] = Form.useForm(); // Form instance to control values
 
     // Fetch toys data
+    // const fetchToys = async () => {
+    //     try {
+    //         setLoading(true);
+    //         const response = await ViewToySaleSupplier(keyword, sortOption, pageIndex - 1, pageSize);
+    //         if (response) {
+    //             const filteredToys = (response.items || response).filter(toy => !toy.isDelete);
+    //             setToys(filteredToys);
+    //             setTotalItemsCount(response.totalItemsCount || filteredToys.length);
+    //         } else {
+    //             setToys([]);
+    //             setTotalItemsCount(0);
+    //         }
+    //     } catch (error) {
+    //         message.error('Error fetching toy data.');
+    //         console.error('Error fetching toy data:', error);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
     const fetchToys = async () => {
         try {
             setLoading(true);
             const response = await ViewToySaleSupplier(keyword, sortOption, pageIndex - 1, pageSize);
             if (response) {
-                const filteredToys = (response.items || response).filter(toy => !toy.isDelete);
-                setToys(filteredToys);
-                setTotalItemsCount(response.totalItemsCount || filteredToys.length);
+                // Remove the filter to include all toys, even those with isDelete set to true
+                const allToys = response.items || response;
+                setToys(allToys);
+                setTotalItemsCount(response.totalItemsCount || allToys.length);
             } else {
                 setToys([]);
                 setTotalItemsCount(0);
             }
         } catch (error) {
-            message.error('Error fetching toy data.');
-            console.error('Error fetching toy data:', error);
+            message.error('Error fetching toy rental data.');
+            console.error('Error fetching toy rental data:', error);
         } finally {
             setLoading(false);
         }
@@ -145,14 +166,20 @@ const ViewToySaleBySupplier = () => {
         }
     };
 
-    const handleDelete = async (toyId) => {
+    const handleDelete = async (toyId, flag) => {
         try {
-            await DeleteToySupplier(toyId);
-            message.success('Toy deleted successfully!');
-            setToys(prevToys => prevToys.filter(toy => toy.toyId !== toyId));
+            await DeleteToySupplier(toyId, flag);
+            message.success(flag ? 'Toy deleted successfully!' : 'Toy restored successfully!');
+
+            // Update the toys list by re-fetching or manually updating the list
+            setToys(prevToys =>
+                prevToys.map(toy =>
+                    toy.toyId === toyId ? { ...toy, isDelete: Boolean(flag) } : toy
+                )
+            );
         } catch (error) {
-            message.error('Error deleting toy.');
-            console.error('Error deleting toy:', error);
+            message.error(flag ? 'Error deleting toy.' : 'Error restoring toy.');
+            console.error(flag ? 'Error deleting toy:' : 'Error restoring toy:', error);
         }
     };
 
@@ -190,13 +217,22 @@ const ViewToySaleBySupplier = () => {
                     >
                         Update
                     </Button>
-                    <Button
-                        type="primary"
-                        danger
-                        onClick={() => handleDelete(record.toyId)}
-                    >
-                        Delete
-                    </Button>
+                    {record.isDelete ? (
+                        <Button
+                            type="primary"
+                            onClick={() => handleDelete(record.toyId, 0)} // Undelete action
+                        >
+                            Undelete
+                        </Button>
+                    ) : (
+                        <Button
+                            type="primary"
+                            danger
+                            onClick={() => handleDelete(record.toyId, 1)} // Delete action
+                        >
+                            Delete
+                        </Button>
+                    )}
                 </>
             ),
         },

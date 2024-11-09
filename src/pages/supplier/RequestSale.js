@@ -82,7 +82,7 @@ const RequestSale = () => {
 
   return (
     <div style={{ maxWidth: 600, margin: '0 auto' }}>
-      <h1>Request Toy Sale</h1>
+      <h1>Post Toy Sale</h1>
       <Form form={form} layout="vertical" onFinish={handleSubmit}>
         <Form.Item label="Toy Name" name="toyName" required>
           <Input value={toyName} onChange={(e) => setToyName(e.target.value)} required />

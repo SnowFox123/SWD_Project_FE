@@ -17,7 +17,8 @@ import {
     ViewToyRentSupplier,
     UpdateToySupplier,
     GetCategorySupplier,
-    DeleteToySupplier // Import Delete API
+    DeleteToySupplier,
+    ViewToySaleSupplier
 } from '../../services/supplierService';
 import { formatCurrency } from '../../utils/currency';
 
@@ -25,7 +26,7 @@ const { Search } = Input;
 const { Option } = Select;
 const { Title } = Typography;
 
-const ViewToyRentBySupplier = () => {
+const ViewToySaleBySupplier = () => {
     const [toys, setToys] = useState([]);
     const [loading, setLoading] = useState(false);
     const [pageIndex, setPageIndex] = useState(1);
@@ -36,14 +37,14 @@ const ViewToyRentBySupplier = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [currentToy, setCurrentToy] = useState(null);
     const [categories, setCategories] = useState([]);
+    const [form] = Form.useForm(); // Form instance to control values
 
     // Fetch toys data
     const fetchToys = async () => {
         try {
             setLoading(true);
-            const response = await ViewToyRentSupplier(keyword, sortOption, pageIndex - 1, pageSize);
+            const response = await ViewToySaleSupplier(keyword, sortOption, pageIndex - 1, pageSize);
             if (response) {
-                // Filter out toys where isDelete is true
                 const filteredToys = (response.items || response).filter(toy => !toy.isDelete);
                 setToys(filteredToys);
                 setTotalItemsCount(response.totalItemsCount || filteredToys.length);
@@ -52,8 +53,8 @@ const ViewToyRentBySupplier = () => {
                 setTotalItemsCount(0);
             }
         } catch (error) {
-            message.error('Error fetching toy rental data.');
-            console.error('Error fetching toy rental data:', error);
+            message.error('Error fetching toy data.');
+            console.error('Error fetching toy data:', error);
         } finally {
             setLoading(false);
         }
@@ -63,7 +64,6 @@ const ViewToyRentBySupplier = () => {
         fetchToys();
     }, [pageIndex, pageSize, keyword, sortOption]);
 
-    // Fetch categories
     useEffect(() => {
         const fetchCategories = async () => {
             try {
@@ -78,39 +78,39 @@ const ViewToyRentBySupplier = () => {
         fetchCategories();
     }, []);
 
-    // Handle page change
     const onPageChange = (page) => {
         setPageIndex(page);
     };
 
-    // Handle search input change
     const handleSearch = (value) => {
         setKeyword(value.trim() ? value : '');
         setPageIndex(1);
     };
 
-    // Handle sort change
     const handleSortChange = (value) => {
         setSortOption(value);
         setPageIndex(1);
     };
 
-    // Open modal for updating a toy
     const handleUpdate = (toyId) => {
         const toy = toys.find((toy) => toy.toyId === toyId);
         if (toy) {
             setCurrentToy(toy);
+            form.setFieldsValue({
+                description: toy.description,
+                buyPrice: toy.buyPrice || 0,
+                stock: toy.stock,
+                categoryId: toy.categoryId,
+            });
             setIsModalVisible(true);
         }
     };
 
-    // Close the modal
     const handleModalCancel = () => {
         setIsModalVisible(false);
         setCurrentToy(null);
     };
 
-    // Handle form submission for updating toy
     const handleFormSubmit = async (values) => {
         if (!currentToy) {
             message.error('No toy selected for updating.');
@@ -124,14 +124,14 @@ const ViewToyRentBySupplier = () => {
             imageUrl: currentToy.imageUrl,
             isActive: currentToy.isActive,
             categoryId: currentToy.categoryId,
-            buyPrice: currentToy.buyPrice || 0,
+            buyPrice: values.buyPrice,
         };
 
         try {
             await UpdateToySupplier(updatedToy.toyId, updatedToy);
             message.success('Toy updated successfully!');
 
-            setToys(prevToys =>
+            setToys((prevToys) =>
                 prevToys.map((toy) =>
                     toy.toyId === updatedToy.toyId ? { ...toy, ...updatedToy } : toy
                 )
@@ -145,20 +145,17 @@ const ViewToyRentBySupplier = () => {
         }
     };
 
-    // Handle delete toy
     const handleDelete = async (toyId) => {
         try {
             await DeleteToySupplier(toyId);
             message.success('Toy deleted successfully!');
-            // Remove deleted toy from the list
-            // setToys(prevToys => prevToys.filter(toy => toy.toyId !== toyId));
+            setToys(prevToys => prevToys.filter(toy => toy.toyId !== toyId));
         } catch (error) {
             message.error('Error deleting toy.');
             console.error('Error deleting toy:', error);
         }
     };
 
-    // Table columns definition
     const columns = [
         {
             title: 'Image',
@@ -173,37 +170,15 @@ const ViewToyRentBySupplier = () => {
                 />
             ),
         },
+        { title: 'Toy Name', dataIndex: 'toyName' },
+        { title: 'Description', dataIndex: 'description' },
         {
-            title: 'Toy Name',
-            dataIndex: 'toyName',
-        },
-        {
-            title: 'Description',
-            dataIndex: 'description',
-        },
-        {
-            title: 'Day Price',
-            dataIndex: 'rentPricePerDay',
+            title: 'Buy Price',
+            dataIndex: 'buyPrice',
             render: (price) => formatCurrency(price),
         },
-        {
-            title: 'Week Price',
-            dataIndex: 'rentPricePerWeek',
-            render: (price) => formatCurrency(price),
-        },
-        {
-            title: 'Two Weeks Price',
-            dataIndex: 'rentPricePerTwoWeeks',
-            render: (price) => formatCurrency(price),
-        },
-        {
-            title: 'Category',
-            dataIndex: 'categoryName',
-        },
-        {
-            title: 'Stock',
-            dataIndex: 'stock',
-        },
+        { title: 'Category', dataIndex: 'categoryName' },
+        { title: 'Stock', dataIndex: 'stock' },
         {
             title: 'Actions',
             render: (_, record) => (
@@ -218,7 +193,7 @@ const ViewToyRentBySupplier = () => {
                     <Button
                         type="primary"
                         danger
-                        onClick={() => handleDelete(record.toyId)} // Call delete handler
+                        onClick={() => handleDelete(record.toyId)}
                     >
                         Delete
                     </Button>
@@ -276,7 +251,6 @@ const ViewToyRentBySupplier = () => {
                 </>
             )}
 
-            {/* Modal for Updating Toy */}
             <Modal
                 title="Update Toy"
                 visible={isModalVisible}
@@ -286,21 +260,10 @@ const ViewToyRentBySupplier = () => {
             >
                 {currentToy && (
                     <Form
-                        initialValues={{
-                            description: currentToy.description,
-                            rentPricePerDay: currentToy.rentPricePerDay,
-                            rentPricePerWeek: currentToy.rentPricePerWeek,
-                            rentPricePerTwoWeeks: currentToy.rentPricePerTwoWeeks,
-                            stock: currentToy.stock,
-                            buyPrice: currentToy.buyPrice || 0, // Default buyPrice to 0 if not set
-                            categoryId: currentToy.categoryId, // Pre-select current category
-                        }}
+                        form={form}
                         onFinish={handleFormSubmit}
                         layout="vertical"
-                        key={currentToy.toyId} // Key is used to re-render the form on toy change
                     >
-
-                        {/* Description */}
                         <Form.Item
                             label="Description"
                             name="description"
@@ -309,34 +272,14 @@ const ViewToyRentBySupplier = () => {
                             <Input.TextArea />
                         </Form.Item>
 
-                        {/* Rent Price Per Day */}
                         <Form.Item
-                            label="Rent Price Per Day"
-                            name="rentPricePerDay"
-                            rules={[{ required: true, message: 'Please input the rent price per day!' }]}
+                            label="Buy Price"
+                            name="buyPrice"
+                            rules={[{ required: true, message: 'Please input the buy price!' }]}
                         >
                             <InputNumber min={0} style={{ width: '100%' }} />
                         </Form.Item>
 
-                        {/* Rent Price Per Week */}
-                        <Form.Item
-                            label="Rent Price Per Week"
-                            name="rentPricePerWeek"
-                            rules={[{ required: true, message: 'Please input the rent price per week!' }]}
-                        >
-                            <InputNumber min={0} style={{ width: '100%' }} />
-                        </Form.Item>
-
-                        {/* Rent Price Per Two Weeks */}
-                        <Form.Item
-                            label="Rent Price Per Two Weeks"
-                            name="rentPricePerTwoWeeks"
-                            rules={[{ required: true, message: 'Please input the rent price per two weeks!' }]}
-                        >
-                            <InputNumber min={0} style={{ width: '100%' }} />
-                        </Form.Item>
-
-                        {/* Stock */}
                         <Form.Item
                             label="Stock"
                             name="stock"
@@ -345,7 +288,6 @@ const ViewToyRentBySupplier = () => {
                             <InputNumber min={0} style={{ width: '100%' }} />
                         </Form.Item>
 
-                        {/* Submit Button */}
                         <Form.Item>
                             <Button type="primary" htmlType="submit" block>
                                 Update Toy
@@ -358,4 +300,4 @@ const ViewToyRentBySupplier = () => {
     );
 };
 
-export default ViewToyRentBySupplier;
+export default ViewToySaleBySupplier;

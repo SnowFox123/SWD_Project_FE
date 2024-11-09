@@ -8,6 +8,7 @@ import {
   UserAddOutlined,
   UserOutlined,
   FileDoneOutlined,
+  AlertOutlined,
   InboxOutlined
 } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
@@ -51,13 +52,13 @@ const TeamPage = () => <p>Team Content</p>;
 const ShopPage = () => <p>Shop Content</p>;
 
 const items = [
-  { key: '1', icon: <FileDoneOutlined />, label: 'Approval Request', component: ApprovalRequestFrom },
-  { key: '2', icon: <ShopOutlined />, label: 'Report Request', component: ViewReportPage },
-  { key: '3', icon: <InboxOutlined />, label: 'Category List', component: CategoryList },
+  // { key: '1', icon: <FileDoneOutlined />, label: 'Approval Request', component: ApprovalRequestFrom },
+  { key: '1', icon: <AlertOutlined />, label: 'Report Request', component: ViewReportPage },
+  { key: '2', icon: <InboxOutlined />, label: 'Category List', component: CategoryList },
   // { key: '3', icon: <UserAddOutlined />, label: 'SignUp Supplier', component: SignUpSupplier },
-  { key: '4', icon: <UsergroupDeleteOutlined />, label: 'View Account', component: BanAccount },
-  { key: '5', icon: <AppstoreOutlined />, label: 'Voucher Manager', component: VoucherManager },
-  { key: '6', icon: <TeamOutlined />, label: 'View Payment', component: ViewPayment },
+  { key: '3', icon: <UsergroupDeleteOutlined />, label: 'View Account', component: BanAccount },
+  { key: '4', icon: <AppstoreOutlined />, label: 'Voucher Manager', component: VoucherManager },
+  { key: '5', icon: <TeamOutlined />, label: 'View Payment', component: ViewPayment },
 ];
 
 const StaffPage = () => {

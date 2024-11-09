@@ -6,6 +6,7 @@ import {
   ShopOutlined,
   FileProtectOutlined,
   // FileProtectOutlined,
+  AlertOutlined,
   UserOutlined,
   RobotOutlined,
   CarryOutOutlined
@@ -21,6 +22,7 @@ import '../../../src/components/nav/navbar.css'; // Ensure this imports your upd
 import RequestForm from './RequestForm';
 import OrderDetailSupplierPage from './OrderDetailSupplierPage';
 import ViewToySupplierPage from './ViewToySupplierPage';
+import ViewReportPage from '../staff/ViewReport';
 
 const { Header, Content, Sider } = Layout;
 const siderStyle = {
@@ -46,7 +48,7 @@ const items = [
   { key: '1', icon: <FileProtectOutlined />, label: 'Request Form', component: RequestForm },
   { key: '2', icon: <CarryOutOutlined />, label: 'Toy Posted', component: ViewToySupplierPage },
   { key: '3', icon: <RobotOutlined />, label: 'Order Details', component: OrderDetailSupplierPage },
-  // { key: '4', icon: <BarChartOutlined />, label: 'Bar Chart', component: BarChartPage },
+  { key: '4', icon: <AlertOutlined />, label: 'Report', component: ViewReportPage },
   // { key: '5', icon: <CloudOutlined />, label: 'Cloud', component: CloudPage },
   // { key: '6', icon: <AppstoreOutlined />, label: 'App Store', component: AppStorePage },
   // { key: '7', icon: <TeamOutlined />, label: 'Team', component: TeamPage },

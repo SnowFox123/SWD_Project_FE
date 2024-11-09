@@ -197,6 +197,22 @@ export const ViewToyRentSupplier = async (keyword, sortoption, pageIndex, pageSi
   }
 };
 
+export const ViewToySaleSupplier = async (keyword, sortoption, pageIndex, pageSize) => {
+  try {
+    const url = `https://localhost:7221/api/Toy/view-toys/sell-supplier?search=${keyword}&sort=${sortoption}&pageIndex=${pageIndex}&pageSize=${pageSize}`;
+    const response = await axiosInstance.get(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data: ", error);
+    throw error;
+  }
+};
+
 export const UpdateToySupplier = async (toyId, updatedToyData) => {
   try {
     const url = `https://localhost:7221/api/Toy/update${toyId}`;
